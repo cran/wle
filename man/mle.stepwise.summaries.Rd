@@ -3,7 +3,7 @@
 \usage{
 \method{summary}{mle.stepwise}(object, num.max=20, verbose=FALSE, ...)
 
-\method{print}{mle.stepwise}(x, digits = max(3, getOption("digits") - 3), max(1, nrow(x$step))...)
+\method{print}{mle.stepwise}(x, digits = max(3, getOption("digits") - 3), num.max=max(1,nrow(x$step)), ...)
 
 \method{print}{summary.mle.stepwise}(x, digits = max(3, getOption("digits") - 3), ...)
 }

@@ -201,10 +201,10 @@ return(list(x.ao=x.ao, resid.ao=resid.ao, ao.position=ao.position))
 #	wle.ar function                                     #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@unive.it                            #
-#	Date: December, 19, 2003                            #
-#	Version: 0.1-4                                      #
+#	Date: January, 5, 2004                              #
+#	Version: 0.1-5                                      #
 #                                                           #
-#	Copyright (C) 2003 Claudio Agostinelli              #
+#	Copyright (C) 2004 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
@@ -270,7 +270,7 @@ class(xreg) <- NULL
 
 if (include.mean && (nd==0)) {
     if (is.matrix(xreg) && is.null(colnames(xreg)))
-        colnames(x) <- paste("xreg", 1:ncxreg, sep="")
+        colnames(xreg) <- paste("xreg", 1:ncxreg, sep="")
     xreg <- cbind(intercept=rep(1, nused), xreg=xreg)
     ncxreg <- ncxreg + 1
 }
@@ -557,10 +557,10 @@ return(result)
 #	wle.ar.step function                                #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@unive.it                            #
-#	Date: December, 3, 2001                             #
-#	Version: 0.1-2                                      #
+#	Date: December, 30, 2003                            #
+#	Version: 0.1-3                                      #
 #                                                           #
-#	Copyright (C) 2001 Claudio Agostinelli              #
+#	Copyright (C) 2003 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
@@ -599,7 +599,7 @@ for (t in ao.position) {
 #     print(cbind(ao.position,x.ao[ao.position]))
 
 if (qr(xx.ao)$rank==NCOL(xx.ao)) {
-    temp.wle <- wle.lm(x~xx.ao -1, boot=boot, smooth=smooth, num.sol=num.sol, group=group, max.iter=max.iter, tol=tol, equal=equal)
+    temp.wle <- wle.lm(x.ao~xx.ao -1, boot=boot, smooth=smooth, num.sol=num.sol, group=group, max.iter=max.iter, tol=tol, equal=equal)
 } else {
     if (verbose) cat("wle.ar.step: the matrix is not full rank\n")
     temp.wle <- list()
@@ -634,6 +634,7 @@ if (temp.wle$tot.sol>1) {
    result$resid <- temp.wle$residuals
    result$sigma2 <- temp.wle$scale^2
    result$weights <- temp.wle$weights
+   result$weights[ao.position] <- 0 
    result$sigma2.coef <- diag(result$sigma2*solve(t(xx.ao)%*%diag(result$weights)%*%xx.ao, tol=1e-10))
    result$resid.ao <- temp.wle$residuals
    result$x.ao <- x.ao

@@ -15,7 +15,7 @@ wle.wrappednormal(x, mu, rho, sd, K, boot = 30, group, num.sol = 1, raf = "HD",
     smooth = 0.0031, tol = 10^(-6), equal = 10^(-3), min.sd = 0.001,
     min.k = 10, max.iter = 100, use.smooth = TRUE, p = 2, verbose = FALSE)
 
-\method{print}{wle.wrappednormal}(x, digits = max(3, getOption("digits") - 3), ...))
+\method{print}{wle.wrappednormal}(x, digits = max(3, getOption("digits") - 3), ...)
 }
 
 \arguments{

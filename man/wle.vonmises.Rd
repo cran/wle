@@ -10,7 +10,7 @@ Computes the weighted likelihood estimates for the parameters of a von Mises dis
 
 \usage{
 wle.vonmises(x, boot = 30, group, num.sol = 1, raf = "HD", smooth, tol = 10^(-6), equal = 10^(-3), max.iter = 500, bias = FALSE, mle.bias = FALSE, max.kappa = 500, min.kappa = 0.01, use.smooth = TRUE, p = 2, verbose = FALSE)
-\method{print}{wle.vonmises}(x, digits = max(3, getOption("digits") - 3), ...))
+\method{print}{wle.vonmises}(x, digits = max(3, getOption("digits") - 3), ...)
 
 }
 %- maybe also 'usage' for other objects documented here.

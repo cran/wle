@@ -1,5 +1,8 @@
 Library wle
 ===========
+Version 0.7-9, 2004/01/14
+Fix documentation for print.wle.vonmises, print.wle.wrappednormal and print.mle.stepwise.
+
 Version 0.7-8, 2003/12/23
 Fix problems in weights.wle.lm and print.wle.t.test. Some changes in wle.ar and wle.fracdiff.
 
