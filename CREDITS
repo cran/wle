@@ -1,0 +1,49 @@
+Some of the source files are not written by the author of this package. This is a complete list of these files:
+
+getcgn.f         
+d1mach.f          i1mach.f         
+dasum.f           idamax.f          
+daxpy.f           ignlgi.f          xgetun.f
+dcopy.f           ignuin.f          xerbla.f
+ddot.f            initgn.f          xermax.f
+dgeco.f           j4save.f          xerclr.f
+dgedi.f           lsame.f           xercnt.f
+dgefa.f           inrgcm.f          xerdmp.f
+dgemm.f           genprm.f          xerhlt.f
+dnrm2.f           mltmod.f          xermsg.f
+dqrdc.f           qrgnin.f          xerprn.f
+dqrsl.f           r1mach.f          xersve.f
+dscal.f           setall.f          xgetf.f
+dswap.f                     	    xgetua.f
+fdump.f
+dgemv.f          
+        
+Some of these files are from the library SLATEC Common Mathematical Library (and some from LINPACK and BLAS) and some others are from the RANLIB.F library. You can find booth complete library in www.netlib.org
+
+RANLIB.F library ACM Transactions policy, hereafter follows the entire LEGALITIES:
+
+Code that appeared in an ACM publication is subject to their algorithms policy:
+
+     Submittal of an algorithm for publication in one of the ACM
+Transactions implies that unrestricted use  of the algorithm within a computer is permissible. General permission to copy and distribute the algorithm without fee is granted provided that the copies  
+are not made or distributed for direct commercial advantage.    
+The ACM copyright notice and the title of the publication and its date appear, and  notice is given that copying  is by permission of the Association for Computing Machinery. To copy otherwise, or to republish, requires a fee and/or specific permission.
+
+Krogh, F.  Algorithms  Policy.  ACM  Tran.   Math.  Softw.   13
+(1987), 183-186.
+
+We place the Ranlib code that we have written in the public domain. 
+                                 NO WARRANTY
+     
+     WE PROVIDE ABSOLUTELY  NO WARRANTY  OF ANY KIND EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS  WITH YOU. SHOULD THIS PROGRAM PROVE  DEFECTIVE, YOU ASSUME  THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION. IN NO EVENT SHALL THE UNIVERSITY  OF TEXAS OR  ANY OF ITS COMPONENT INSTITUTIONS INCLUDING M. D. ANDERSON HOSPITAL BE LIABLE TO YOU FOR DAMAGES, INCLUDING ANY LOST PROFITS, LOST MONIES, OR OTHER SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA OR ITS ANALYSIS BEING RENDERED INACCURATE OR  LOSSES SUSTAINED  BY THIRD PARTIES) THE PROGRAM.
+  (Above NO WARRANTY modified from the GNU NO WARRANTY statement.)
+
+
+
+
+
+
+
+
+              
+          

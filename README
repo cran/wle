@@ -1,0 +1,20 @@
+This package contains a library for the robust approach to statistics. It is based on Weighted Likelihood approach.
+
+On the actual version 0.2 (see STATUS file) the package contains function for robust estimation of normal location and scale scale in univariate and multivariate model, linear regression with one step estimation too and robust model selection criterion based on Mallows Cp, AIC, Cross-validation, Stepwise, Backword and Forward.
+
+I have installed and run successfully the package under this system:
+
+Hardware: PC with AMD K6 and 64M ram
+OS: Linux with kernel 2.0.36 (Mandrake release)
+Fortran compiler: g77 - GNU project Fortran Compiler (v0.5.21)
+C++ compiler: gcc, g++ - GNU project C and C++ Compiler (v2.7)
+R: R version 0.63 and R version 1.0.1
+
+To install the package, use the command R INSTALL wle.
+
+Not all the code is written by me. Please, see the CREDITS, the COPYING and the COPYRIGHT file for License of this code.
+
+The code I wrote is not still optimize, and some bugs appear sometime. Please, report the bugs to me by e-mail.
+
+Claudio Agostinelli <claudio@stat.unipd.it>
+

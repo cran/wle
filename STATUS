@@ -1,0 +1,13 @@
+Library wle
+===========
+
+Version 0.2, 1999/12/25
+
+It is added the following functions: wle.onestep, wle.cp, wle.aic, wle.cv, wle.stepwise, wle.normal.multi, plot.wle.lm, plot.wle.cp and some other functions for classical model selection such as mle.cp, mle.aic, mle.cv and plot.mle.cp. All the function related are documented and some examples and datasets are provided. The error report system from the fortran routine code is set up but not working yet.
+
+Version 0.1, 1998/12/1
+
+This is a small experimental library with only some functions, i.e., wle.normal, wle.smooth and wle.lm, not completly working. No documentation is provided.
+
+
+Claudio Agostinelli <claudio@stat.unipd.it>
