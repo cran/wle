@@ -249,8 +249,14 @@ C
 C      nmaxmod=(2**npre)-1
 C
       nmaxmod=nrep
+ 
+C      write(*,*) nmaxmod
+C      write(*,*) nrep
 
-      do 65 imodel=nmaxmod,1,-1 
+      do 65 imodel=nmaxmod,1,-1
+
+C      write(*,*) imodel
+ 
          call dectobin (imodel,npre,nmodel)
       do 60 i=1,npre
          cv(imodel,i)=nmodel(i)

@@ -1,8 +1,8 @@
 #############################################################
 #                                                           #
-#	WLE.POISSON function                                #
+#	wle.poisson function                                #
 #	Author: Claudio Agostinelli                         #
-#	E-mail: claudio@stat.unipd.it                       #
+#	E-mail: claudio@unive.it                            #
 #	Date: August, 3, 2001                               #
 #	Version: 0.2                                        #
 #                                                           #
@@ -10,8 +10,7 @@
 #                                                           #
 #############################################################
 
-wle.poisson <- function(x, boot=30, group, num.sol=1, raf="HD", tol=10^(-6), equal=10^(-3), max.iter=500, verbose=FALSE)
-{
+wle.poisson <- function(x, boot=30, group, num.sol=1, raf="HD", tol=10^(-6), equal=10^(-3), max.iter=500, verbose=FALSE) {
 
 result <- list()
 
@@ -152,8 +151,19 @@ class(result) <- "wle.poisson"
 return(result)
 }
 
-print.wle.poisson <- function(x, digits = max(3, getOption("digits") - 3), ...)
-{
+#############################################################
+#                                                           #
+#	print.wle.poisson function                          #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: August, 3, 2001                               #
+#	Version: 0.2                                        #
+#                                                           #
+#	Copyright (C) 2001 Claudio Agostinelli              #
+#                                                           #
+#############################################################
+
+print.wle.poisson <- function(x, digits = max(3, getOption("digits") - 3), ...) {
     cat("\nCall:\n",deparse(x$call),"\n\n",sep="")
     cat("lambda:\n")
     print.default(format(x$lambda, digits=digits),

@@ -1,8 +1,8 @@
 #############################################################
 #                                                           #
-#	WLE.AIC function                                    #
+#	wle.aic function                                    #
 #	Author: Claudio Agostinelli                         #
-#	E-mail: claudio@stat.unipd.it                       #
+#	E-mail: claudio@unive.it                            #
 #	Date: August, 2, 2001                               #
 #	Version: 0.4                                        #
 #                                                           #
@@ -10,8 +10,7 @@
 #                                                           #
 #############################################################
 
-wle.aic<- function(formula, data=list(), model=TRUE, x=FALSE, y=FALSE, boot=30, group, var.full=0, num.sol=1, raf="HD", smooth=0.031, tol=10^(-6), equal=10^(-3), max.iter=500, min.weight=0.5, method="full", alpha=2, contrasts=NULL, verbose=FALSE)
-{
+wle.aic <- function(formula, data=list(), model=TRUE, x=FALSE, y=FALSE, boot=30, group, var.full=0, num.sol=1, raf="HD", smooth=0.031, tol=10^(-6), equal=10^(-3), max.iter=500, min.weight=0.5, method="full", alpha=2, contrasts=NULL, verbose=FALSE) {
 
 raf <- switch(raf,
 	HD = 1,
@@ -174,11 +173,21 @@ class(result) <- "wle.aic"
 return(result)
 }
 
+#############################################################
+#                                                           #
+#	summary.wle.aic function                            #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: August, 2, 2001                               #
+#	Version: 0.4-1                                      #
+#                                                           #
+#	Copyright (C) 2001 Claudio Agostinelli              #
+#                                                           #
+#############################################################
 
 summary.wle.aic <- function (object, num.max=20, verbose=FALSE, ...) {
 
-z <- .Alias(object)
-if (is.null(z$terms)) {
+if (is.null(object$terms)) {
     stop("invalid \'wle.aic\' object")
 }
 
@@ -188,7 +197,7 @@ if (num.max<1) {
 }
 
 ans <- list()
-waic <- z$waic
+waic <- object$waic
 if (is.null(nmodel <- nrow(waic))) nmodel <- 1
 num.max <- min(nmodel,num.max)
 if (nmodel!=1) { 
@@ -199,16 +208,40 @@ if (nmodel!=1) {
 
 ans$waic <- waic
 ans$num.max <- num.max
-ans$call <- z$call
+ans$call <- object$call
 
 class(ans) <- "summary.wle.aic"
 return(ans)
 }
 
+#############################################################
+#                                                           #
+#	print.wle.aic function                              #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: August, 2, 2001                               #
+#	Version: 0.4                                        #
+#                                                           #
+#	Copyright (C) 2001 Claudio Agostinelli              #
+#                                                           #
+#############################################################
+
 print.wle.aic <- function (x, digits = max(3, getOption("digits") - 3), ...) {
-res_summary.wle.aic(object=x, num.max=nrow(x$waic), ...)
-print.summary.wle.aic(res, digits=digits, ...)
+    res_summary.wle.aic(object=x, num.max=nrow(x$waic), ...)
+    print.summary.wle.aic(res, digits=digits, ...)
 }
+
+#############################################################
+#                                                           #
+#	print.summary.wle.aic function                      #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: August, 2, 2001                               #
+#	Version: 0.4                                        #
+#                                                           #
+#	Copyright (C) 2001 Claudio Agostinelli              #
+#                                                           #
+#############################################################
 
 print.summary.wle.aic <- function (x, digits = max(3, getOption("digits") - 3), ...) {
     cat("\nCall:\n")

@@ -10,15 +10,15 @@ C     normal regression linear model
 C     
 C     Author: Claudio Agostinelli 
 C             Dipartimento di Statistica
-C             Universita' di Padova
-C             35121 Padova
+C             Universita' di Venezia
+C             30125 Venezia
 C             ITALIA
 C
-C     E-mail: claudio@stat.unipd.it
+C     E-mail: claudio@unive.it
 C
-C     August, 2, 2001
+C     December, 3, 2001
 C
-C     Version: 0.4
+C     Version: 0.5
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
@@ -186,7 +186,6 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       dimension dparam(nvar+inter)
 
       dimension xparam(nsize),xsubpar(ngrp)
-      dimension rwmat(nsize,nsize)
       dimension wxidata(nsize,nvar+inter),wydata(nsize)
       dimension dparold(nvar+inter)
 
@@ -230,9 +229,6 @@ C
       if (inter.eq.1) then
          xidata(i,npre)=duno
       endif
-      do 15 ik=1, nsize
-         rwmat(i,ik)=dzero
- 15   continue
  10   continue
 
       do 30 i=1, nrep
@@ -396,9 +392,12 @@ C IRAF = 3 Chi Squared disparity
       tot=dzero
 
       do 150 i=1,nsize
-         rwmat(i,i)=dsqrt(rw(i))
+         do 155 j=1,npre
+            wxidata(i,j)=dsqrt(rw(i))*xidata(i,j)
+ 155     continue
+         wydata(i)=dsqrt(rw(i))*ydata(i)
          tot=tot+rw(i)
-C         write(*,*) rw(i)
+C        write(*,*) rw(i)
  150  continue   
 
       tot=tot/dsize
@@ -409,12 +408,6 @@ C
 C
 C     Parameters
 C
-
-      call dgemv('N',nsize,nsize,duno,rwmat,nsize,ydata,1,
-     & dzero,wydata,1)
-
-      call dgemm('N','N',nsize,npre,nsize,duno,rwmat,nsize,
-     & xidata,nsize,dzero,wxidata,nsize) 
 
       call dqrdc (wxidata,nsize,nsize,npre,qraux,jpvt,work,0)
 

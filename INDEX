@@ -1,4 +1,5 @@
 artificial               Hawkins, Bradu, Kass's Artificial Data
+binary                   Convert decimal base number to binary base
 cavendish                Cavendish's determinations of the mean density
                          of the earth Data
 hald                     Hald Data
@@ -16,6 +17,8 @@ plot.wle.lm              Plots for the Linear Model
 selection                Selection's Data
 wle.aic                  Weighted Akaike Information Criterion
 wle.aic.summaries        Summaries and methods for wle.aic
+wle.ar                   Fit Autoregressive Models to Time Series -
+                         Preliminary Version
 wle.binomial             Robust Estimation in the Binomial Model
 wle.cp                   Weighted Mallows Cp
 wle.cp.summaries         Summaries and methods for wle.cp
@@ -35,6 +38,7 @@ wle.onestep              A One-Step Weighted Likelihood Estimator for
                          Linear model
 wle.onestep.summaries    Summaries and methods for wle.onestep
 wle.poisson              Robust Estimation in the Poisson Model
+wle.riunif               The Integer Uniform Distribution
 wle.smooth               Bandwidth selection for the normal kernel and
                          normal model.
 wle.stepwise             Weighted Stepwise, Backward and Forward
@@ -42,3 +46,5 @@ wle.stepwise             Weighted Stepwise, Backward and Forward
 wle.stepwise.summaries   Accessing summaries for wle.stepwise
 wle.t.test               Weighted Likelihood Student's t-Test
 wle.var.test             Weighted F Test to Compare Two Variances
+wle.weights              Weights based on Weighted Likelihood for the
+                         normal model

@@ -1,10 +1,12 @@
 #############################################################
 #                                                           #
-#	WLE.VAR.TEST function                               #
+#	wle.var.test function                               #
 #	Author: Claudio Agostinelli                         #
-#	E-mail: claudio@stat.unipd.it                       #
+#	E-mail: claudio@unive.it                            #
 #	Date: Febraury 21, 2001                             #
 #	Version: 0.1                                        #
+#                                                           #
+#	Copyright (C) 2001 Claudio Agostinelli              #
 #                                                           #
 #	Based on var.test function in                       #
 #       ctest package version 1.2.0                         #

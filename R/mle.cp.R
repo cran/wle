@@ -1,8 +1,8 @@
 #############################################################
 #                                                           #
-#	MLE.CP function                                     #
+#	mle.cp function                                     #
 #	Author: Claudio Agostinelli                         #
-#	E-mail: claudio@stat.unipd.it                       #
+#	E-mail: claudio@unive.it                            #
 #	Date: August, 2, 2001                               #
 #	Version: 0.4                                        #
 #                                                           #
@@ -10,8 +10,7 @@
 #                                                           #
 #############################################################
 
-mle.cp <- function(formula, data=list(), model=TRUE, x=FALSE, y=FALSE, var.full=0, contrasts=NULL, verbose=FALSE)
-{
+mle.cp <- function(formula, data=list(), model=TRUE, x=FALSE, y=FALSE, var.full=0, contrasts=NULL, verbose=FALSE) {
 
     ret.x <- x
     ret.y <- y
@@ -95,15 +94,26 @@ return(result)
 
 }
 
+#############################################################
+#                                                           #
+#	summary.mle.cp function                             #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: December, 3, 2001                             #
+#	Version: 0.4-1                                      #
+#                                                           #
+#	Copyright (C) 2001 Claudio Agostinelli              #
+#                                                           #
+#############################################################
+
 summary.mle.cp <- function (object, num.max=20, verbose=FALSE, ...) {
 
-z <- .Alias(object)
-if (is.null(z$terms)) {
+if (is.null(object$terms)) {
     stop("invalid \'mle.cp\' object")
 }
 
 ans <- list()
-cp <- z$cp
+cp <- object$cp
 
 if (num.max<1) {
     if (verbose) cat("summary.mle.cp: num.max can not less than 1, num.max=1 \n")
@@ -125,16 +135,40 @@ if (nmodel!=1) {
 
 ans$cp <- cp
 ans$num.max <- num.max
-ans$call <- z$call
+ans$call <- object$call
 
 class(ans) <- "summary.mle.cp"
 return(ans)
 }
 
+#############################################################
+#                                                           #
+#	print.mle.cp function                               #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: August, 2, 2001                               #
+#	Version: 0.4                                        #
+#                                                           #
+#	Copyright (C) 2001 Claudio Agostinelli              #
+#                                                           #
+#############################################################
+
 print.mle.cp <- function (x, digits = max(3, getOption("digits") - 3), ...) {
-res_summary.mle.cp(object=x, num.max=nrow(x$cp), ...)
-print.summary.mle.cp(res, digits=digits, ...)
+    res_summary.mle.cp(object=x, num.max=nrow(x$cp), ...)
+    print.summary.mle.cp(res, digits=digits, ...)
 }
+
+#############################################################
+#                                                           #
+#	print.summary.mle.cp function                       #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: August, 2, 2001                               #
+#	Version: 0.4                                        #
+#                                                           #
+#	Copyright (C) 2001 Claudio Agostinelli              #
+#                                                           #
+#############################################################
 
 print.summary.mle.cp <- function (x, digits = max(3, getOption("digits") - 3), ...) {
     cat("\nCall:\n")

@@ -1,10 +1,12 @@
 #############################################################
 #                                                           #
-#	WLE.T.TEST function                                 #
+#	wle.t.test function                                 #
 #	Author: Claudio Agostinelli                         #
-#	E-mail: claudio@stat.unipd.it                       #
+#	E-mail: claudio@unive.it                            #
 #	Date: Febraury 9, 2001                              #
 #	Version: 0.1                                        #
+#                                                           #
+#	Copyright (C) 2001 Claudio Agostinelli              #
 #                                                           #
 #	Based on t.test function in                         #
 #       ctest package version 1.2.0                         #
@@ -203,6 +205,17 @@ wle.t.test <- function(x, y=NULL, alternative = c("two.sided", "less", "greater"
     return(result)
 }
 
+#############################################################
+#                                                           #
+#	print.wle.t.test function                           #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: Febraury 9, 2001                              #
+#	Version: 0.1                                        #
+#                                                           #
+#	Copyright (C) 2001 Claudio Agostinelli              #
+#                                                           #
+#############################################################
 
 print.wle.t.test <- function(x, x.root="ALL", y.root="ALL", digits = 4, quote = TRUE, prefix = "", ...) {
 

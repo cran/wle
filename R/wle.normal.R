@@ -1,8 +1,8 @@
 #############################################################
 #                                                           #
-#	WLE.NORMAL function                                 #
+#	wle.normal function                                 #
 #	Author: Claudio Agostinelli                         #
-#	E-mail: claudio@stat.unipd.it                       #
+#	E-mail: claudio@unive.it                            #
 #	Date: August, 2, 2001                               #
 #	Version: 0.4                                        #
 #                                                           #
@@ -127,6 +127,18 @@ result$call <- match.call()
 class(result) <- "wle.normal"
 return(result)
 }
+
+#############################################################
+#                                                           #
+#	print.wle.normal function                           #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: August, 2, 2001                               #
+#	Version: 0.4                                        #
+#                                                           #
+#	Copyright (C) 2001 Claudio Agostinelli              #
+#                                                           #
+#############################################################
 
 print.wle.normal <- function(x, digits = max(3, getOption("digits") - 3), ...)
 {

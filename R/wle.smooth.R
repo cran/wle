@@ -1,8 +1,8 @@
 #############################################################
 #                                                           #
-#	WLE.SMOOTH function                                 #
+#	wle.smooth function                                 #
 #	Author: Claudio Agostinelli                         #
-#	E-mail: claudio@stat.unipd.it                       #
+#	E-mail: claudio@unive.it                            #
 #	Date: October, 10, 2000                             #
 #	Version: 0.3                                        #
 #                                                           #
@@ -44,8 +44,19 @@ class(result) <- "wle.smooth"
 return(result)
 }
 
-print.wle.smooth <- function(x, digits = max(3, getOption("digits") - 3), ...)
-{
+#############################################################
+#                                                           #
+#	print.wle.smooth function                           #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: October, 10, 2000                             #
+#	Version: 0.3                                        #
+#                                                           #
+#	Copyright (C) 2000 Claudio Agostinelli              #
+#                                                           #
+#############################################################
+
+print.wle.smooth <- function(x, digits = max(3, getOption("digits") - 3), ...) {
     cat("\nCall:\n",deparse(x$call),"\n\n",sep="")
     cat("\nBandwidth: ",format(x$root, digits=digits))
     cat("\n")

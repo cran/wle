@@ -1,46 +1,44 @@
 #############################################################
 #                                                           #
-#	PLOT.MLE.CP function                                #
+#	plot.mle.cp function                                #
 #	Author: Claudio Agostinelli                         #
-#	E-mail: claudio@stat.unipd.it                       #
-#	Date: August, 2, 2001                               #
-#	Version: 0.4                                        #
+#	E-mail: claudio@unive.it                            #
+#	Date: December, 3, 2001                             #
+#	Version: 0.4-1                                      #
 #                                                           #
 #	Copyright (C) 2001 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
-plot.mle.cp <- function(x, base.line=0, num.max=20, plot.it=TRUE, log.scale=FALSE, xlab="Number of Predictors", ylab=NULL, verbose=FALSE, ...)
-{
+plot.mle.cp <- function(x, base.line=0, num.max=20, plot.it=TRUE, log.scale=FALSE, xlab="Number of Predictors", ylab=NULL, verbose=FALSE, ...) {
 
-z <- .Alias(x)
-if (is.null(z$terms)) {
-    stop("invalid \'mle.cp\' object")
-}
+    if (is.null(x$terms)) {
+        stop("invalid \'mle.cp\' object")
+    }
 
-cp <- x$cp
+    cp <- x$cp
 
-if (num.max<1) {
-    if (verbose) cat("plot.mle.cp: num.max can not less than 1, num.max=1 \n")
-    num.max <- 1
-}
+    if (num.max<1) {
+        if (verbose) cat("plot.mle.cp: num.max can not less than 1, num.max=1 \n")
+        num.max <- 1
+    }
 
-if(is.null(nrow(cp)) | nrow(cp)==1) {
-    num.model <- 1
-} else {
-    num.model <- nrow(cp) 
-}
+    if (is.null(nrow(cp)) | nrow(cp)==1) {
+        num.model <- 1
+    } else {
+        num.model <- nrow(cp) 
+    }
 
-if (num.model<num.max) {
-    if (verbose) cat("plot.mle.cp: The number of models is less than num.max \n")
-    num.max <- num.model
-}
+    if (num.model<num.max) {
+        if (verbose) cat("plot.mle.cp: The number of models is less than num.max \n")
+        num.max <- num.model
+    }
 
-if (is.null(ncol(cp))) {
-    stop("No models to plot")
-} else {
-nvar <- ncol(cp)-1
-}
+    if (is.null(ncol(cp))) {
+        stop("No models to plot")
+    } else {
+        nvar <- ncol(cp)-1
+    }
 
 good.model <- (apply(cp[,1:nvar],1,sum)+base.line>=cp[,nvar+1])
 cp.good <- matrix(cp[good.model,],ncol=nvar+1)

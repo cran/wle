@@ -63,7 +63,7 @@ Models for \code{wle.cp} are specified symbolically.  A typical model has the fo
 
 \code{min.weight}: the weighted likelihood equation could have more than one solution. These roots appear for particular situation depending on contamination level and type. The presence of multiple roots in the full model can create some problem in the set of weights we should use. Actually, the selection of the root is done by the minimum scale error provided. Since this choice is not always the one would choose, we introduce the \code{min.weight} parameter in order to choose only between roots that do not down weight everything. This is not still the optimal solution, and perhaps, in the new release, this part will be change. 
 
-\code{method}: this parameter, when set to "reduced",  allows to use weights based on the reduced model. This is strongly discourage since the robust and asymptotic property of this kind of weighted Cp are not as good as the one based on \code{method="full"}.}
+\code{method}: this parameter, when set to \code{"reduced"},  allows to use weights based on the reduced model. This is strongly discourage since the robust and asymptotic property of this kind of weighted Cp are not as good as the one based on \code{method="full"}.}
 
 \value{
 

@@ -1,8 +1,8 @@
 #############################################################
 #                                                           #
-#	WLE.CP function                                     #
+#	wle.cp function                                     #
 #	Author: Claudio Agostinelli                         #
-#	E-mail: claudio@stat.unipd.it                       #
+#	E-mail: claudio@unive.it                            #
 #	Date: August, 2, 2001                               #
 #	Version: 0.4                                        #
 #                                                           #
@@ -10,8 +10,7 @@
 #                                                           #
 #############################################################
 
-wle.cp <- function(formula, data=list(), model=TRUE, x=FALSE, y=FALSE, boot=30, group, var.full=0, num.sol=1, raf="HD", smooth=0.031, tol=10^(-6), equal=10^(-3), max.iter=500, min.weight=0.5, method="full", alpha=2, contrasts=NULL, verbose=FALSE)
-{
+wle.cp <- function(formula, data=list(), model=TRUE, x=FALSE, y=FALSE, boot=30, group, var.full=0, num.sol=1, raf="HD", smooth=0.031, tol=10^(-6), equal=10^(-3), max.iter=500, min.weight=0.5, method="full", alpha=2, contrasts=NULL, verbose=FALSE) {
 
 raf <- switch(raf,
 	HD = 1,
@@ -175,10 +174,21 @@ return(result)
 
 }
 
+#############################################################
+#                                                           #
+#	summary.wle.cp function                             #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: August, 2, 2001                               #
+#	Version: 0.4                                        #
+#                                                           #
+#	Copyright (C) 2001 Claudio Agostinelli              #
+#                                                           #
+#############################################################
+
 summary.wle.cp <- function (object, num.max=20, verbose=FALSE, ...) {
 
-z <- .Alias(object)
-if (is.null(z$terms)) {
+if (is.null(object$terms)) {
     stop("invalid \'wle.cp\' object")
 }
 
@@ -188,7 +198,7 @@ if (num.max<1) {
 }
 
 ans <- list()
-wcp <- z$wcp
+wcp <- object$wcp
 if(is.null(nmodel <- nrow(wcp))) nmodel <- 1
 num.max <- min(nmodel,num.max)
 
@@ -205,16 +215,40 @@ if (nmodel!=1) {
 
 ans$wcp <- wcp
 ans$num.max <- num.max
-ans$call <- z$call
+ans$call <- object$call
 
 class(ans) <- "summary.wle.cp"
 return(ans)
 }
 
+#############################################################
+#                                                           #
+#	print.wle.cp function                               #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: August, 2, 2001                               #
+#	Version: 0.4                                        #
+#                                                           #
+#	Copyright (C) 2001 Claudio Agostinelli              #
+#                                                           #
+#############################################################
+
 print.wle.cp <- function (x, digits = max(3, getOption("digits") - 3), ...) {
-res_summary.wle.cp(object=x, num.max=nrow(x$wcp), ...)
-print.summary.wle.cp(res, digits=digits, ...)
+    res_summary.wle.cp(object=x, num.max=nrow(x$wcp), ...)
+    print.summary.wle.cp(res, digits=digits, ...)
 }
+
+#############################################################
+#                                                           #
+#	print.summary.wle.cp function                       #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: August, 2, 2001                               #
+#	Version: 0.4                                        #
+#                                                           #
+#	Copyright (C) 2001 Claudio Agostinelli              #
+#                                                           #
+#############################################################
 
 print.summary.wle.cp <- function (x, digits = max(3, getOption("digits") - 3), ...) {
     cat("\nCall:\n")

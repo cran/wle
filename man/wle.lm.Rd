@@ -77,7 +77,7 @@ Models for \code{wle.lm} are specified symbolically.  A typical model has the fo
 \item{delta}{the Pearson residuals.}
 \item{freq}{the number of starting points converging to the roots.}
 \item{tot.sol}{the number of solutions found.}
-\item{not.conv}{the number of starting points that does not converge after the \code{imax} iteration are reached.}
+\item{not.conv}{the number of starting points that does not converge after the \code{max.iter} iteration are reached.}
 \item{call}{the match.call().}
 \item{contrasts}{}
 \item{xlevels}{}

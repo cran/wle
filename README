@@ -1,13 +1,15 @@
+This is under development version 0.7
+
 This package contains a library for the robust approach to statistics. It is based on Weighted Likelihood approach.
 
-On the actual version 0.6-1 (see STATUS file) the package contains function for robust estimation of normal location and scale in univariate and multivariate model, shape and scale in gamma model, p in binomial model, lambda in poisson model, linear regression and one step estimation, robust model selection criterion based on Mallows Cp, AIC, Cross-validation, Stepwise, Backward and Forward, t-test and variance test. There is also an experimental code for univariate normal mixture models.
+On the actual version 0.7 (see STATUS file) the package contains function for robust estimation of normal location and scale in univariate and multivariate model, shape and scale in gamma model, p in binomial model, lambda in poisson model, linear regression and one step estimation, robust model selection criterion based on Mallows Cp, AIC, Cross-validation, Stepwise, Backward and Forward, t-test and variance test. There is also experimental code for univariate normal mixture models and for seasonal autoregressive models.
 
 I have installed and run successfully the package under this system:
 
-OS: Red Hat Linux release 6.1 (Cartman) Kernel 2.2.12-20 on an i686
-Fortran compiler: g77 version egcs-2.91.66 19990314/Linux (egcs-1.1.2 release) (from FSF-g77 version 0.5.24-19981002)
-C compiler: gcc version egcs-2.91.66 19990314/Linux (egcs-1.1.2 release)
-R: version 1.3.1 (2001-08-31)
+OS: Linux Suse 7.1 on AMD686
+Fortran compiler: GNU project Fortran Compiler (v0.5.24)
+C compiler: GNU project C and C++ Compiler (gcc-2.95)
+R: version 1.4.0 (2001-12-19)
 
 To install the package, use the command R CMD INSTALL wle.
 
@@ -15,5 +17,5 @@ Not all the code is written by me. Please, see the CREDITS, the COPYING and the 
 
 The code I wrote is not still optimize, and some bugs appear sometime. Please, report the bugs, any comments and suggestions to me by e-mail. Please, also let me know about any applications or use of the package.
 
-Claudio Agostinelli <claudio@stat.unipd.it>
+Claudio Agostinelli <claudio@unive.it>
 

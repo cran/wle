@@ -1,8 +1,8 @@
 #############################################################
 #                                                           #
-#	WLE.GAMMA function                                  #
+#	wle.gamma function                                  #
 #	Author: Claudio Agostinelli                         #
-#	E-mail: claudio@stat.unipd.it                       #
+#	E-mail: claudio@unive.it                            #
 #	Date: August, 2, 2001                               #
 #	Version: 0.2                                        #
 #                                                           #
@@ -228,6 +228,17 @@ if (tot.sol) {
    return(result)
 }
 
+#############################################################
+#                                                           #
+#	print.wle.gamma function                            #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: August, 2, 2001                               #
+#	Version: 0.2                                        #
+#                                                           #
+#	Copyright (C) 2001 Claudio Agostinelli              #
+#                                                           #
+#############################################################
 
 print.wle.gamma <- function(x, digits = max(3, getOption("digits") - 3), ...) {
     cat("\nCall:\n",deparse(x$call),"\n\n",sep="")

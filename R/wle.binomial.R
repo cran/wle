@@ -1,8 +1,8 @@
 #############################################################
 #                                                           #
-#	WLE.BINOMIAL function                               #
+#	wle.binomial function                               #
 #	Author: Claudio Agostinelli                         #
-#	E-mail: claudio@stat.unipd.it                       #
+#	E-mail: claudio@unive.it                            #
 #	Date: August, 2, 2001                               #
 #	Version: 0.2                                        #
 #                                                           #
@@ -10,8 +10,7 @@
 #                                                           #
 #############################################################
 
-wle.binomial <- function(x, size, boot=30, group, num.sol=1, raf="HD", tol=10^(-6), equal=10^(-3), max.iter=500, verbose=FALSE)
-{
+wle.binomial <- function(x, size, boot=30, group, num.sol=1, raf="HD", tol=10^(-6), equal=10^(-3), max.iter=500, verbose=FALSE) {
 
 result <- list()
 
@@ -155,8 +154,19 @@ class(result) <- "wle.binomial"
 return(result)
 }
 
-print.wle.binomial <- function(x, digits = max(3, getOption("digits") - 3), ...)
-{
+#############################################################
+#                                                           #
+#	print.wle.binomial function                         #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: August, 2, 2001                               #
+#	Version: 0.2                                        #
+#                                                           #
+#	Copyright (C) 2001 Claudio Agostinelli              #
+#                                                           #
+#############################################################
+
+print.wle.binomial <- function(x, digits = max(3, getOption("digits") - 3), ...) {
     cat("\nCall:\n",deparse(x$call),"\n\n",sep="")
     cat("p:\n")
     print.default(format(x$p, digits=digits),

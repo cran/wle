@@ -1,8 +1,8 @@
 #############################################################
 #                                                           #
-#	PLOT.WLE.LM function                                #
+#	plot.wle.lm function                                #
 #	Author: Claudio Agostinelli                         #
-#	E-mail: claudio@stat.unipd.it                       #
+#	E-mail: claudio@unive.it                            #
 #	Date: August, 2, 2001                               #
 #	Version: 0.4                                        #
 #                                                           #

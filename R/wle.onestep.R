@@ -1,9 +1,9 @@
 #############################################################
 #                                                           #
-#	WLE.ONESTEP function                                #
+#	wle.onestep function                                #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@stat.unipd.it                       #
-#	Date: December, 19, 2000                             #
+#	Date: December, 19, 2000                            #
 #	Version: 0.3                                        #
 #                                                           #
 #	Copyright (C) 2000 Claudio Agostinelli              #
@@ -147,8 +147,19 @@ class(result) <- "wle.onestep"
 return(result)
 }
 
-print.wle.onestep <- function(x, digits = max(3, getOption("digits") - 3), ...)
-{
+#############################################################
+#                                                           #
+#	print.wle.onestep function                          #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@stat.unipd.it                       #
+#	Date: December, 19, 2000                            #
+#	Version: 0.3                                        #
+#                                                           #
+#	Copyright (C) 2000 Claudio Agostinelli              #
+#                                                           #
+#############################################################
+
+print.wle.onestep <- function(x, digits = max(3, getOption("digits") - 3), ...) {
     cat("\nCall:\n",deparse(x$call),"\n\n",sep="")
     cat("Coefficients:\n")
     print.default(format(coef(x), digits=digits),

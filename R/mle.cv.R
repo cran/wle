@@ -1,8 +1,8 @@
 #############################################################
 #                                                           #
-#	MLE.CV function                                     #
+#	mle.cv function                                     #
 #	Author: Claudio Agostinelli                         #
-#	E-mail: claudio@stat.unipd.it                       #
+#	E-mail: claudio@unive.it                            #
 #	Date: August, 2, 2001                               #
 #	Version: 0.4                                        #
 #                                                           #
@@ -10,11 +10,10 @@
 #                                                           #
 #############################################################
 
-mle.cv <- function(formula, data=list(), model=TRUE, x=FALSE, y=FALSE, monte.carlo=500, split, contrasts=NULL, verbose=FALSE)
-{
+mle.cv <- function(formula, data=list(), model=TRUE, x=FALSE, y=FALSE, monte.carlo=500, split, contrasts=NULL, verbose=FALSE) {
 
 if (missing(split)) {
-split <- 0
+    split <- 0
 }
 
     ret.x <- x
@@ -91,43 +90,77 @@ dimnames(result$cv) <- list(NULL,c(dn,"cv"))
 class(result) <- "mle.cv" 
 
 return(result)
-
 }
+
+#############################################################
+#                                                           #
+#	summary.mle.cv function                             #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: August, 2, 2001                               #
+#	Version: 0.4-1                                      #
+#                                                           #
+#	Copyright (C) 2001 Claudio Agostinelli              #
+#                                                           #
+#############################################################
 
 summary.mle.cv <- function (object, num.max=20, verbose=FALSE, ...) {
 
-z <- .Alias(object)
-if (is.null(z$terms)) {
-    stop("invalid \'mle.cv\' object")
+    if (is.null(object$terms)) {
+        stop("invalid \'mle.cv\' object")
+    }
+
+    if (num.max<1) {
+        if (verbose) cat("summary.mle.cv: num.max can not less than 1, num.max=1 \n")
+        num.max <- 1
+    }
+
+    ans <- list()
+    cv <- object$cv
+    if(is.null(nmodel <- nrow(cv))) nmodel <- 1
+    num.max <- min(nmodel,num.max)
+    if (nmodel!=1) { 
+        nvar <- ncol(cv)-1
+        cv <- cv[order(cv[,(nvar+1)]),]
+        cv <- cv[1:num.max,]
+    }
+
+    ans$cv <- cv
+    ans$num.max <- num.max
+    ans$call <- object$call
+
+    class(ans) <- "summary.mle.cv"
+    return(ans)
 }
 
-if (num.max<1) {
-    if (verbose) cat("summary.mle.cv: num.max can not less than 1, num.max=1 \n")
-    num.max <- 1
-}
-
-ans <- list()
-cv <- z$cv
-if(is.null(nmodel <- nrow(cv))) nmodel <- 1
-num.max <- min(nmodel,num.max)
-if (nmodel!=1) { 
-nvar <- ncol(cv)-1
-cv <- cv[order(cv[,(nvar+1)]),]
-cv <- cv[1:num.max,]
-}
-
-ans$cv <- cv
-ans$num.max <- num.max
-ans$call <- z$call
-
-class(ans) <- "summary.mle.cv"
-return(ans)
-}
+#############################################################
+#                                                           #
+#	print.mle.cv function                               #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: August, 2, 2001                               #
+#	Version: 0.4                                        #
+#                                                           #
+#	Copyright (C) 2001 Claudio Agostinelli              #
+#                                                           #
+#############################################################
 
 print.mle.cv <- function (x, digits = max(3, getOption("digits") - 3), ...) {
-res_summary.mle.cv(object=x, num.max=nrow(x$cv), ...)
-print.summary.mle.cv(res, digits=digits, ...)
+    res_summary.mle.cv(object=x, num.max=nrow(x$cv), ...)
+    print.summary.mle.cv(res, digits=digits, ...)
 }
+
+#############################################################
+#                                                           #
+#	print.summary.mle.cv function                       #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: August, 2, 2001                               #
+#	Version: 0.4                                        #
+#                                                           #
+#	Copyright (C) 2001 Claudio Agostinelli              #
+#                                                           #
+#############################################################
 
 print.summary.mle.cv <- function (x, digits = max(3, getOption("digits") - 3), ...) {
     cat("\nCall:\n")

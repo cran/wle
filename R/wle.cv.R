@@ -1,8 +1,8 @@
 #############################################################
 #                                                           #
-#	WLE.CV function                                     #
+#	wle.cv function                                     #
 #	Author: Claudio Agostinelli                         #
-#	E-mail: claudio@stat.unipd.it                       #
+#	E-mail: claudio@unive.it                            #
 #	Date: August, 2, 2001                               #
 #	Version: 0.4                                        #
 #                                                           #
@@ -10,8 +10,7 @@
 #                                                           #
 #############################################################
 
-wle.cv <- function(formula, data=list(), model=TRUE, x=FALSE, y=FALSE, monte.carlo=500, split, boot=30, group, num.sol=1, raf="HD", smooth=0.031, tol=10^(-6), equal=10^(-3), max.iter=500, min.weight=0.5, contrasts=NULL, verbose=FALSE)
-{
+wle.cv <- function(formula, data=list(), model=TRUE, x=FALSE, y=FALSE, monte.carlo=500, split, boot=30, group, num.sol=1, raf="HD", smooth=0.031, tol=10^(-6), equal=10^(-3), max.iter=500, min.weight=0.5, contrasts=NULL, verbose=FALSE) {
 
 raf <- switch(raf,
 	HD = 1,
@@ -148,7 +147,7 @@ if (min.weight<0) {
 
 delnull <- z$same==0
 
-result$wcv <- z$wcv[!delnull,]
+result$wcv <- z$wcv
 result$coefficients <- z$param[!delnull,]
 result$scale <- sqrt(z$var[!delnull])
 result$residuals <- z$resid[!delnull]
@@ -182,10 +181,21 @@ class(result) <- "wle.cv"
 return(result)
 }
 
+#############################################################
+#                                                           #
+#	summary.wle.cv function                             #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: December, 3, 2001                             #
+#	Version: 0.4-1                                      #
+#                                                           #
+#	Copyright (C) 2001 Claudio Agostinelli              #
+#                                                           #
+#############################################################
+
 summary.wle.cv <- function (object, num.max=20, verbose=FALSE, ...) {
 
-z <- .Alias(object)
-if (is.null(z$terms)) {
+if (is.null(object$terms)) {
     stop("invalid \'wle.cv\' object")
 }
 
@@ -195,7 +205,7 @@ if (num.max<1) {
 }
 
 ans <- list()
-wcv <- z$wcv
+wcv <- object$wcv
 if(is.null(nmodel <- nrow(wcv))) nmodel <- 1
 num.max <- min(nmodel,num.max)
 if (nmodel!=1) { 
@@ -206,16 +216,40 @@ wcv <- wcv[1:num.max,]
 
 ans$wcv <- wcv
 ans$num.max <- num.max
-ans$call <- z$call
+ans$call <- object$call
 
 class(ans) <- "summary.wle.cv"
 return(ans)
 }
 
+#############################################################
+#                                                           #
+#	print.wle.cv function                               #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: August, 2, 2001                               #
+#	Version: 0.4                                        #
+#                                                           #
+#	Copyright (C) 2001 Claudio Agostinelli              #
+#                                                           #
+#############################################################
+
 print.wle.cv <- function (x, digits = max(3, getOption("digits") - 3), ...) {
-res_summary.wle.cv(object=x, num.max=nrow(x$wcv), ...)
-print.summary.wle.cv(res, digits=digits, ...)
+    res_summary.wle.cv(object=x, num.max=nrow(x$wcv), ...)
+    print.summary.wle.cv(res, digits=digits, ...)
 }
+
+#############################################################
+#                                                           #
+#	print.summary.wle.cv function                       #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: August, 2, 2001                               #
+#	Version: 0.4                                        #
+#                                                           #
+#	Copyright (C) 2001 Claudio Agostinelli              #
+#                                                           #
+#############################################################
 
 print.summary.wle.cv <- function (x, digits = max(3, getOption("digits") - 3), ...) {
     cat("\nCall:\n")

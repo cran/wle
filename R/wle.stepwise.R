@@ -1,8 +1,8 @@
 #############################################################
 #                                                           #
-#	WLE.STEPWISE function                               #
+#	wle.stepwise function                               #
 #	Author: Claudio Agostinelli                         #
-#	E-mail: claudio@stat.unipd.it                       #
+#	E-mail: claudio@unive.it                            #
 #	Date: August, 3, 2001                               #
 #	Version: 0.4                                        #
 #                                                           #
@@ -199,10 +199,21 @@ return(result)
 
 }
 
+#############################################################
+#                                                           #
+#	summary.wle.stepwise function                       #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: December, 3, 2001                             #
+#	Version: 0.4-1                                      #
+#                                                           #
+#	Copyright (C) 2001 Claudio Agostinelli              #
+#                                                           #
+#############################################################
+
 summary.wle.stepwise <- function (object, num.max=20, verbose=FALSE, ...) {
 
-z <- .Alias(object)
-if (is.null(z$terms)) {
+if (is.null(object$terms)) {
     stop("invalid \'wle.stepwise\' object")
 }
 
@@ -212,7 +223,7 @@ if (num.max<1) {
 }
 
 ans <- list()
-wstep <- z$wstep
+wstep <- object$wstep
 if(is.null(nmodel <- nrow(wstep))) nmodel <- 1
 num.max <- min(nmodel,num.max)
 if (nmodel!=1) { 
@@ -221,19 +232,43 @@ if (nmodel!=1) {
 
 ans$wstep <- wstep
 ans$num.max <- num.max
-ans$type <- z$type
-ans$f.in <- z$f.in
-ans$f.out <- z$f.out
-ans$call <- z$call
+ans$type <- object$type
+ans$f.in <- object$f.in
+ans$f.out <- object$f.out
+ans$call <- object$call
 
 class(ans) <- "summary.wle.stepwise"
 return(ans)
 }
 
+#############################################################
+#                                                           #
+#	print.wle.stepwise function                         #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: December, 3, 2001                             #
+#	Version: 0.4                                        #
+#                                                           #
+#	Copyright (C) 2001 Claudio Agostinelli              #
+#                                                           #
+#############################################################
+
 print.wle.stepwise <- function (x, digits = max(3, getOption("digits") - 3), ...) {
 res_summary.wle.stepwise(object=x, num.max=nrow(x$wstep), ...)
 print.summary.wle.stepwise(res, digits=digits, ...)
 }
+
+#############################################################
+#                                                           #
+#	print.summary.wle.stepwise function                 #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: December, 3, 2001                             #
+#	Version: 0.4                                        #
+#                                                           #
+#	Copyright (C) 2001 Claudio Agostinelli              #
+#                                                           #
+#############################################################
 
 print.summary.wle.stepwise <- function (x, digits = max(3, getOption("digits") - 3), ...) {
     cat("\nCall:\n")

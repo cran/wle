@@ -109,8 +109,7 @@ return(result)
 
 summary.mle.stepwise <- function (object, num.max=20, verbose=FALSE, ...) {
 
-z <- .Alias(object)
-if (is.null(z$terms)) {
+if (is.null(object$terms)) {
     stop("invalid \'mle.stepwise\' object")
 }
 
@@ -120,7 +119,7 @@ if (num.max<1) {
 }
 
 ans <- list()
-step <- z$step
+step <- object$step
 if(is.null(nmodel <- nrow(step))) nmodel <- 1
 num.max <- min(nmodel,num.max)
 if (nmodel!=1) { 
@@ -129,10 +128,10 @@ if (nmodel!=1) {
 
 ans$step <- step
 ans$num.max <- num.max
-ans$type <- z$type
-ans$f.in <- z$f.in
-ans$f.out <- z$f.out
-ans$call <- z$call
+ans$type <- object$type
+ans$f.in <- object$f.in
+ans$f.out <- object$f.out
+ans$call <- object$call
 
 class(ans) <- "summary.mle.stepwise"
 return(ans)

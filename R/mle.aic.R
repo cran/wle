@@ -1,8 +1,8 @@
 #############################################################
 #                                                           #
-#	MLE.AIC function                                    #
+#	mle.aic function                                    #
 #	Author: Claudio Agostinelli                         #
-#	E-mail: claudio@stat.unipd.it                       #
+#	E-mail: claudio@unive.it                            #
 #	Date: August, 2, 2001                               #
 #	Version: 0.4                                        #
 #                                                           #
@@ -90,10 +90,21 @@ class(result) <- "mle.aic"
 return(result)
 }
 
+#############################################################
+#                                                           #
+#	summary.mle.aic function                            #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: December, 3, 2001                             #
+#	Version: 0.4-1                                      #
+#                                                           #
+#	Copyright (C) 2001 Claudio Agostinelli              #
+#                                                           #
+#############################################################
+
 summary.mle.aic <- function (object, num.max=20, verbose=FALSE, ...) {
 
-z <- .Alias(object)
-if (is.null(z$terms)) {
+if (is.null(object$terms)) {
     stop("invalid \'mle.aic\' object")
 }
 
@@ -103,7 +114,7 @@ if (num.max<1) {
 }
 
 ans <- list()
-aic <- z$aic
+aic <- object$aic
 if (is.null(nmodel <- nrow(aic))) nmodel <- 1
 num.max <- min(nmodel,num.max)
 if (nmodel!=1) { 
@@ -114,16 +125,40 @@ if (nmodel!=1) {
 
 ans$aic <- aic
 ans$num.max <- num.max
-ans$call <- z$call
+ans$call <- object$call
 
 class(ans) <- "summary.mle.aic"
 return(ans)
 }
 
+#############################################################
+#                                                           #
+#	print.mle.aic function                              #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: August, 2, 2001                               #
+#	Version: 0.4                                        #
+#                                                           #
+#	Copyright (C) 2001 Claudio Agostinelli              #
+#                                                           #
+#############################################################
+
 print.mle.aic <- function (x, digits = max(3, getOption("digits") - 3), ...) {
-res_summary.mle.aic(object=x, num.max=nrow(x$aic), ...)
-print.summary.mle.aic(res, digits=digits, ...)
+   res_summary.mle.aic(object=x, num.max=nrow(x$aic), ...)
+   print.summary.mle.aic(res, digits=digits, ...)
 }
+
+#############################################################
+#                                                           #
+#	print.summary.mle.aic function                      #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: August, 2, 2001                               #
+#	Version: 0.4                                        #
+#                                                           #
+#	Copyright (C) 2001 Claudio Agostinelli              #
+#                                                           #
+#############################################################
 
 print.summary.mle.aic <- function (x, digits = max(3, getOption("digits") - 3), ...) {
     cat("\nCall:\n")

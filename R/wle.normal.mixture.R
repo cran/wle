@@ -1,8 +1,8 @@
 #############################################################
 #                                                           #
-#	WLE.NORMAL.MIXTURE function                         #
+#	wle.normal.mixture function                         #
 #	Author: Claudio Agostinelli                         #
-#	E-mail: claudio@stat.unipd.it                       #
+#	E-mail: claudio@unive.it                            #
 #	Date: October, 3, 2001                              #
 #	Version: 0.2                                        #
 #                                                           #
@@ -100,8 +100,6 @@ if (smooth<10^(-5)) {
 if (smooth.start<10^(-5)) {
     if (verbose) cat("wle.normal.mixture: the smooth.start parameter seems too small \n")
 }
-
-
 
 if (tol<=0) {
     if (verbose) cat("wle.normal.mixture: the accuracy must be positive, using default value: 10^(-6) \n")
@@ -317,11 +315,21 @@ if (z$nsol>0) {
 result$call <- match.call()
 class(result) <- "wle.normal.mixture"
 return(result)
-
 }
 
-print.wle.normal.mixture <- function(x, digits = max(3, getOption("digits") - 3), ...)
-{
+#############################################################
+#                                                           #
+#	print.wle.normal.mixture function                   #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: October, 3, 2001                              #
+#	Version: 0.2                                        #
+#                                                           #
+#	Copyright (C) 2001 Claudio Agostinelli              #
+#                                                           #
+#############################################################
+
+print.wle.normal.mixture <- function(x, digits = max(3, getOption("digits") - 3), ...) {
     cat("\nCall:\n",deparse(x$call),"\n\n",sep="")
     cat("Location:\n")
     print.default(format(x$location, digits=digits),

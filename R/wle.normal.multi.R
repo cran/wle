@@ -1,8 +1,8 @@
 #############################################################
 #                                                           #
-#	WLE.NORMAL.MULTI function                           #
+#	wle.normal.multi function                           #
 #	Author: Claudio Agostinelli                         #
-#	E-mail: claudio@stat.unipd.it                       #
+#	E-mail: claudio@unive.it                            #
 #	Date: August, 2, 2001                               #
 #	Version: 0.4                                        #
 #                                                           #
@@ -21,7 +21,7 @@ raf <- switch(raf,
 if (raf==-1) stop("Please, choose the RAF: HD=Hellinger Disparity, NED=Negative Exponential Disparity, SCHI2=Symmetric Chi-squares Disparity")
 
 if (missing(group)) {
-group <- 0
+    group <- 0
 }
 
 if (is.null(size <- nrow(x)) | is.null(nvar <- ncol(x))) {

@@ -1,9 +1,9 @@
 #############################################################
 #                                                           #
-#	PLOT.WLE.CP function                                #
-#	E-mail: claudio@stat.unipd.it                       #
-#	Date: August, 2, 2001                               #
-#	Version: 0.4                                        #
+#	plot.wle.cp function                                #
+#	E-mail: claudio@unive.it                            #
+#	Date: December, 3, 2001                             #
+#	Version: 0.4-1                                      #
 #                                                           #
 #	Copyright (C) 2001 Claudio Agostinelli              #
 #                                                           #
@@ -11,34 +11,33 @@
 
 plot.wle.cp <- function(x, base.line=0, num.max=20, plot.it=TRUE, log.scale=FALSE, xlab="Number of Predictors", ylab=NULL, verbose=FALSE, ...) {
 
-z <- .Alias(x)
-if (is.null(z$terms)) {
-    stop("invalid \'wle.cp\' object")
-}
+    if (is.null(x$terms)) {
+        stop("invalid \'wle.cp\' object")
+    }
 
-wcp <- x$wcp
+    wcp <- x$wcp
 
-if (num.max<1) {
-    if (verbose) cat("plot.wle.cp: num.max can not less than 1, num.max=1 \n")
-num.max <- 1
-}
+    if (num.max<1) {
+        if (verbose) cat("plot.wle.cp: num.max can not less than 1, num.max=1 \n")
+        num.max <- 1
+    }
 
-if(is.null(nrow(wcp)) | nrow(wcp)==1) {
-    num.model <- 1
-} else {
-    num.model <- nrow(wcp) 
-}
+    if (is.null(nrow(wcp)) | nrow(wcp)==1) {
+        num.model <- 1
+    } else {
+        num.model <- nrow(wcp) 
+    }
 
-if (num.model<num.max) {
-    if (verbose) cat("plot.wle.cp: The number of models is less than num.max \n")
-    num.max <- num.model
-}
+    if (num.model<num.max) {
+        if (verbose) cat("plot.wle.cp: The number of models is less than num.max \n")
+        num.max <- num.model
+    }
 
-if(is.null(ncol(wcp))) {
-   stop("No models to plot")
-} else {
-   nvar <- ncol(wcp)-1
-}
+    if (is.null(ncol(wcp))) {
+        stop("No models to plot")
+    } else {
+        nvar <- ncol(wcp)-1
+    }
 
 good.model <- (apply(wcp[,1:nvar],1,sum)+base.line>=wcp[,nvar+1])
 wcp.good <- matrix(wcp[good.model,],ncol=nvar+1)

@@ -1,8 +1,8 @@
 #############################################################
 #                                                           #
-#	WLE.LM function                                     #
+#	wle.lm function                                     #
 #	Author: Claudio Agostinelli                         #
-#	E-mail: claudio@stat.unipd.it                       #
+#	E-mail: claudio@unive.it                            #
 #	Date: August, 2, 2001                               #
 #	Version: 0.4                                        #
 #                                                           #
@@ -214,6 +214,18 @@ class(result) <- "wle.lm"
 return(result)
 }
 
+#############################################################
+#                                                           #
+#	print.wle.lm function                               #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: December, 3, 2001                             #
+#	Version: 0.1                                        #
+#                                                           #
+#	Copyright (C) 2001 Claudio Agostinelli              #
+#                                                           #
+#############################################################
+
 print.wle.lm <- function(x, digits = max(3, getOption("digits") - 3), ...)
 {
     cat("\nCall:\n",deparse(x$call),"\n\n",sep="")
@@ -228,12 +240,23 @@ print.wle.lm <- function(x, digits = max(3, getOption("digits") - 3), ...)
     invisible(x)
 }
 
-summary.wle.lm <- function(object, root="ALL", ...)
-{
-z <- .Alias(object)
-if (is.null(z$terms)) stop("invalid \'wle.lm\' object")
+#############################################################
+#                                                           #
+#	summary.wle.lm function                             #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: December, 3, 2001                             #
+#	Version: 0.1                                        #
+#                                                           #
+#	Copyright (C) 2001 Claudio Agostinelli              #
+#                                                           #
+#############################################################
 
-tot.sol <- z$tot.sol
+summary.wle.lm <- function(object, root="ALL", ...) {
+
+if (is.null(object$terms)) stop("invalid \'wle.lm\' object")
+
+tot.sol <- object$tot.sol
 
 if (root!="ALL" & !is.numeric(root)) {
     stop("Please, choose one root, for print all root ALL")
@@ -259,41 +282,50 @@ print.summary.wle.lm.root(x[[i]], digits = max(3, getOption("digits") - 3), sign
 }
 }
 
-
-
+#############################################################
+#                                                           #
+#	summary.wle.lm.root function                        #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: December, 3, 2001                             #
+#	Version: 0.1                                        #
+#                                                           #
+#	Copyright (C) 2001 Claudio Agostinelli              #
+#                                                           #
+#############################################################
 
 summary.wle.lm.root <- function (object, root=1, ...) {
-z <- .Alias(object)
-if (is.null(z$terms)) stop("invalid \'wle.lm\' object")
 
-tot.sol <- z$tot.sol
+if (is.null(object$terms)) stop("invalid \'wle.lm\' object")
+
+tot.sol <- object$tot.sol
 if (tot.sol<root) {
     stop(paste("Root ",root," not found"))
 }
 if (tot.sol!=1) {
-n <- ncol(z$residuals)
-p <- ncol(z$coefficients)
+n <- ncol(object$residuals)
+p <- ncol(object$coefficients)
 } else {
-n <- length(z$residuals)
-p <- length(z$coefficients)
+n <- length(object$residuals)
+p <- length(object$coefficients)
 }
 
-rdf <- z$tot.weights[root]*n - p 
+rdf <- object$tot.weights[root]*n - p 
 if (tot.sol>1) {   
-    r <- z$residuals[root,]
-    f <- z$fitted.values[root,]
-    w <- z$weights[root,]
-    est <- z$coefficients[root,]
-    se <- z$standard.error[root,]
+    r <- object$residuals[root,]
+    f <- object$fitted.values[root,]
+    w <- object$weights[root,]
+    est <- object$coefficients[root,]
+    se <- object$standard.error[root,]
 } else {
-    r <- z$residuals
-    f <- z$fitted.values
-    w <- z$weights
-    est <- z$coefficients
-    se <- z$standard.error
+    r <- object$residuals
+    f <- object$fitted.values
+    w <- object$weights
+    est <- object$coefficients
+    se <- object$standard.error
 }
 
-    mss <- if (attr(z$terms, "intercept")) {
+    mss <- if (attr(object$terms, "intercept")) {
     		m <- sum(w * f /sum(w))
         	sum(w * (f - m)^2)
         	} else sum(w * f^2)
@@ -301,7 +333,7 @@ if (tot.sol>1) {
   
     resvar <- rss/rdf
     tval <- est/se
-    ans <- z[c("call", "terms")]
+    ans <- object[c("call", "terms")]
     ans$residuals <- sqrt(w)*r
     ans$coefficients <- cbind(est, se, tval, 2*(1 - pt(abs(tval), rdf)))
     dimnames(ans$coefficients)<-
@@ -309,8 +341,8 @@ if (tot.sol>1) {
 	     c("Estimate", "Std. Error", "t value", "Pr(>|t|)"))
     ans$sigma <- sqrt(resvar)
     ans$df <- c(p, rdf, p)
-    if (p != attr(z$terms, "intercept")) {
-	df.int <- if (attr(z$terms, "intercept")) 1 else 0
+    if (p != attr(object$terms, "intercept")) {
+	df.int <- if (attr(object$terms, "intercept")) 1 else 0
 	ans$r.squared <- mss/(mss + rss)
 	ans$adj.r.squared <- 1 - (1 - ans$r.squared) *
 	    ((n - df.int)/rdf)
@@ -322,8 +354,19 @@ if (tot.sol>1) {
     return(ans)
 }
 
-print.summary.wle.lm.root <- function (x, digits = max(3, getOption("digits") - 3), signif.stars= getOption("show.signif.stars"),	...)
-{
+#############################################################
+#                                                           #
+#	print.summary.wle.lm.root function                  #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: December, 3, 2001                             #
+#	Version: 0.1                                        #
+#                                                           #
+#	Copyright (C) 2001 Claudio Agostinelli              #
+#                                                           #
+#############################################################
+
+print.summary.wle.lm.root <- function (x, digits = max(3, getOption("digits") - 3), signif.stars= getOption("show.signif.stars"),	...) {
     cat("\nCall:\n")
     cat(paste(deparse(x$call), sep="\n", collapse = "\n"), "\n\n", sep="")
     resid <- x$residuals
@@ -371,7 +414,7 @@ print.summary.wle.lm.root <- function (x, digits = max(3, getOption("digits") - 
 
 fitted.wle.lm <- function(object, ...) object$fitted.values
 coef.wle.lm <- function(object, ...) object$coefficients
-weights.wle.lm <- .Alias(weights.default)
+weights.wle.lm <- weights.default
 formula.wle.lm <- function(x, ...) formula(x$terms)
 
 model.frame.wle.lm <-

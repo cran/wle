@@ -1,6 +1,9 @@
 Library wle
 ===========
 
+Version 0.7, 2002/01/02 
+Fix the 56th observation in Hawkins, Bradu, Kass dataset. Fix a bugs in the wle.cv introduced in Version 0.6 and 0.6-1 of the package. Rewrite some parts of wleregfix subroutine (for wle.lm function and wle.aic, wle.cp, wle.cv and in some others functions). Delete all .Alias calls. Preliminary version of wle.ar.
+
 Version 0.6-1, 2001/09/14
 Bug fix in wle.lm and wle.var.test
 
