@@ -75,10 +75,10 @@ library(wle)
 
 set.seed(1234)
 
-x_rpois(40,5)
+x <- rpois(40,5)
 wle.poisson(x)
 
-x_c(rpois(40,5),rpois(10,20))
+x <- c(rpois(40,5),rpois(10,20))
 wle.poisson(x)
 
 }

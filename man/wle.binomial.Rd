@@ -74,10 +74,10 @@ library(wle)
 
 set.seed(1234)
 
-x_rbinom(20,p=0.2,size=10)
+x <- rbinom(20,p=0.2,size=10)
 wle.binomial(x,size=10)
 
-x_c(rbinom(20,p=0.2,size=10),rbinom(10,p=0.9,size=10))
+x <- c(rbinom(20,p=0.2,size=10),rbinom(10,p=0.9,size=10))
 wle.binomial(x,size=10)
 
 }

@@ -236,7 +236,7 @@ return(ans)
 #############################################################
 
 print.wle.cv <- function (x, digits = max(3, getOption("digits") - 3), ...) {
-    res_summary.wle.cv(object=x, num.max=nrow(x$wcv), ...)
+    res <- summary.wle.cv(object=x, num.max=nrow(x$wcv), ...)
     print.summary.wle.cv(res, digits=digits, ...)
 }
 

@@ -147,7 +147,7 @@ summary.mle.cv <- function (object, num.max=20, verbose=FALSE, ...) {
 #############################################################
 
 print.mle.cv <- function (x, digits = max(3, getOption("digits") - 3), ...) {
-    res_summary.mle.cv(object=x, num.max=nrow(x$cv), ...)
+    res <- summary.mle.cv(object=x, num.max=nrow(x$cv), ...)
     print.summary.mle.cv(res, digits=digits, ...)
 }
 

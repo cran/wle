@@ -234,7 +234,7 @@ return(ans)
 #############################################################
 
 print.wle.cp <- function (x, digits = max(3, getOption("digits") - 3), ...) {
-    res_summary.wle.cp(object=x, num.max=nrow(x$wcp), ...)
+    res <- summary.wle.cp(object=x, num.max=nrow(x$wcp), ...)
     print.summary.wle.cp(res, digits=digits, ...)
 }
 

@@ -82,8 +82,8 @@ if (ret.y)
     result$y <- ydata
 
 dn <- colnames(xdata)
-dimnames(result$coefficients)_list(NULL,dn)
-dimnames(result$aic)_list(NULL,c(dn,"aic"))
+dimnames(result$coefficients) <- list(NULL,dn)
+dimnames(result$aic) <- list(NULL,c(dn,"aic"))
 
 class(result) <- "mle.aic"
 
@@ -144,7 +144,7 @@ return(ans)
 #############################################################
 
 print.mle.aic <- function (x, digits = max(3, getOption("digits") - 3), ...) {
-   res_summary.mle.aic(object=x, num.max=nrow(x$aic), ...)
+   res <- summary.mle.aic(object=x, num.max=nrow(x$aic), ...)
    print.summary.mle.aic(res, digits=digits, ...)
 }
 

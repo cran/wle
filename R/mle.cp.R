@@ -85,8 +85,8 @@ if (ret.y)
     result$y <- ydata
 
 dn <- colnames(xdata)
-dimnames(result$coefficients)_list(NULL,dn)
-dimnames(result$cp)_list(NULL,c(dn,"cp"))
+dimnames(result$coefficients) <- list(NULL,dn)
+dimnames(result$cp) <- list(NULL,c(dn,"cp"))
 
 class(result) <- "mle.cp" 
 
@@ -154,7 +154,7 @@ return(ans)
 #############################################################
 
 print.mle.cp <- function (x, digits = max(3, getOption("digits") - 3), ...) {
-    res_summary.mle.cp(object=x, num.max=nrow(x$cp), ...)
+    res <- summary.mle.cp(object=x, num.max=nrow(x$cp), ...)
     print.summary.mle.cp(res, digits=digits, ...)
 }
 

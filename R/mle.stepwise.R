@@ -56,7 +56,7 @@ if (f.in<0 | f.out<0) {
     stop("f.in and f.out can not be negative")
 }
 
-nrep_2^nvar-1
+nrep <- 2^nvar-1
 
   z <- .Fortran("step",
 	as.double(ydata),
@@ -138,7 +138,7 @@ return(ans)
 }
 
 print.mle.stepwise <- function (x, digits = max(3, getOption("digits") - 3), ...) {
-res_summary.mle.stepwise(object=x, num.max=nrow(x$step), ...)
+res <- summary.mle.stepwise(object=x, num.max=nrow(x$step), ...)
 print.summary.mle.stepwise(res, digits=digits, ...)
 }
 

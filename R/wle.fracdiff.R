@@ -3,8 +3,8 @@
 #	wle.fracdiff.ao function                                #
 #	Author: Claudio Agostinelli                             #
 #	E-mail: claudio@unive.it                                #
-#	Date: April, 02, 2002                                   #
-#	Version: 0.2-1                                          #
+#	Date: April, 08, 2002                                   #
+#	Version: 0.2-2                                          #
 #                                                           #
 #     Copyright (C) 2002 Claudio Agostinelli                #
 #                                                           #
@@ -19,7 +19,7 @@ wle.fracdiff.ao <- function(d, sigma2, x, M=100, x.init=rep(0,M), x.mean=0, use.
     }
 
     nused <- length(x)
-    resid <- wle.fracdiff.residuals(d=d, M=M, x=x, x.init=x.init, x.mean=x.mean, use.init=use.init)  
+    resid <- wle.fracdiff.residuals(d=d, M=M, x=x, x.ao=x, x.init=x.init, x.mean=x.mean, use.init=use.init)  
     nresid <- length(resid)
 
     weights <- .Fortran("wlew",
@@ -214,10 +214,10 @@ wle.fracdiff <- function(x, lower, upper, M, group, na.action=na.fail, tol=10^(-
                temp$d <- init.values[1]
                temp$sigma2 <- init.values[2]
                temp$x.mean <- init.values[3]
-               temp$resid <- wle.fracdiff.residuals(d=temp$d, M=M, x=x, x.init=x.init, x.mean=temp$x.mean, use.init=use.init)
+               temp$resid <- wle.fracdiff.residuals(d=temp$d, M=M, x=x, x.ao=x, x.init=x.init, x.mean=temp$x.mean, use.init=use.init)
            } else {
                temp <- wle.fracdiff.solve(x=x.boot, x.init=x.init, max.iter=max.iter.start, verbose=verbose, M=M,  lower, upper, tol=tol, use.uniroot=use.uniroot, use.init=use.init, include.mean=include.mean)
-               temp$resid <- wle.fracdiff.residuals(temp$d, M=M, x=x, x.init=x.init, x.mean=temp$x.mean, use.init=use.init)
+               temp$resid <- wle.fracdiff.residuals(temp$d, M=M, x=x, x.ao=x, x.init=x.init, x.mean=temp$x.mean, use.init=use.init)
                temp$sigma2 <- wle.fracdiff.sigma2(resid=temp$resid)
            }
     
@@ -323,7 +323,7 @@ wle.fracdiff <- function(x, lower, upper, M, group, na.action=na.fail, tol=10^(-
 # end while (!setequal(ao.position,ao.position.old) & conv)
 
                    if (conv) {
-                       resid.with.ao <- wle.fracdiff.residuals(d, M=M, x=x, x.init=x.init, x.mean=x.mean, use.init=use.init) 
+                       resid.with.ao <- wle.fracdiff.residuals(d, M=M, x=x, x.ao=x, x.init=x.init, x.mean=x.mean, use.init=use.init) 
                        resid.with.ao <- ts(resid.with.ao, start=(start(x)+MM), end=end(x), frequency=frequency(x))
                        class(resid.with.ao) <- "ts"
 
@@ -332,7 +332,7 @@ wle.fracdiff <- function(x, lower, upper, M, group, na.action=na.fail, tol=10^(-
                        resid <- ts(resid, start=(start(x)+MM), end=end(x), frequency=frequency(x))        
                        class(resid) <- "ts" 
 
-                       resid.without.ao <- wle.fracdiff.residuals(d, M=M, x=x.ao, x.init=x.init, x.mean=x.mean, use.init=use.init) 
+                       resid.without.ao <- wle.fracdiff.residuals(d, M=M, x=x.ao, x.ao=x.ao, x.init=x.init, x.mean=x.mean, use.init=use.init) 
                        resid.without.ao <- ts(resid.without.ao, start=(start(x)+MM), end=end(x), frequency=frequency(x))
                        class(resid.without.ao) <- "ts"
  
@@ -570,7 +570,7 @@ return(xi.coef)
 #                                                           #
 #############################################################
 
-wle.fracdiff.residuals <- function(d, M, x, x.ao=x, x.init=rep(0,M), x.mean=0, use.init=FALSE) {
+wle.fracdiff.residuals <- function(d, M, x, x.ao, x.init=rep(0,M), x.mean=0, use.init=FALSE) {
 
     x <- x - x.mean
     x.ao <- x.ao - x.mean

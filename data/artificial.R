@@ -1,4 +1,4 @@
-artificial_matrix(c(10.1,  19.6,  28.3,   9.7,
+artificial <- matrix(c(10.1,  19.6,  28.3,   9.7,
  9.5,  20.5,  28.9,  10.1,
 10.7,  20.2,  31.0,  10.3,
  9.9,  21.5,  31.7,   9.5,
@@ -74,6 +74,6 @@ artificial_matrix(c(10.1,  19.6,  28.3,   9.7,
  0.0,   2.2,   1.6,  -0.9,
  0.3,   0.4,   2.6,   0.2), ncol=4, byrow=TRUE)
 
-y.artificial_artificial[,4]
-x.artificial_artificial[,1:3]
+y.artificial <- artificial[,4]
+x.artificial <- artificial[,1:3]
 

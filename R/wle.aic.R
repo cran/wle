@@ -227,7 +227,7 @@ return(ans)
 #############################################################
 
 print.wle.aic <- function (x, digits = max(3, getOption("digits") - 3), ...) {
-    res_summary.wle.aic(object=x, num.max=nrow(x$waic), ...)
+    res <- summary.wle.aic(object=x, num.max=nrow(x$waic), ...)
     print.summary.wle.aic(res, digits=digits, ...)
 }
 

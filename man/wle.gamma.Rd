@@ -96,11 +96,11 @@ library(wle)
 
 set.seed(1234)
 
-x_rgamma(100,2,2)
+x <- rgamma(100,2,2)
 
 wle.gamma(x)
 
-x_c(rgamma(30,2,2),rgamma(100,20,20))
+x <- c(rgamma(30,2,2),rgamma(100,20,20))
 
 wle.gamma(x, boot=10, group=10, num.sol=2)
 

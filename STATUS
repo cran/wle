@@ -1,5 +1,8 @@
 Library wle
 ===========
+Version 0.7-3, 2002/06/24
+Replace all the underscore (_) with <-.
+
 Version 0.7-2, 2002/04/02
 Fix the documentation (.Rd) file for *.summaries.Rd file. Include a preliminary version of the wle.fracdiff function with related functions. The R^2-adjusted is now evaluated according to the sum of the weights instead of the number of observations.
 

@@ -6,14 +6,14 @@
 \method{fitted}{wle.lm}(object, ...)
 \method{model.frame}{wle.lm}(formula, data, na.action, ...)
 \method{summary}{wle.lm}(object, root="ALL", ...)
-summary.wle.lm.root(object, root=1, ...)
+\method{summary}{wle.lm.root}(object, root=1, ...)
 
 \method{print}{wle.lm}(x, digits = max(3, getOption("digits") - 3), ...)
 
 \method{print}{summary.wle.lm}(x, digits = max(3, getOption("digits") - 3), 
            signif.stars= getOption("show.signif.stars"),  ...)
 
-print.summary.wle.lm.root(x, digits = max(3, getOption("digits") - 3), 
+\method{print}{summary.wle.lm.root}(x, digits = max(3, getOption("digits") - 3), 
            signif.stars= getOption("show.signif.stars"),  ...)
 }
 

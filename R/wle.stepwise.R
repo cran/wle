@@ -255,7 +255,7 @@ return(ans)
 #############################################################
 
 print.wle.stepwise <- function (x, digits = max(3, getOption("digits") - 3), ...) {
-res_summary.wle.stepwise(object=x, num.max=nrow(x$wstep), ...)
+res <- summary.wle.stepwise(object=x, num.max=nrow(x$wstep), ...)
 print.summary.wle.stepwise(res, digits=digits, ...)
 }
 
