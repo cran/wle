@@ -1,7 +1,7 @@
 \name{wle.stepwise.summaries}
 \title{Accessing summaries for wle.stepwise}
 \usage{
-summary.wle.stepwise(object, num.max=20, ...)
+summary.wle.stepwise(object, num.max=20, verbose=FALSE, ...)
 
 print.wle.stepwise(x, digits = max(3, getOption("digits") - 3), ...)
 
@@ -15,9 +15,16 @@ print.summary.wle.stepwise(x, digits = max(3, getOption("digits") - 3), ...)
 \arguments{
  \item{object}{an object of class \code{wle.stepwise}.}
  \item{x}{an object of class \code{wle.stepwise} or \code{summary.wle.stepwise}.}
- \item{num.max}{the number of the last iterations reported.}}
-
+ \item{digits}{number of digits to be used for most numbers.} 
+ \item{num.max}{the number of the last iterations reported.}
+ \item{verbose}{if \code{TRUE} warnings are printed.}
+ \item{...}{additional arguments affecting the summary produced (in
+   \code{summary.wle.stepwise}) or further arguments passed to or from
+   other methods (in \code{print.wle.stepwise} and
+   \code{print.summary.wle.stepwise}).}
 }
+
+ 
 \description{All these functions are \code{\link{methods}} for class \code{wle.stepwise} or \code{summary.wle.stepwise}.}
 
 \details{

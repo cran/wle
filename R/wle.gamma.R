@@ -3,14 +3,14 @@
 #	WLE.GAMMA function                                  #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@stat.unipd.it                       #
-#	Date: February, 16, 2001                            #
-#	Version: 0.1                                        #
+#	Date: August, 2, 2001                               #
+#	Version: 0.2                                        #
 #                                                           #
 #	Copyright (C) 2001 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
-wle.gamma <- function(x, boot=30, group, num.sol=1, raf="HD", smooth=0.008, tol=10^(-6), equal=10^(-3), max.iter=500, shape.int=c(0.01,100), shape.tol=10, use.smooth=TRUE, tol.int) {
+wle.gamma <- function(x, boot=30, group, num.sol=1, raf="HD", smooth=0.008, tol=10^(-6), equal=10^(-3), max.iter=500, shape.int=c(0.01,100), shape.tol=10, use.smooth=TRUE, tol.int, verbose=FALSE) {
 
 wsolve <- function (o, media, medialog) {
    medialog + log(o/media) - digamma(o)
@@ -37,43 +37,43 @@ stop("Number of observation must be at least equal to 2")
 }
 
 if (group<2) {
-group <- max(round(size/4),2)
-cat("wle.gamma: dimension of the subsample set to default value: ",group,"\n")
+    group <- max(round(size/4),2)
+    if (verbose) cat("wle.gamma: dimension of the subsample set to default value: ",group,"\n")
 }
 
 maxboot <- sum(log(1:size))-(sum(log(1:group))+sum(log(1:(size-group))))
 
 if (boot<1 | log(boot) > maxboot) {
-stop("Bootstrap replication not in the range")
+    stop("Bootstrap replication not in the range")
 }
 
 if (!(num.sol>=1)) {
-cat("wle.gamma: number of solution to report set to 1 \n")
-num.sol <- 1
+    if (verbose) cat("wle.gamma: number of solution to report set to 1 \n")
+    num.sol <- 1
 }
 
 if (max.iter<1) {
-cat("wle.gamma: max number of iteration set to 500 \n")
-max.iter <- 500
+    if (verbose) cat("wle.gamma: max number of iteration set to 500 \n")
+    max.iter <- 500
 }
 
 if (smooth<10^(-5)) {
-cat("wle.gamma: the smooth parameter seems too small \n")
+    if (verbose) cat("wle.gamma: the smooth parameter seems too small \n")
 }
 
-if (tol<0) {
-cat("wle.gamma: the accuracy can not be negative, using default value \n")
-tol <- 10^(-6)
+if (tol<=0) {
+    if (verbose) cat("wle.gamma: the accuracy must be positive, using default value: 10^(-6) \n")
+    tol <- 10^(-6)
 }
 
-if (equal<0) {
-cat("wle.gamma: the equal parameter can not be negative, using default value \n")
-equal <- 10^(-3)
+if (equal<=tol) {
+    if (verbose) cat("wle.gamma: the equal parameter must be positive, using default value: tol+10^(-3) \n")
+    equal <- tol+10^(-3)
 }
 
 if (!is.logical(use.smooth)) {
-cat("wle.gamma: the use.smooth must be a logical value, using default value \n")
-use.smooth <- TRUE
+    if (verbose) cat("wle.gamma: the use.smooth must be a logical value, using default value \n")
+    use.smooth <- TRUE
 }
 
 if (length(shape.int)!=2) stop("shape.int must be a vector of length 2 \n")
@@ -82,25 +82,25 @@ shape.int <- rev(sort(shape.int))
 shape.first <- shape.int
 
 if (shape.int[2] <= 0) {
-stop("the elements of shape.int must be positive \n")
+    stop("the elements of shape.int must be positive \n")
 }
 
 if (shape.int[1] <= 0) {
-cat("wle.gamma: the elements of shape.int must be positive, using default value \n")
-shape.int[1] <- tol
+    if (verbose) cat("wle.gamma: the elements of shape.int must be positive, using default value \n")
+    shape.int[1] <- tol
 }
 
 if (shape.tol <=0) {
-cat("wle.gamma: shape.tol must be positive, using default value \n")
-shape.tol <- 10
+    if (verbose) cat("wle.gamma: shape.tol must be positive, using default value \n")
+    shape.tol <- 10
 } 
 
 if (missing(tol.int)) {
    tol.int <- tol*10^(-4)
 } else {
    if (tol.int <=0) {
-     cat("wle.gamma: tol.int must be positive, using default value \n")
-     tol.int <- tol*10^(-4) 
+       if (verbose) cat("wle.gamma: tol.int must be positive, using default value \n")
+       tol.int <- tol*10^(-4) 
    } 
 }
 
@@ -147,7 +147,8 @@ dsup <- max(x)+ 3*smooth*temp
 	as.double(shape),
 	weights=double(size),
 	density=double(size),
-	model=double(size))
+	model=double(size),
+        PACKAGE = "wle")
 
 ww <- z$weights
 wsum <- sum(ww)
@@ -171,12 +172,18 @@ xdiff <- max(abs(c(o-shape,l-1/lambda)))
       o.store <- o
       l.store <- l
       w.store <- ww
+      f.store <- z$density
+      m.store <- z$model
+      d.store <- f.store/m.store - 1
       tot.sol <- 1
    } else {
       if (min(abs(o.store-o))>equal & min(abs(l.store-l))>equal) {
           o.store <- c(o.store,o)
           l.store <- c(l.store,l)
           w.store <- rbind(w.store,ww)
+          f.store <- rbind(f.store,z$density)
+          m.store <- rbind(m.store,z$model)
+          d.store <- rbind(d.store,z$density/z$model - 1)
           tot.sol <- tot.sol + 1
       }
    }
@@ -187,8 +194,6 @@ xdiff <- max(abs(c(o-shape,l-1/lambda)))
 }
 ##### end of while (tot.sol < num.sol & iboot < boot)
 
-
-
 if (tot.sol) {
    result$scale <- c(l.store)
    result$shape <- o.store
@@ -198,16 +203,29 @@ if (tot.sol) {
   
    result$tot.weights <- tot.w
    result$weights <- w.store
+   result$delta <- d.store
+   result$f.density <- f.store
+   result$m.density <- m.store
    result$tot.sol <- tot.sol
    result$not.conv <- not.conv
    result$call <- match.call()
+} else{
+   if (verbose) cat("wle.gamma: No solutions are fuond, checks the parameters\n")
+   result$scale <- NA
+   result$shape <- NA
+   result$tot.weights <- NA
+   result$weights <- rep(NA,size)
+   result$delta <- rep(NA,size)
+   result$f.density <- rep(NA,size)
+   result$m.density <- rep(NA,size)
+   result$tot.sol <- 0
+   result$not.conv <- boot
+   result$call <- match.call()
+}
 
    class(result) <- "wle.gamma"
 
    return(result)
-} else{
-stop("No solutions are fuond, checks the parameters")
-}
 }
 
 

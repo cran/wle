@@ -1,6 +1,7 @@
       SUBROUTINE WLENORMMULTI (DATI,NSIZE,NVAR,NBOOT,
      & NGRP,NREP,IRAF,RK,
-     & RPREC,REQUAL,IMAX,dmedia,varia,totpesi,pesi,nsame,
+     & RPREC,REQUAL,IMAX,dmedia,varia,totpesi,pesi,
+     & dden,dmod,ddelta,nsame,
      & nsol,nconv)
 
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
@@ -17,13 +18,13 @@ C             ITALIA
 C
 C     E-mail: claudio@stat.unipd.it
 C
-C     December, 19 2000
+C     August, 2, 2001
 C
-C     Version: 0.3
+C     Version: 0.4
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
-C    Copyright (C) 2000 Claudio Agostinelli
+C    Copyright (C) 2001 Claudio Agostinelli
 C
 C    This program is free software; you can redistribute it and/or modify
 C    it under the terms of the GNU General Public License as published by
@@ -64,6 +65,9 @@ C     dmedia     output   D      NREP*NVAR    the WLE mean
 C     varia     output   D      NREP*NVAR*NVAR the WLE variance and covariance matrix
 C     totpesi   output   D      NREP         the total sum of the weights
 C     pesi      output   D      NREP*NSIZE   the weights
+C     dden      output   D      NREP*NSIZE   the kernel density
+C     dmod      output   D      NREP*NSIZE   the smoothed model
+C     ddelta    output   D      NREP*NSIZE   the Pearson residuals
 C     nsame     output   I      NREP         frequencies of each root
 C     nsol      output   I      1            the total number of solutions
 C     nconv     output   I      1            number of boostrap sampling that 
@@ -136,6 +140,8 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       dimension dmedia(nrep,nvar),varia(nrep,nvar,nvar) 
       dimension totpesi(nrep)
       dimension pesi(nrep,nsize),nsame(nrep)
+      dimension dden(nrep,nsize),dmod(nrep,nsize)
+      dimension ddelta(nrep,nsize)
       dimension rloc(nvar),dvsuno(nsize),dvguno(ngrp)
       dimension rsca(nvar,nvar)
       dimension rlocold(nvar), dmw(nsize,nsize), rnowsold(nvar,nvar)
@@ -361,8 +367,7 @@ C IRAF = 3 Chi Squared disparity
           if(iraf.ne.3) then
              rw(i)=(adelta(i)+duno)/(delta(i)+duno)
           else
-             rw(i)=1-((delta(i)**ddue) / ((delta(i)**ddue) +
-     &       ddue))
+             rw(i)=duno - (delta(i) / (delta(i) + ddue))**ddue
           endif
 
              if(rw(i).lt.dzero) then 
@@ -444,7 +449,9 @@ C      write(*,*) 'rnows :', rnows
          goto 9999
       endif   
 
+C
 C Convergence achieved
+C
 
 C      write(*,*) 'Converge ', iboot
 
@@ -465,6 +472,9 @@ C
 
          do 193 i=1,nsize
             pesi(nsol,i)=rw(i)
+            dden(nsol,i)=d(i)
+            dmod(nsol,i)=rm(i)
+            ddelta(nsol,i)=delta(i)
  193        continue
 
       else
@@ -500,6 +510,9 @@ C
 
                    do 200 i=1,nsize
                       pesi(nsol,i)=rw(i)
+                      dden(nsol,i)=d(i)
+                      dmod(nsol,i)=rm(i)
+                      ddelta(nsol,i)=delta(i)
  200               continue
  290               continue
       endif 

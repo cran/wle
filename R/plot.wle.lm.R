@@ -3,43 +3,43 @@
 #	PLOT.WLE.LM function                                #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@stat.unipd.it                       #
-#	Date: December, 19, 2000                            #
-#	Version: 0.3                                        #
+#	Date: August, 2, 2001                               #
+#	Version: 0.4                                        #
 #                                                           #
-#	Copyright (C) 2000 Claudio Agostinelli              #
+#	Copyright (C) 2001 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
-plot.wle.lm <- function(object, level.weight=0.5, ask = interactive() && .Device != "postscript") {
+plot.wle.lm <- function(x, level.weight=0.5, ask = interactive() && .Device != "postscript", verbose=FALSE, ...) {
 
 old.par <- par(no.readonly=TRUE)
 on.exit(par(old.par))
 
-if (!inherits(object, "wle.lm")) stop("Use only with 'wle.lm' objects")
+if (!inherits(x, "wle.lm")) stop("Invalid 'wle.lm' object")
 
 if (ask) par(ask = TRUE)
  
-if (!is.null(object$model)) {
-ydata <- object$model[,1]
-xdata <- object$model[,-1]
-} else if (!is.null(object$x) & !is.null(object$y)) {
-ydata <- object$y
-xdata <- object$x
+if (!is.null(x$model)) {
+ydata <- x$model[,1]
+xdata <- x$model[,-1]
+} else if (!is.null(x$x) & !is.null(x$y)) {
+ydata <- x$y
+xdata <- x$x
 } else {
 stop("Please, rerun wle.lm with model=TRUE (or x=TRUE and y=TRUE)")
 }
 
 if (level.weight<0 | level.weight >1) {
-cat("plot.wle.lm: level.weight should be between zero and one, set to 0.5 \n")
-level.weight <- 0.5
+    if (verbose) cat("plot.wle.lm: level.weight should be between zero and one, set to 0.5 \n")
+    level.weight <- 0.5
 }
 
-param <- as.matrix(object$coefficients)
-res <- as.matrix(object$residuals)
-y.fit <- as.matrix(object$fitted.values)
-weight <- as.matrix(object$weights)
-tot.weight <- object$tot.weights
-tot.sol <- object$tot.sol
+param <- as.matrix(x$coefficients)
+res <- as.matrix(x$residuals)
+y.fit <- as.matrix(x$fitted.values)
+weight <- as.matrix(x$weights)
+tot.weight <- x$tot.weights
+tot.sol <- x$tot.sol
 
 if (tot.sol>1) {
 par(mfcol=c(tot.sol,tot.sol))

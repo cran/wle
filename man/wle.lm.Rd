@@ -4,7 +4,7 @@
 wle.lm(formula, data=list(), model=TRUE, x=FALSE, 
        y=FALSE, boot=30, group, num.sol=1, raf="HD", 
        smooth=0.031, tol=10^(-6), equal=10^(-3), 
-       max.iter=500, contrasts=NULL)
+       max.iter=500, contrasts=NULL, verbose=FALSE)
 }
 
 \alias{wle.lm}
@@ -44,6 +44,8 @@ wle.lm(formula, data=list(), model=TRUE, x=FALSE,
 
   \item{contrasts}{an optional list. See the \code{contrasts.arg}
     of \code{model.matrix.default}.}
+
+  \item{verbose}{if \code{TRUE} warnings are printed.}
 }
 \description{
 \code{wle.lm} is used to fit linear models via Weighted Likelihood, when the errors are iid from a normal distribution with null mean and unknown variance. The carriers are considered fixed. Note that this estimator is robust against the presence of bad leverage points too.
@@ -70,6 +72,9 @@ Models for \code{wle.lm} are specified symbolically.  A typical model has the fo
 \item{fitted.values}{the fitted values from the estimated model, one column vector for each root found.}
 \item{tot.weights}{the sum of the weights divide by the number of observations, one value for each root found.}
 \item{weights}{the weights associated to each observation, one column vector for each root found.}
+\item{f.density}{the non-parametric density estimation.}
+\item{m.density}{the smoothed model.}
+\item{delta}{the Pearson residuals.}
 \item{freq}{the number of starting points converging to the roots.}
 \item{tot.sol}{the number of solutions found.}
 \item{not.conv}{the number of starting points that does not converge after the \code{imax} iteration are reached.}
@@ -84,11 +89,11 @@ Models for \code{wle.lm} are specified symbolically.  A typical model has the fo
 }
 
 \references{
-Agostinelli, C., (1998). Inferenza statistica robusta basata sulla funzione di verosimiglianza pesata: alcuni sviluppi, \emph{ Ph.D Thesis}, Department of Statistics, University of Padova.
+Agostinelli, C., (1998) Inferenza statistica robusta basata sulla funzione di verosimiglianza pesata: alcuni sviluppi, \emph{ Ph.D Thesis}, Department of Statistics, University of Padova.
 
-Agostinelli, C., Markatou, M., (1998). A one-step robust estimator for regression based on the weighted likelihood reweighting scheme, \emph{ Statistics \& Probability Letters}, Vol. 37, n. 4, 341-350.
+Agostinelli, C., Markatou, M., (1998) A one-step robust estimator for regression based on the weighted likelihood reweighting scheme, \emph{ Statistics \& Probability Letters}, Vol. 37, n. 4, 341-350.
 
-Agostinelli, C., (1998). Verosimiglianza pesata nel modello di regressione lineare,  \emph{ XXXIX Riunione scientifica della Societ\`a Italiana di Statistica}, Sorrento 1998.
+Agostinelli, C., (1998) Verosimiglianza pesata nel modello di regressione lineare,  \emph{ XXXIX Riunione scientifica della Societ\`a Italiana di Statistica}, Sorrento 1998.
 
 }
 

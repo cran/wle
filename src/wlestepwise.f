@@ -184,6 +184,8 @@ C      dimension wxidata(nsize,nvar+inter)
       dimension wresid(nmaxsol,nsize) 
       dimension wtotpesi(nmaxsol)
       dimension wpesi(nmaxsol,nsize)
+      dimension dden(nmaxsol,nsize), dmod(nmaxsol,nsize)
+      dimension ddelta(nmaxsol,nsize) 
       dimension nwsame(nmaxsol)
       dimension nmodel(nvar+inter)
       dimension dstep(nrep,nvar+inter+1)
@@ -192,6 +194,9 @@ C      dimension wxidata(nsize,nvar+inter)
       dimension dfparam(nmaxsol,nvar+inter)
       dimension dfvar(nmaxsol)
       dimension dfpesi(nmaxsol,nsize)
+      dimension dfden(nmaxsol,nsize), dfmod(nmaxsol,nsize)
+      dimension dfdelta(nmaxsol,nsize) 
+
       dimension dfresid(nmaxsol,nsize)
       dimension dftot(nmaxsol)
 
@@ -261,8 +266,9 @@ C
       iconv=0
 
        call wleregfix(ydata,xidata,0,nsize,npre,
-     & npre,nboot,ngrp,nmaxsol,iraf,rk,rprec,requal,imax,
-     & dfparam,dfvar,dfresid,dftot,dfpesi,nfsame,nfsol,iconv)
+     &  npre,nboot,ngrp,nmaxsol,iraf,rk,rprec,requal,imax,
+     &  dfparam,dfvar,dfresid,dftot,dfpesi,
+     &  dfden,dfmod,dfdelta,nfsame,nfsol,iconv)
 
 C       write(*,*) 'nsize: ',nsize
 C       write(*,*) 'npre: ',npre
@@ -426,7 +432,8 @@ C         write(*,*) xparam
 
          call wleregfix(ydata,xisub,0,nsize,npre,
      &        jpos,nboot,ngrp,nmaxsol,iraf,rk,rprec,requal,imax,
-     &        wparam,wvaria,wresid,wtotpesi,wpesi,nwsame,nsol,iconv)
+     &        wparam,wvaria,wresid,wtotpesi,wpesi,
+     &        dden,dmod,ddelta,nwsame,nsol,iconv)
       
       endif
  

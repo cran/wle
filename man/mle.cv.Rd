@@ -2,7 +2,8 @@
 \title{Cross Validation Selection Method}
 \usage{
 mle.cv(formula, data=list(), model=TRUE, x=FALSE, 
-       y=FALSE, monte.carlo=500, split, contrasts=NULL)
+       y=FALSE, monte.carlo=500, split, 
+       contrasts=NULL, verbose=FALSE)
 }
 \alias{mle.cv}
 \arguments{
@@ -23,6 +24,8 @@ mle.cv(formula, data=list(), model=TRUE, x=FALSE,
 
   \item{contrasts}{an optional list. See the \code{contrasts.arg}
     of \code{model.matrix.default}.}
+
+  \item{verbose}{if \code{TRUE} warnings are printed.}
 }
 
 \description{The Cross Validation selection method is evaluated for each submodel.}
@@ -50,6 +53,11 @@ mle.cv(formula, data=list(), model=TRUE, x=FALSE,
 \author{Claudio Agostinelli}
 
 %\seealso{}
+
+\references{
+Shao, J., (1993) Linear model selection by Cross-Validation. \emph{Journal American Statistical Association}, 88, 486-494.
+}
+
 
 \examples{
 library(wle)

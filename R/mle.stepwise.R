@@ -3,14 +3,14 @@
 #	MLE.STEPWISE function                               #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@stat.unipd.it                       #
-#	Date: December, 19, 2000                            #
-#	Version: 0.3                                        #
+#	Date: August,  2, 2001                              #
+#	Version: 0.4                                        #
 #                                                           #
-#	Copyright (C) 2000 Claudio Agostinelli              #
+#	Copyright (C) 2001 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
-mle.stepwise <- function(formula, data=list(), model=TRUE, x=FALSE, y=FALSE, type="Forward", f.in=4.0, f.out=4.0, contransts=NULL)
+mle.stepwise <- function(formula, data=list(), model=TRUE, x=FALSE, y=FALSE, type="Forward", f.in=4.0, f.out=4.0, contransts=NULL, verbose=FALSE)
 {
 
 ntype <- switch(type,
@@ -27,6 +27,7 @@ ntype <- switch(type,
     mf$type <- mf$f.in <- mf$f.out <- NULL
     mf$max.iter <- mf$contrasts <- NULL
     mf$model <- mf$x <- mf$y <- NULL
+    mf$verbose <- NULL
     mf$drop.unused.levels <- TRUE
     mf[[1]] <- as.name("model.frame")
     mf <- eval(mf, sys.frame(sys.parent()))
@@ -48,11 +49,11 @@ if (is.null(size <- nrow(xdata)) | is.null(nvar <- ncol(xdata))) stop("'x' must 
 if (length(ydata)!=size) stop("'y' and 'x' are not compatible")
 
 if (size<nvar+1) {
-stop("Number of observation must be at least equal to the number of predictors (including intercept) + 1")
+    stop("Number of observation must be at least equal to the number of predictors (including intercept) + 1")
 }
 
 if (f.in<0 | f.out<0) {
-stop("f.in and f.out can not be negative")
+    stop("f.in and f.out can not be negative")
 }
 
 nrep_2^nvar-1
@@ -91,12 +92,13 @@ if (ret.y)
 
 dn <- colnames(xdata)
 
+if (z$imodel>0) {
 if (z$imodel==1) {
 names(result$step) <- c(dn," ")
 } else {
 dimnames(result$step) <- list(NULL,c(dn," "))
 }
-
+}
 
 class(result) <- "mle.stepwise"
 
@@ -105,7 +107,7 @@ return(result)
 }
 
 
-summary.mle.stepwise <- function (object, num.max=20, ...) {
+summary.mle.stepwise <- function (object, num.max=20, verbose=FALSE, ...) {
 
 z <- .Alias(object)
 if (is.null(z$terms)) {
@@ -113,8 +115,8 @@ if (is.null(z$terms)) {
 }
 
 if (num.max<1) {
-cat("summary.mle.stepwise: num.max can not less than 1, num.max=1 \n")
-num.max <- 1
+    if (verbose) cat("summary.mle.stepwise: num.max can not less than 1, num.max=1 \n")
+    num.max <- 1
 }
 
 ans <- list()

@@ -51,13 +51,12 @@ wle.t.test(x, y = NULL, alternative = c("two.sided", "less", "greater"),
   \item{equal}{the absolute value for which two roots are considered the same. (This parameter must be greater than \code{tol}).}
 
   \item{max.iter}{maximum number of iterations.}
-
-
-
 }
+
 \description{
-  wle.t.test performs one and two sample Weighted Likelihood t-tests on vectors of data. This is a robust version of the classical t-test. It should be used when the majority of the data follows a normal distribution.
+  \code{wle.t.test} performs one and two sample Weighted Likelihood t-tests on vectors of data. This is a robust version of the classical t-test. It should be used when the majority of the data follows a normal distribution.
 }
+
 \details{
   If \code{paired} is \code{TRUE} then both \code{x} and \code{y} must
   be specified and they must be the same length.  Missing values are
@@ -118,12 +117,11 @@ wle.t.test(x, y = NULL, alternative = c("two.sided", "less", "greater"),
 
 \references{
 
-Agostinelli, C., (1998). Inferenza statistica robusta basata sulla funzione di verosimiglianza pesata: alcuni sviluppi, \emph{ Ph.D Thesis}, Department of Statistics, University of Padova (in italian).
+Agostinelli, C., (1998) Inferenza statistica robusta basata sulla funzione di verosimiglianza pesata: alcuni sviluppi, \emph{ Ph.D Thesis}, Department of Statistics, University of Padova (in italian).
 
-Agostinelli, C., (1998). Un approccio robusto alla verifica d'ipotesi basato sulla funzione di verosimiglianza pesata - Robust Testing Hypotheses via Weighted Likelihood function, submitted to {\it Statistica}, revised february 2000 (in italian).
+Agostinelli, C., (2001) Un approccio robusto alla verifica d'ipotesi basato sulla funzione di verosimiglianza pesata - Robust Testing Hypotheses via Weighted Likelihood function, in press \emph{Statistica}, (in italian).
 
-Agostinelli, C., Markatou, M. (2001) Test of hypotheses based on the Weighted Likelihood Methodology, in print {\it Statistica Sinica} probably vol. 11, n. 2, Aprile 2001.
-
+Agostinelli, C., and Markatou, M., (2001) Test of hypotheses based on the Weighted Likelihood Methodology, \emph{Statistica Sinica},  vol. 11, n. 2, 499-514.
 }
 
 \author{Claudio Agostinelli}
@@ -170,3 +168,10 @@ wle.t.test(x=c(rnorm(40,0,1),rnorm(40,10,1)),
 
 \keyword{robust}
 \keyword{htest}
+
+
+
+
+
+
+

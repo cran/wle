@@ -1,6 +1,9 @@
 Library wle
 ===========
 
+Version 0.6, 2001/09/05
+Most of the functions return the Pearson residuals, the smoothed model and the non parametric density estimator for each observation. I fix the definition of the SCHI2 Residual Adjustment Function. It is added a preliminary version of a function for the parameter estimation in a univariate normal mixture models.  
+
 Version 0.5, 2001/05/20
 Only minor changes, and minor bug fix
 
@@ -16,7 +19,7 @@ Version 0.2, 1999/12/25
 
 It is added the following functions: wle.onestep, wle.cp, wle.aic, wle.cv, wle.stepwise, wle.normal.multi, plot.wle.lm, plot.wle.cp and some other functions for classical model selection such as mle.cp, mle.aic, mle.cv and plot.mle.cp. All the function related are documented and some examples and datasets are provided. The error report system from the fortran routine code is set up but not working yet.
 
-Version 0.1, 1998/12/1
+Version 0.1, 1998/12/01
 
 This is a small experimental library with only some functions, i.e., wle.normal, wle.smooth and wle.lm, not completly working. No documentation is provided.
 

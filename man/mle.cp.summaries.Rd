@@ -1,7 +1,7 @@
 \name{mle.cp.summaries}
 \title{Summaries and methods for mle.cp}
 \usage{
-summary.mle.cp(object, num.max=20, ...)
+summary.mle.cp(object, num.max=20, verbose=FALSE, ...)
 
 print.mle.cp(x, digits = max(3, getOption("digits") - 3), ...)
 
@@ -15,7 +15,12 @@ print.summary.mle.cp(x, digits = max(3, getOption("digits") - 3), ...)
 \arguments{
  \item{object}{an object of class \code{mle.cp}.}
  \item{x}{an object of class \code{mle.cp} or \code{summary.mle.cp}.}
+ \item{digits}{number of digits to be used for most numbers.}  
  \item{num.max}{the max number of models should be reported.}
+ \item{verbose}{if \code{TRUE} warnings are printed.}
+ \item{...}{additional arguments affecting the summary produced (in
+   \code{summary.mle.cp}) or further arguments passed to or from other methods
+   (in \code{print.mle.cp} and \code{print.summary.mle.cp}).}
 }
 
 \description{All these functions are \code{\link{methods}} for class \code{mle.cp} or \code{summary.mle.cp}.}

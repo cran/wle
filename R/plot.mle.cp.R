@@ -3,26 +3,26 @@
 #	PLOT.MLE.CP function                                #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@stat.unipd.it                       #
-#	Date: December, 19, 2000                            #
-#	Version: 0.3                                        #
+#	Date: August, 2, 2001                               #
+#	Version: 0.4                                        #
 #                                                           #
-#	Copyright (C) 2000 Claudio Agostinelli              #
+#	Copyright (C) 2001 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
-plot.mle.cp <- function(object, base.line=0, num.max=20, plot.it=TRUE, log.scale=FALSE, xlab="Number of Predictors", ylab=NULL)
+plot.mle.cp <- function(x, base.line=0, num.max=20, plot.it=TRUE, log.scale=FALSE, xlab="Number of Predictors", ylab=NULL, verbose=FALSE, ...)
 {
 
-z <- .Alias(object)
+z <- .Alias(x)
 if (is.null(z$terms)) {
     stop("invalid \'mle.cp\' object")
 }
 
-cp <- object$cp
+cp <- x$cp
 
 if (num.max<1) {
-cat("plot.mle.cp: num.max can not less than 1, num.max=1 \n")
-num.max <- 1
+    if (verbose) cat("plot.mle.cp: num.max can not less than 1, num.max=1 \n")
+    num.max <- 1
 }
 
 if(is.null(nrow(cp)) | nrow(cp)==1) {
@@ -31,14 +31,13 @@ if(is.null(nrow(cp)) | nrow(cp)==1) {
     num.model <- nrow(cp) 
 }
 
-if(num.model<num.max)
-{
-cat("plot.mle.cp: The number of models is less than num.max \n")
-num.max <- num.model
+if (num.model<num.max) {
+    if (verbose) cat("plot.mle.cp: The number of models is less than num.max \n")
+    num.max <- num.model
 }
 
-if(is.null(ncol(cp))) {
-stop("No models to plot")
+if (is.null(ncol(cp))) {
+    stop("No models to plot")
 } else {
 nvar <- ncol(cp)-1
 }

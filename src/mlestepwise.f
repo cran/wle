@@ -15,13 +15,13 @@ C             ITALIA
 C
 C     E-mail: claudio@stat.unipd.it
 C
-C     July, 6, 2000
+C     September, 6, 2001
 C
-C     Version: 0.2
+C     Version: 0.3
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
-C    Copyright (C) 2000 Claudio Agostinelli
+C    Copyright (C) 2001 Claudio Agostinelli
 C
 C    This program is free software; you can redistribute it and/or modify
 C    it under the terms of the GNU General Public License as published by
@@ -186,7 +186,7 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       istep=1
 
       do 1 i=1, nsize
-         dpesi(i)=1.0d00
+         dpesi(i)=duno
  1    continue
 
       if(ntype.eq.3) then
@@ -223,13 +223,13 @@ C
 
             mediay=0.0d00
              do 3200 i=1,nsize
-                mediay=mediay+dpesi(i)*ydata(i)
+                mediay=mediay+ydata(i)
  3200        continue
-             mediay=mediay/dtotpesi
+             mediay=mediay/dsize
 
              dvarmod=0.0d00
              do 3100 i=1,nsize
-                dvarmod=dvarmod+dpesi(i)*(ydata(i)-mediay)**ddue
+                dvarmod=dvarmod+(ydata(i)-mediay)**ddue
  3100        continue
 
           elseif(ntype.eq.2) then
@@ -263,12 +263,8 @@ C         write(*,*) xparam
                 
           endif  
 
- 9999 continue
-
-C      write(*,*) 'nmodel: ', nmodel
-C      write(*,*) 'ntype: ', ntype
-      
-
+9999  continue
+      write(*,*) ''
       ipos=1
       ntotin=0
 
@@ -355,7 +351,6 @@ C         write(*,*) xparam
  1090       continue
 
 C         write(*,*) 'avaria ',avaria
-C         write(*,*) 'dvar ',dvar
 C         write(*,*) 'dvarmod ',dvarmod
 
          if (ntype.eq.1) then

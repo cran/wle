@@ -1,6 +1,7 @@
-      SUBROUTINE WLENORM (DATI,NSIZE,NBOOT,NGRP,NREP,IRAF,RK,
-     & RPREC,REQUAL,IMAX,dmedia,varia,totpesi,pesi,nsame,nsol,
-     & nconv)
+      SUBROUTINE WLENORM (DDATI,NSIZE,NLENGTH,NBOOT,NGRP,NREP,
+     & IRAF,RK,
+     & RPREC,REQUAL,IMAX,dmedia,varia,totpesi,pesi,
+     & dden,dmod,ddelta,nsame,nsol,nconv)
 
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
@@ -15,13 +16,13 @@ C             ITALIA
 C
 C     E-mail: claudio@stat.unipd.it
 C
-C     December, 19 2000
+C     August, 7, 2001
 C
-C     Version: 0.3
+C     Version: 0.5
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
-C    Copyright (C) 2000 Claudio Agostinelli
+C    Copyright (C) 2001 Claudio Agostinelli
 C
 C    This program is free software; you can redistribute it and/or modify
 C    it under the terms of the GNU General Public License as published by
@@ -41,14 +42,15 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
 C     PARAMETER:
 C     NAME:     I/O:    TYPE:  DIMENSIONS:   DESCRIPTIONS:
-C     DATI      input    D      NSIZE        vector of the data
+C     DDATI     input    D      NLENGTH      vector of the data
 C     NSIZE     input    I      1            length of the data 
+C     NLENGTH   input    I      1            
 C     NBOOT     input    I      1            number of bootstrap replication
 C     NGRP      input    I      1            dimension of the subsample 
 C     NREP      input    I      1            number of solution be reported
 C     IRAF      input    I      1            type of RAF
 C                                            1: Hellinger distance 
-C                                            2: Negative Exponentia`l disparity 
+C                                            2: Negative Exponential disparity 
 C                                            3: Chi squared disparity
 C     RK        input    D      1            smoothing parameter
 C     RPREC     input    D      1            precision of the convergence 
@@ -61,6 +63,9 @@ C     dmedia     output   D      NREP         the WLE mean
 C     varia     output   D      NREP         the WLE variance
 C     totpesi   output   D      NREP         the total sum of the weights
 C     pesi      output   D      NREP*NSIZE   the weights
+C     dden      output   D      NREP*NSIZE   the kernel density
+C     dmod      output   D      NREP*NSIZE   the smoothed model
+C     delta     output   D      NREP*NSIZE   the Pearson residuals
 C     nsame     output   I      NREP         frequencies of each root
 C     nsol      output   I      1            the total number of solutions
 C     nconv     output   I      1            number of boostrap sampling that 
@@ -110,10 +115,13 @@ C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       dimension d(nsize),rm(nsize),delta(nsize),adelta(nsize)
       dimension ds(nsize),rw(nsize)
+      dimension ddati(nlength)
       dimension dati(nsize)
       dimension dmedia(nrep),varia(nrep), totpesi(nrep)
       dimension pesi(nrep,nsize),nsame(nrep)
-  
+      dimension dden(nrep,nsize),dmod(nrep,nsize) 
+      dimension ddelta(nrep,nsize)
+
       dimension sub(ngrp), nstart(nsize)
       dimension nrand(nboot,ngrp)
 
@@ -124,6 +132,10 @@ C     the genprm subroutine generate a permuation of an array
       external genprm
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+
+      do 1 i=1,nsize
+         dati(i)=ddati(i)
+ 1    continue
 
       do 30 i=1,nrep
          nsame(i)=0
@@ -233,8 +245,7 @@ C IRAF = 3 Chi Squared disparity
           if(iraf.ne.3) then
              rw(i)=(adelta(i)+duno)/(delta(i)+duno)
           else
-             rw(i)=1-((delta(i)**ddue) / ((delta(i)**ddue) +
-     &       ddue))
+             rw(i)=duno - (delta(i) / (delta(i) + ddue))**ddue
           endif
 
              if(rw(i).lt.dzero) then 
@@ -246,6 +257,7 @@ C IRAF = 3 Chi Squared disparity
              
          else
              rw(i)=dzero
+             delta(i)=duno/rerr
          endif         
  140   continue
 
@@ -295,6 +307,10 @@ C
          totpesi(nsol)=tot
          do 170 i=1,nsize
             pesi(nsol,i)=rw(i)
+            dden(nsol,i)=d(i)            
+            dmod(nsol,i)=rm(i)
+            ddelta(nsol,i)=delta(i)
+
  170     continue
       else
          do 180 isol=1,nsol
@@ -313,6 +329,9 @@ C
       		   totpesi(nsol)=tot
                    do 200 i=1,nsize
                       pesi(nsol,i)=rw(i)
+                      dden(nsol,i)=d(i)            
+                      dmod(nsol,i)=rm(i)
+                      ddelta(nsol,i)=delta(i)
  200               continue
  190               continue
       endif 

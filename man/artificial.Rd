@@ -14,6 +14,7 @@ data(artificial)
   \code{artificial} is matrix with 75 cases (rows) and 4 variables
   (columns) where the last column is the dependent variable,
   \code{y.artificial} and \code{x.artificial} are also available.
+}
 
 \source{
   Hawkins, D.M., Bradu, D., and Kass, G.V. (1984)

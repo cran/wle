@@ -10,8 +10,7 @@
 #                                                           #
 #############################################################
 
-wle.smooth <- function(weight=0.31,costant=3,level=0.2,dimension=1,raf="HD",interval=c(0.00001,0.5),tol=10^-6,max.iter=1000)
-{
+wle.smooth <- function(weight=0.31,costant=3,level=0.2,dimension=1,raf="HD",interval=c(0.00001,0.5),tol=10^-6,max.iter=1000) {
 
 raf <- switch(raf,
 	HD = 1,

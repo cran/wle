@@ -1,7 +1,7 @@
 \name{wle.cv.summaries}
 \title{Summaries and methods for wle.cv}
 \usage{
-summary.wle.cv(object, num.max=20, ...)
+summary.wle.cv(object, num.max=20, verbose=FALSE, ...)
 
 print.wle.cv(x, digits = max(3, getOption("digits") - 3), ...)
 
@@ -15,7 +15,12 @@ print.summary.wle.cv(x, digits = max(3, getOption("digits") - 3), ...)
 \arguments{
  \item{object}{an object of class \code{wle.cv}.}
  \item{x}{an object of class \code{wle.cv} or \code{summary.wle.cv}.}
+ \item{digits}{number of digits to be used for most numbers.}
  \item{num.max}{the max number of models should be reported.}
+ \item{verbose}{if \code{TRUE} warnings are printed.}
+ \item{...}{additional arguments affecting the summary produced (in
+   \code{summary.wle.cv}) or further arguments passed to or from other methods
+   (in \code{print.wle.cv} and \code{print.summary.wle.cv}).}
 }
 
 \description{All these functions are \code{\link{methods}} for class \code{wle.cv} or \code{summary.wle.cv}.}

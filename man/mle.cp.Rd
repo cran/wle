@@ -2,7 +2,7 @@
 \title{Mallows Cp}
 \usage{
 mle.cp(formula, data=list(), model=TRUE, x=FALSE, 
-       y=FALSE, var.full=0, contrasts=NULL)
+       y=FALSE, var.full=0, contrasts=NULL, verbose=FALSE)
 }
 \alias{mle.cp}
 \arguments{
@@ -20,6 +20,9 @@ mle.cp(formula, data=list(), model=TRUE, x=FALSE,
 
   \item{contrasts}{an optional list. See the \code{contrasts.arg}
     of \code{model.matrix.default}.}
+
+  \item{verbose}{if \code{TRUE} warnings are printed.}
+
 }
 
 \description{The Mallows Cp is evaluated for each submodel.}
@@ -50,6 +53,10 @@ mle.cp(formula, data=list(), model=TRUE, x=FALSE,
 }
 
 \author{Claudio Agostinelli}
+
+\references{
+Mallows, C.L., (1973) Some comments on Cp, \emph{Technometrics}, 15, 661-675.
+}
 
 %\seealso{}
 

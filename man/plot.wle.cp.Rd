@@ -1,21 +1,24 @@
 \name{plot.wle.cp}
 \title{Plot the Weighted Mallows Cp}
 \usage{
-plot.wle.cp(object, base.line=0, num.max=20, 
+plot.wle.cp(x, base.line=0, num.max=20, 
            plot.it=TRUE, log.scale=FALSE, 
-           xlab="Number of Predictors", ylab=NULL)
+           xlab="Number of Predictors", ylab=NULL,
+           verbose=FALSE, ...)
 }
 
 \alias{plot.wle.cp}
 
 \arguments{
- \item{object}{an object of class \code{wle.cp}.}
+ \item{x}{an object of class \code{wle.cp}.}
  \item{base.line}{the intercept of the line to split the submodels in acceptable (good) and not-acceptable (bad), (the slope is always one).}
  \item{num.max}{maximum number of submodels plotted.}
  \item{plot.it}{if TRUE the graph is plotted.}
  \item{log.scale}{if TRUE the y-axis as log10 scale.}
  \item{xlab}{a title for the x axis.}
  \item{ylab}{a title for the y axis.}
+ \item{verbose}{if \code{TRUE} warnings are printed.}
+ \item{...}{graphical parameters can be given as arguments.}
 }
 
 \description{Plot the weighted Mallows Cp based on weighted likelihood.}
@@ -30,13 +33,13 @@ plot.wle.cp(object, base.line=0, num.max=20,
 
 \references{
 
-Agostinelli, C., (1999). Robust model selection in regression via weighted likelihood methodology, \emph{ Working Paper n. 1999.4}, Department of Statistics, Universiy of Padova.
+Agostinelli, C., (1999) Robust model selection in regression via weighted likelihood methodology, \emph{ Working Paper n. 1999.4}, Department of Statistics, Universiy of Padova.
 
-Agostinelli, C., (1999). Robust model selection in regression via weighted likelihood methodology, submitted to \emph{ Statistics \& Probability Letters}, revised december 1999.
+Agostinelli, C., (1999) Robust model selection in regression via weighted likelihood methodology, submitted to \emph{ Statistics \& Probability Letters}, revised december 1999.
 
-Agostinelli, C., (1998). Inferenza statistica robusta basata sulla funzione di verosimiglianza pesata: alcuni sviluppi, \emph{ Ph.D Thesis}, Department of Statistics, University of Padova.
+Agostinelli, C., (1998) Inferenza statistica robusta basata sulla funzione di verosimiglianza pesata: alcuni sviluppi, \emph{ Ph.D Thesis}, Department of Statistics, University of Padova.
 
-Agostinelli, C., (1998). Verosimiglianza pesata nel modello di regressione lineare,  \emph{ XXXIX Riunione scientifica della Societ\`a Italiana di Statistica}, Sorrento 1998.
+Agostinelli, C., (1998) Verosimiglianza pesata nel modello di regressione lineare,  \emph{ XXXIX Riunione scientifica della Societ\`a Italiana di Statistica}, Sorrento 1998.
 
 }
 

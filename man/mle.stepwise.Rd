@@ -3,7 +3,7 @@
 \usage{
 mle.stepwise(formula, data=list(), model=TRUE, x=FALSE, 
              y=FALSE, type="Forward", f.in=4.0, f.out=4.0, 
-             contransts=NULL)
+             contransts=NULL, verbose=FALSE)
 }
 \alias{mle.stepwise}
 \arguments{
@@ -28,8 +28,10 @@ mle.stepwise(formula, data=list(), model=TRUE, x=FALSE,
 
   \item{f.out}{the out value}
 
-  \item{contrasts}{an optional list. See the \code{contrasts.arg}
+  \item{contransts}{an optional list. See the \code{contrasts.arg}
     of \code{model.matrix.default}.}
+
+  \item{verbose}{if \code{TRUE} warnings are printed.}
 
 }
 
@@ -60,6 +62,20 @@ mle.stepwise(formula, data=list(), model=TRUE, x=FALSE,
 
 \author{Claudio Agostinelli}
 
+\references{
+
+Beale, E.M.L., Kendall, M.G., Mann, D.W., (1967) The discarding of variables in multivariate analysis, \emph{Biometrika}, 54, 357-366.
+
+Efroymson, (1960) Multiple regression analysis, in \emph{Mathematical Methods for Digital Computers}, eds. A. Ralston and H.S. Wilf, 191-203, Wiley, New York.
+
+Garside, M.J., (1965) The best sub-set in multiple regression analysis, \emph{Applied Statistics}, 14, 196-200.
+
+Goldberger, A.S, and Jochems, D.B., (1961) Note on stepwise least squares, \emph{Journal of the American Statistical Association}, 56, 105-110.
+
+Goldberger, A.S., (1961) Stepwise least squares: Residual analysis and specification error, \emph{Journal of the American Statistical Association}, 56, 998-1000.
+
+}
+
 \examples{
 
 library(wle)
@@ -68,7 +84,7 @@ data(hald)
 
 cor(hald)
 
-result <- mle.stepwise(y.hald~x.hald)
+result <- mle.stepwise(y.hald~x.hald, )
 
 summary(result)
 

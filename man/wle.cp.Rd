@@ -6,7 +6,8 @@ wle.cp(formula, data=list(), model=TRUE, x=FALSE,
        y=FALSE, boot=30, group, var.full=0, num.sol=1, 
        raf="HD", smooth=0.031, tol=10^(-6), 
        equal=10^(-3), max.iter=500, min.weight=0.5, 
-       method="full", alpha=2, contrasts=NULL)}
+       method="full", alpha=2, contrasts=NULL, verbose=FALSE)
+}
 \alias{wle.cp}
 \arguments{
   \item{formula}{a symbolic description of the model to be fit.
@@ -37,7 +38,7 @@ wle.cp(formula, data=list(), model=TRUE, x=FALSE,
 
   \item{smooth}{the value of the smoothing parameter.}
 
-  \item{tol}{the absolute accuracy to be used to achieve convergence of the algorithm.}
+  \item{tol}{the absolute accuracy to be used to achieve convergence of the algorithm.}c
 
   \item{equal}{the absolute value for which two roots are considered the same. (This parameter must be greater than \code{tol}).}
 
@@ -51,6 +52,8 @@ wle.cp(formula, data=list(), model=TRUE, x=FALSE,
 
   \item{contrasts}{an optional list. See the \code{contrasts.arg}
     of \code{model.matrix.default}.}
+
+  \item{verbose}{if TRUE warnings are printed.}
 }
 
 \description{The Weighted Mallows Cp is evaluated for each submodel.}

@@ -1,7 +1,7 @@
 \name{mle.stepwise.summaries}
 \title{Accessing summaries for mle.stepwise}
 \usage{
-summary.mle.stepwise(object, num.max=20, ...)
+summary.mle.stepwise(object, num.max=20, verbose=FALSE, ...)
 
 print.mle.stepwise(x, digits = max(3, getOption("digits") - 3), ...)
 
@@ -14,10 +14,16 @@ print.summary.mle.stepwise(x, digits = max(3, getOption("digits") - 3), ...)
 
 \arguments{
  \item{object}{an object of class \code{mle.stepwise}.}
- \item{x}{an object of class \code{mle.stepwise} or \code{summary.mle.stepwise}.}
- \item{num.max}{the number of the last iterations reported.}}
-
+ \item{x}{an object of class \code{mle.stepwise} or
+   \code{summary.mle.stepwise}.}
+ \item{digits}{number of digits to be used for most numbers.}
+ \item{num.max}{the number of the last iterations reported.}
+ \item{verbose}{if \code{TRUE} warnings are printed.}
+ \item{...}{additional arguments affecting the summary produced (in
+   \code{summary.mle.stepwise}) or further arguments passed to or from other methods
+   (in \code{print.mle.stepwise} and \code{print.summary.mle.stepwise}).} 
 }
+
 \description{All these functions are \code{\link{methods}} for class \code{mle.stepwise} or \code{summary.mle.stepwise}.}
 
 %\details{}

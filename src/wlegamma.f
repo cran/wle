@@ -152,8 +152,7 @@ C IRAF = 3 Chi Squared disparity
           if(iraf.ne.3) then
              rw(i)=(adelta(i)+duno)/(delta(i)+duno)
           else
-             rw(i)=1-((delta(i)**ddue) / ((delta(i)**ddue) +
-     &       ddue))
+             rw(i)=duno - (delta(i) / (delta(i) + ddue))**ddue
           endif
 
              if(rw(i).lt.0.0) then 
@@ -165,6 +164,7 @@ C IRAF = 3 Chi Squared disparity
              
          else
              rw(i)=0.0d00
+             delta(i)=1.0d00/rerr
          endif         
  140   continue
 

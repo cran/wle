@@ -1,7 +1,7 @@
 \name{mle.aic.summaries}
 \title{Summaries and methods for mle.aic}
 \usage{
-summary.mle.aic(object, num.max=20, ...)
+summary.mle.aic(object, num.max=20, verbose=FALSE, ...)
 
 print.mle.aic(x, digits = max(3, getOption("digits") - 3), ...)
 
@@ -16,6 +16,11 @@ print.summary.mle.aic(x, digits = max(3, getOption("digits") - 3), ...)
  \item{object}{an object of class \code{mle.aic}.}
  \item{x}{an object of class \code{mle.aic} or \code{summary.mle.aic}.}
  \item{num.max}{the max number of models should be reported.}
+ \item{digits}{number of digits to be used for most numbers.} 
+ \item{verbose}{if \code{TRUE} warnings are printed.}
+ \item{...}{additional arguments affecting the summary produced (in
+   \code{summary.mle.aic}) or further arguments passed to or from other methods
+   (in \code{print.mle.aic} and \code{print.summary.mle.aic}).}
 }
 
 \description{All these functions are \code{\link{methods}} for class \code{mle.aic} or \code{summary.mle.aic}.}

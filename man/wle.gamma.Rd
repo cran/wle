@@ -4,7 +4,7 @@
 wle.gamma(x, boot=30, group, num.sol=1, raf="HD", smooth=0.008, 
           tol=10^(-6), equal=10^(-3), max.iter=500, 
           shape.int=c(0.01,100), shape.tol=10, 
-          use.smooth=TRUE, tol.int)
+          use.smooth=TRUE, tol.int, verbose=FALSE)
 }
 \alias{wle.gamma}
 \alias{print.wle.gamma}
@@ -40,11 +40,12 @@ wle.gamma(x, boot=30, group, num.sol=1, raf="HD", smooth=0.008,
 
   \item{use.smooth}{if \code{FALSE} the unsmoothed model is used. This is usefull when the integration routine does not work well.}
 
-  \item{tol.int}{the absolute accuracy to be used in the integration routine. The default value is \eqn{tol*10^{-4}}.}
+  \item{tol.int}{the absolute accuracy to be used in the integration routine. The default value is \eqn{tol*10^{-4}}.} 
 
+  \item{verbose}{if \code{TRUE} warnings are printed.}
 }
 \description{
-\code{wle.gamma} is a preliminary version; it is used to robust estimate the shape and the scale parameters via Weighted Likelihood, when the majority of the data are from a gamma distribution.
+\code{wle.gamma} is in a preliminary version; it is used to robust estimate the shape and the scale parameters via Weighted Likelihood, when the majority of the data are from a gamma distribution.
 }
 
 \details{
@@ -71,6 +72,9 @@ The Folded Normal distribution is use as kernel. The bandwith is \eqn{smooth*sha
 \item{scale}{the estimator of the scale parameter, one value for each root found.}
 \item{tot.weights}{the sum of the weights divide by the number of observations, one value for each root found.}
 \item{weights}{the weights associated to each observation, one column vector for each root found.}
+\item{f.density}{the non-parametric density estimation.}
+\item{m.density}{the smoothed model.}
+\item{delta}{the Pearson residuals.}
 \item{call}{the match.call().}
 \item{tot.sol}{the number of solutions found.}
 \item{not.conv}{the number of starting points that does not converge after the \code{max.iter} iteration are reached.}

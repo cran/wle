@@ -3,14 +3,14 @@
 #	WLE.CP function                                     #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@stat.unipd.it                       #
-#	Date: December, 19, 2000                            #
-#	Version: 0.3                                        #
+#	Date: August, 2, 2001                               #
+#	Version: 0.4                                        #
 #                                                           #
-#	Copyright (C) 2000 Claudio Agostinelli              #
+#	Copyright (C) 2001 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
-wle.cp <- function(formula, data=list(), model=TRUE, x=FALSE, y=FALSE, boot=30, group, var.full=0, num.sol=1, raf="HD", smooth=0.031, tol=10^(-6), equal=10^(-3), max.iter=500, min.weight=0.5, method="full", alpha=2, contrasts=NULL)
+wle.cp <- function(formula, data=list(), model=TRUE, x=FALSE, y=FALSE, boot=30, group, var.full=0, num.sol=1, raf="HD", smooth=0.031, tol=10^(-6), equal=10^(-3), max.iter=500, min.weight=0.5, method="full", alpha=2, contrasts=NULL, verbose=FALSE)
 {
 
 raf <- switch(raf,
@@ -42,6 +42,7 @@ group <- 0
     mf$min.weight <- mf$max.iter <- mf$raf <- NULL
     mf$var.full <- mf$alpha <- mf$contrasts <- NULL
     mf$model <- mf$x <- mf$y <- mf$method <- NULL
+    mf$verbose <- NULL
     mf$drop.unused.levels <- TRUE
     mf[[1]] <- as.name("model.frame")
     mf <- eval(mf, sys.frame(sys.parent()))
@@ -69,48 +70,48 @@ stop("Number of observations must be at least equal to the number of predictors 
 }
 
 if (group<nvar) {
-group <- max(round(size/4),nvar)
-cat("wle.cp: dimension of the subsample set to default value = ",group,"\n")
+    group <- max(round(size/4),nvar)
+    if (verbose) cat("wle.cp: dimension of the subsample set to default value = ",group,"\n")
 }
 
 maxboot <- sum(log(1:size))-(sum(log(1:group))+sum(log(1:(size-group))))
 
 if (boot<1 | log(boot) > maxboot) {
-stop("Bootstrap replication not in the range")
+    stop("Bootstrap replication not in the range")
 }
 
 
 if (!(num.sol>=1)) {
-cat("wle.cp: number of solution to report set to 1 \n")
-num.sol <- 1
+    if (verbose) cat("wle.cp: number of solution to report set to 1 \n")
+    num.sol <- 1
 }
 
 if (max.iter<1) {
-cat("wle.cp: max number of iteration set to 500 \n")
-max.iter <- 500
+    if (verbose) cat("wle.cp: max number of iteration set to 500 \n")
+    max.iter <- 500
 }
 
 if (smooth<10^(-5)) {
-cat("wle.cp: the smooth parameter seems too small \n")
+    if (verbose) cat("wle.cp: the smooth parameter seems too small \n")
 }
 
-if (tol<0) {
-cat("wle.cp: the accuracy can not be negative, using default value \n")
-tol <- 10^(-6)
+if (tol<=0) {
+    if (verbose) cat("wle.cp: the accuracy must be positive, using default value:  10^(-6) \n")
+    tol <- 10^(-6)
 }
-if (equal<0) {
-cat("wle.cp: the equal parameter can not be negative, using default value \n")
-equal <- 10^(-3)
+if (equal<=tol) {
+    if (verbose) cat("wle.cp: the equal parameter must be greater than tol, using default value: tol+10^(-3)\n")
+    equal <- tol+10^(-3)
 }
 
 if (var.full<0) {
-cat("wle.cp: the variance of the full model can not be negative, using default value \n")
-var.full <- 0
+    if (verbose) cat("wle.cp: the variance of the full model can not be negative, using default value \n")
+    var.full <- 0
 }
 
 if (min.weight<0) {
-cat("wle.cp: the minimum sum of the weights can not be negative, using default value \n")
-min.weight <- 0.5
+    if (verbose) cat("wle.cp: the minimum sum of the weights can not be negative, using default value \n")
+    min.weight <- 0.5
 }
 
   z <- .Fortran("wlecp",
@@ -174,7 +175,7 @@ return(result)
 
 }
 
-summary.wle.cp <- function (object, num.max=20, ...) {
+summary.wle.cp <- function (object, num.max=20, verbose=FALSE, ...) {
 
 z <- .Alias(object)
 if (is.null(z$terms)) {
@@ -182,8 +183,8 @@ if (is.null(z$terms)) {
 }
 
 if (num.max<1) {
-cat("summary.wle.cp: num.max can not less than 1, num.max=1 \n")
-num.max <- 1
+    if (verbose) cat("summary.wle.cp: num.max can not less than 1, num.max=1 \n")
+    num.max <- 1
 }
 
 ans <- list()

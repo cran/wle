@@ -5,7 +5,7 @@ wle.aic(formula, data=list(), model=TRUE, x=FALSE,
         y=FALSE, boot=30, group, var.full=0, num.sol=1, 
         raf="HD", smooth=0.031, tol=10^(-6), 
         equal=10^(-3), max.iter=500, min.weight=0.5, 
-        method="full", alpha=2, contrasts=NULL)
+        method="full", alpha=2, contrasts=NULL, verbose=FALSE)
 }
 \alias{wle.aic}
 \arguments{
@@ -50,6 +50,9 @@ wle.aic(formula, data=list(), model=TRUE, x=FALSE,
 
   \item{contrasts}{an optional list. See the \code{contrasts.arg}
     of \code{model.matrix.default}.}
+
+  \item{verbose}{if \code{TRUE} warnings are printed.}
+
 }
 
 \description{The Weighted Akaike Information Criterion.}
@@ -59,7 +62,11 @@ Models for \code{wle.aic} are specified symbolically.  A typical model has the f
 
 \code{min.weight}: the weighted likelihood equation could have more than one solution. These roots appear for particular situation depending on contamination level and type. The presence of multiple roots in the full model can create some problem in the set of weights we should use. Actually, the selection of the root is done by the minimum scale error provided. Since this choice is not always the one would choose, we introduce the \code{min.weight} parameter in order to choose only between roots that do not down weight everything. This is not still the optimal solution, and perhaps, in the new release, this part will be change. 
 
-\code{method}: this parameter, when set to "reduced",  allows to use weights based on the reduced model. This is strongly discourage since the robust and asymptotic property of this kind of weighted AIC are not as good as the one based on \code{method="full"}.}
+\code{method}: this parameter, when set to "reduced",  allows to use
+weights based on the reduced model. This is strongly discourage since
+the robust and asymptotic property of this kind of weighted AIC are not
+as good as the one based on \code{method="full"}.
+}
 
 \value{
 \code{wle.aic} returns an object of \code{\link{class}} \code{"wle.aic"}.
@@ -86,16 +93,17 @@ Models for \code{wle.aic} are specified symbolically.  A typical model has the f
 }
 \references{
 
-Agostinelli, C., (1999). Robust model selection in regression via weighted likelihood methodology, \emph{ Working Paper n. 1999.4}, Department of Statistics, Universiy of Padova.
+Agostinelli, C., (1999) Robust model selection in regression via weighted likelihood methodology, \emph{Working Paper n. 1999.4}, Department of Statistics, Universiy of Padova.
 
-Agostinelli, C., (1999). Robust model selection in regression via weighted likelihood methodology, submitted to \emph{ Statistics \& Probability Letters}, revised december 1999.
+Agostinelli, C., (1999) Robust model selection in regression via weighted likelihood methodology, submitted to \emph{Statistics \& Probability Letters}, revised december 1999.
 
-Agostinelli, C., (1998). Inferenza statistica robusta basata sulla funzione di verosimiglianza pesata: alcuni sviluppi, \emph{ Ph.D Thesis}, Department of Statistics, University of Padova.
+Agostinelli, C., (1998) Inferenza statistica robusta basata sulla funzione di verosimiglianza pesata: alcuni sviluppi, \emph{Ph.D Thesis}, Department of Statistics, University of Padova.
 
-Agostinelli, C., Markatou, M., (1998). A one-step robust estimator for regression based on the weighted likelihood reweighting scheme, \emph{ Statistics \& Probability Letters}, Vol. 37, n. 4, 341-350.
+Agostinelli, C., Markatou, M., (1998) A one-step robust estimator for regression based on the weighted likelihood reweighting scheme, \emph{Statistics \& Probability Letters}, Vol. 37, n. 4, 341-350.
 
-Agostinelli, C., (1998). Verosimiglianza pesata nel modello di regressione lineare,  \emph{ XXXIX Riunione scientifica della Societ\`a Italiana di Statistica}, Sorrento 1998.
+Agostinelli, C., (1998) Verosimiglianza pesata nel modello di regressione lineare,  \emph{XXXIX Riunione scientifica della Societa' Italiana di Statistica}, Sorrento 1998.
 }
+
 \author{Claudio Agostinelli}
 
 \examples{
@@ -124,3 +132,4 @@ summary(result)
 
 \keyword{regression}
 \keyword{robust}
+

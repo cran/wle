@@ -3,14 +3,14 @@
 #	MLE.CP function                                     #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@stat.unipd.it                       #
-#	Date: December, 19, 2000                            #
-#	Version: 0.3                                        #
+#	Date: August, 2, 2001                               #
+#	Version: 0.4                                        #
 #                                                           #
-#	Copyright (C) 2000 Claudio Agostinelli              #
+#	Copyright (C) 2001 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
-mle.cp <- function(formula, data=list(), model=TRUE, x=FALSE, y=FALSE, var.full=0, contrasts=NULL)
+mle.cp <- function(formula, data=list(), model=TRUE, x=FALSE, y=FALSE, var.full=0, contrasts=NULL, verbose=FALSE)
 {
 
     ret.x <- x
@@ -20,6 +20,7 @@ mle.cp <- function(formula, data=list(), model=TRUE, x=FALSE, y=FALSE, var.full=
     mf <- cl <- match.call()
     mf$var.full <- mf$contrasts <- NULL
     mf$model <- mf$x <- mf$y <- NULL
+    mf$verbose <- NULL
     mf$drop.unused.levels <- TRUE
     mf[[1]] <- as.name("model.frame")
     mf <- eval(mf, sys.frame(sys.parent()))
@@ -47,8 +48,8 @@ stop("Number of observation must be at least equal to the number of predictors (
 }
 
 if (var.full<0) {
-cat("mle.cp: the variance of the full model can not be negative, using default value \n")
-var.full <- 0
+    if (verbose) cat("mle.cp: the variance of the full model can not be negative, using default value \n")
+    var.full <- 0
 }
 
   z <- .Fortran("mlecp",
@@ -94,7 +95,7 @@ return(result)
 
 }
 
-summary.mle.cp <- function (object, num.max=20, ...) {
+summary.mle.cp <- function (object, num.max=20, verbose=FALSE, ...) {
 
 z <- .Alias(object)
 if (is.null(z$terms)) {
@@ -105,8 +106,8 @@ ans <- list()
 cp <- z$cp
 
 if (num.max<1) {
-cat("summary.mle.cp: num.max can not less than 1, num.max=1 \n")
-num.max <- 1
+    if (verbose) cat("summary.mle.cp: num.max can not less than 1, num.max=1 \n")
+    num.max <- 1
 }
 
 if(is.null(nmodel <- nrow(cp))) nmodel <- 1

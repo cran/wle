@@ -1,4 +1,4 @@
-      SUBROUTINE WLECV (YDATA,XDATA,INTER,NSIZE,NVAR,
+       SUBROUTINE WLECV (YDATA,XDATA,INTER,NSIZE,NVAR,
      & NBOOT,NGRP,NREP,NMCCV,NSPLIT,IRAF,RK,
      & RPREC,REQUAL,IMAX,NMAXSOL,DMINPESI,
      & cv,wparam,wvaria,wresid,wtotpesi,wpesi,nwsame,indice,
@@ -176,6 +176,8 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       dimension wresid(nmaxsol,nsize) 
       dimension wtotpesi(nmaxsol)
       dimension wpesi(nmaxsol,nsize)
+      dimension dden(nmaxsol,nsize), dmod(nmaxsol,nsize)
+      dimension ddelta(nmaxsol,nsize) 
       dimension nwsame(nmaxsol)
       dimension nmodel(nvar+inter)
       dimension dconv(nrep)
@@ -258,8 +260,9 @@ C
  65   continue
 
        call wleregfix(ydata,xidata,0,nsize,npre,
-     & npre,nboot,ngrp,nmaxsol,iraf,rk,rprec,requal,imax,
-     & wparam,wvaria,wresid,wtotpesi,wpesi,nwsame,nsol,iconv)
+     &  npre,nboot,ngrp,nmaxsol,iraf,rk,rprec,requal,imax,
+     &  wparam,wvaria,wresid,wtotpesi,wpesi,
+     &  dden,dmod,ddelta,nwsame,nsol,iconv)
 
        if(iconv.eq.nboot) then
           info=1

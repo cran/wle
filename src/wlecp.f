@@ -99,6 +99,8 @@ C                                            does not converg
       dimension resid(nrep*nmaxsol,nsize),wresid(nmaxsol,nsize) 
       dimension totpesi(nrep*nmaxsol),wtotpesi(nmaxsol)
       dimension pesi(nrep*nmaxsol,nsize),wpesi(nmaxsol,nsize)
+      dimension dden(nmaxsol,nsize), dmod(nmaxsol,nsize)
+      dimension ddelta(nmaxsol,nsize) 
       dimension nsame(nrep*nmaxsol), nwsame(nmaxsol)
       dimension nmodel(nvar+inter)
       dimension cp(nrep*nmaxsol,nvar+inter+1)
@@ -154,8 +156,9 @@ C         write(*,*) nmodel
  30      continue
 
        call wleregfix(ydata,xiidata,0,nsize,npre,
-     & ncol,nboot,ngrp,nmaxsol,iraf,rk,rprec,requal,imax,
-     & wparam,wvaria,wresid,wtotpesi,wpesi,nwsame,nsol,nconv)
+     &  ncol,nboot,ngrp,nmaxsol,iraf,rk,rprec,requal,imax,
+     &  wparam,wvaria,wresid,wtotpesi,wpesi,
+     &  dden,dmod,ddelta,nwsame,nsol,nconv)
 
        if(nconv.eq.nboot) then
           info=1

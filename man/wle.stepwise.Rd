@@ -5,7 +5,8 @@ wle.stepwise(formula, data=list(), model=TRUE, x=FALSE,
              y=FALSE, boot=30, group, num.sol=1, raf="HD", 
              smooth=0.031, tol=10^(-6), equal=10^(-3), 
              max.iter=500, min.weight=0.5, type="Forward", 
-             f.in=4.0, f.out=4.0, method="WLE", contrasts=NULL)
+             f.in=4.0, f.out=4.0, method="WLE", 
+             contrasts=NULL, verbose=FALSE)
 }
 \alias{wle.stepwise}
 
@@ -64,6 +65,8 @@ wle.stepwise(formula, data=list(), model=TRUE, x=FALSE,
 
   \item{contrasts}{an optional list. See the \code{contrasts.arg}
     of \code{model.matrix.default}.}
+
+  \item{verbose}{if \code{TRUE} warnings are printed.}
 }
 
 \description{This function performs Weighted Stepwise, Forward and Backward model selection.}
@@ -115,11 +118,11 @@ Models for \code{wle.stepwise} are specified symbolically.  A typical model has 
 
 Agostinelli, C., (2000) Robust stepwise regression, Working Paper n. 2000.10 del Dipartimento di Scienze Statistiche, Universit\`a di Padova, Padova.
 
-Agostinelli, C., (2000) Robust stepwise regression, submitted to  \emph{Journal of Applied Statistics}.
+Agostinelli, C., (2001) Robust stepwise regression, \emph{Journal of Applied Statistics} in press.
 
-Agostinelli, C., (1998). Inferenza statistica robusta basata sulla funzione di verosimiglianza pesata: alcuni sviluppi, \emph{ Ph.D Thesis}, Department of Statistics, University of Padova.
+Agostinelli, C., (1998) Inferenza statistica robusta basata sulla funzione di verosimiglianza pesata: alcuni sviluppi, \emph{Ph.D Thesis}, Department of Statistics, University of Padova.
 
-Agostinelli, C., (1998). Verosimiglianza pesata nel modello di regressione lineare,  \emph{ XXXIX Riunione scientifica della Societ\`a Italiana di Statistica}, Sorrento 1998.
+Agostinelli, C., (1998) Verosimiglianza pesata nel modello di regressione lineare,  \emph{XXXIX Riunione scientifica della Societ\`a Italiana di Statistica}, Sorrento 1998.
 
 }
 

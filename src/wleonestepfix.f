@@ -1,6 +1,7 @@
       SUBROUTINE WLEONESTEPFIX (YDATA,XDATA,INTER,NSIZE,NCOL,
      & NVAR,DPARAM,DVAR,IRAF,RK,
-     & NSTEP,rparam,varia,resid,totpesi,dpesi)
+     & NSTEP,rparam,varia,resid,totpesi,dpesi,
+     & dden,dmod,ddelta)
 
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
@@ -15,13 +16,13 @@ C             ITALIA
 C
 C     E-mail: claudio@stat.unipd.it
 C
-C     October, 10 1999
+C     August, 2 2001
 C
-C     Version: 0.2
+C     Version: 0.3
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
-C    Copyright (C) 1999 Claudio Agostinelli
+C    Copyright (C) 2001 Claudio Agostinelli
 C
 C    This program is free software; you can redistribute it and/or modify
 C    it under the terms of the GNU General Public License as published by
@@ -62,6 +63,10 @@ C     varia     output   D      1            the WLE variance of the residulas
 C     resid     output   D      NSIZE        the WLE residuals
 C     totpesi   output   D      1            the total sum of the weights
 C     dpesi      output   D      NSIZE        the weights
+C     dden       output   D      NSIZE        the kernel density
+C     dmod       output   D      NSIZE        the smoothed model
+C     ddelta     output   D      NSIZE        the Pearson residuals
+
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
@@ -142,9 +147,12 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       dimension rparam(ncol+inter) 
       dimension resid(nsize)
       dimension dpesi(nsize)
+      dimension dden(nsize)
+      dimension dmod(nsize)
+      dimension ddelta(nsize)
+
       dimension dparam(nvar+inter)
 
-C      dimension sing(nsize+nvar+inter)
       dimension xparam(nsize)
       dimension rwmat(nsize,nsize)
       dimension wxidata(nsize,nvar+inter),wydata(nsize)
@@ -262,8 +270,7 @@ C IRAF = 3 Chi Squared disparity
           if(iraf.ne.3) then
              rw(i)=(adelta(i)+duno)/(delta(i)+duno)
           else
-             rw(i)=1-((delta(i)**ddue) / ((delta(i)**ddue) +
-     &       ddue))
+             rw(i)=duno - (delta(i) / (delta(i) + ddue))**ddue             
           endif
 
              if(rw(i).lt.dzero) then 
@@ -275,6 +282,7 @@ C IRAF = 3 Chi Squared disparity
              
          else
              rw(i)=dzero
+             delta(i)=duno/rerr
          endif         
  140  continue
 
@@ -361,6 +369,9 @@ C write down the results and return
 
          do 230 i=1,nsize
             dpesi(i)=rw(i)
+            dden(i)=d(i)
+            dmod(i)=rm(i)
+            ddelta(i)=delta(i)
             resid(i)=rdata(i)
  230     continue
 

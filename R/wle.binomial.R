@@ -3,14 +3,14 @@
 #	WLE.BINOMIAL function                               #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@stat.unipd.it                       #
-#	Date: February, 13, 2001                            #
-#	Version: 0.1                                        #
+#	Date: August, 2, 2001                               #
+#	Version: 0.2                                        #
 #                                                           #
 #	Copyright (C) 2001 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
-wle.binomial <- function(x, size, boot=30, group, num.sol=1, raf="HD", tol=10^(-6), equal=10^(-3), max.iter=500)
+wle.binomial <- function(x, size, boot=30, group, num.sol=1, raf="HD", tol=10^(-6), equal=10^(-3), max.iter=500, verbose=FALSE)
 {
 
 result <- list()
@@ -30,34 +30,34 @@ stop("Number of observation must be at least equal to 1")
 }
 
 if (group<1) {
-group <- max(round(nsize/4),1)
-cat("wle.binomial: dimension of the subsample set to default value: ",group,"\n")
+    group <- max(round(nsize/4),1)
+    if (verbose) cat("wle.binomial: dimension of the subsample set to default value: ",group,"\n")
 }
 
 maxboot <- sum(log(1:nsize))-(sum(log(1:group))+sum(log(1:(nsize-group))))
 
 if (boot<1 | log(boot) > maxboot) {
-stop("Bootstrap replication not in the range")
+    stop("Bootstrap replication not in the range")
 }
 
 if (!(num.sol>=1)) {
-cat("wle.binomial: number of solution to report set to 1 \n")
-num.sol <- 1
+    if (verbose) cat("wle.binomial: number of solution to report set to 1 \n")
+    num.sol <- 1
 }
 
 if (max.iter<1) {
-cat("wle.binomial: max number of iteration set to 500 \n")
-max.iter <- 500
+    if (verbose) cat("wle.binomial: max number of iteration set to 500 \n")
+    max.iter <- 500
 }
 
-if (tol<0) {
-cat("wle.binomial: the accuracy can not be negative, using default value \n")
-tol <- 10^(-6)
+if (tol<=0) {
+    if (verbose) cat("wle.binomial: the accuracy must be positive, using default value: 10^(-6) \n")
+    tol <- 10^(-6)
 }
 
-if (equal<0) {
-cat("wle.binomial: the equal parameter can not be negative, using default value \n")
-equal <- 10^(-3)
+if (equal<=tol) {
+    if (verbose) cat("wle.binomial: the equal parameter must be greater than tol, using default value: tol+10^(-3) \n")
+    equal <- tol+10^(-3)
 }
 
 tot.sol <- 0
@@ -106,11 +106,17 @@ while (tot.sol < num.sol & iboot < boot) {
    if (tot.sol==0) {
       p.store <- p
       w.store <- ww
+      m.store <- mm
+      f.store <- ff
+      d.store <- dd
       tot.sol <- 1
    } else {
       if (min(abs(p.store-p))>equal) {
           p.store <- c(p.store,p)
           w.store <- rbind(w.store,ww)
+          m.store <- rbind(m.store,mm)
+          f.store <- rbind(f.store,ff)
+          d.store <- rbind(d.store,dd)
           tot.sol <- tot.sol + 1
       }
    }
@@ -122,19 +128,31 @@ while (tot.sol < num.sol & iboot < boot) {
 ##### end of while (tot.sol < num.sol & iboot < boot)
 
 if (tot.sol) {
-result$p <- p.store
-result$tot.weights <- sum(ww)/nsize
-result$weights <- w.store
-result$tot.sol <- tot.sol
-result$not.conv <- not.conv
-result$call <- match.call()
+    result$p <- p.store
+    result$tot.weights <- sum(ww)/nsize
+    result$weights <- w.store
+    result$delta <- d.store
+    result$f.density <- f.store
+    result$m.density <- m.store
+    result$tot.sol <- tot.sol
+    result$not.conv <- not.conv
+    result$call <- match.call()
+} else {
+    if (verbose) cat("wle.binomial: No solutions are fuond, checks the parameters\n")
+    result$p <- NA
+    result$tot.weights <- NA
+    result$weights <- rep(NA,nsize)
+    result$delta <- rep(NA,nsize)
+    result$f.density <- rep(NA,nsize)
+    result$m.density <- rep(NA,nsize)
+    result$tot.sol <- 0
+    result$not.conv <- boot
+    result$call <- match.call()
+}
 
 class(result) <- "wle.binomial"
 
 return(result)
-} else{
-stop("No solutions are fuond, checks the parameters")
-}
 }
 
 print.wle.binomial <- function(x, digits = max(3, getOption("digits") - 3), ...)

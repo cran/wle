@@ -2,7 +2,7 @@
 \title{Accessing Linear Model Fits for wle.lm}
 \usage{
 coef.wle.lm(object, ...)
-formula.wle.lm(object, ...)
+formula.wle.lm(x, ...)
 fitted.wle.lm(object, ...)
 model.frame.wle.lm(formula, data, na.action, ...)
 summary.wle.lm(object, root="ALL", ...)
@@ -29,12 +29,17 @@ print.summary.wle.lm.root(x, digits = max(3, getOption("digits") - 3),
 \alias{print.summary.wle.lm.root}
 
 \arguments{
- \item{object}{an object of class \code{wle.lm}.}
+ \item{object}{an object of class \code{wle.lm}.}  
  \item{x}{an object of class \code{wle.lm} or \code{summary.wle.lm}.}
  \item{formula}{a model formula}
  \item{data}{\code{data.frame}, list, \code{environment} or object coercible to \code{data.frame} containing the variables in \code{formula}.}
  \item{na.action}{how \code{NA}s are treated. The default is first, any \code{na.action} attribute of \code{data}, second a \code{na.action} setting of \code{\link{options}}, and third \code{\link{na.fail}} if that is unset. The ``factory-fresh'' default is \code{\link{na.omit}}.}
  \item{root}{the root to be printed, in summary.wle.lm it could be  "ALL", all the roots are printed, or a vector of integers.}
+ \item{digits}{number of digits to be used for most numbers.}
+ \item{signif.stars}{logical; if \code{TRUE}, P-values are additionally encoded
+   visually as ``significance stars'' in order to help scanning of long
+   coefficient tables. It defaults to the \code{show.signif.stars} slot of \code{\link{options}}.}
+ \item{...}{additional arguments.}
 }
 \description{All these functions are \code{\link{methods}} for class \code{wle.lm} or \code{summary.wle.lm}.}
 

@@ -5,7 +5,7 @@ wle.cv(formula, data=list(), model=TRUE, x=FALSE,
        y=FALSE, monte.carlo=500, split, boot=30, 
        group, num.sol=1, raf="HD", smooth=0.031, 
        tol=10^(-6), equal=10^(-3), max.iter=500, 
-       min.weight=0.5, contrasts=NULL)}
+       min.weight=0.5, contrasts=NULL, verbose=FALSE)}
 \alias{wle.cv}
 
 \arguments{
@@ -50,9 +50,12 @@ wle.cv(formula, data=list(), model=TRUE, x=FALSE,
 
   \item{contrasts}{an optional list. See the \code{contrasts.arg}
     of \code{model.matrix.default}.}
+
+  \item{verbose}{if \code{TRUE} warnings are printed.}
 }
 
-\description{ The Weighted Cross-Validation methods is used to choose the best linear model.}
+\description{ The Weighted Cross-Validation methods is used to choose
+  the best linear model.}
 
 \details{
 Models for \code{wle.cv} are specified symbolically.  A typical model has the form \code{response ~ terms} where \code{response} is the (numeric) response vector and \code{terms} is a series of terms which specifies a linear predictor for \code{response}.  A terms specification of the form \code{first+second} indicates all the terms in \code{first} together with all the terms in \code{second} with duplicates removed. A specification of the form \code{first:second} indicates the the set of terms obtained by taking the interactions of all terms in \code{first} with all terms in \code{second}. The specification \code{first*second} indicates the \emph{cross} of \code{first} and \code{second}.  This is the same as \code{first+second+first:second}.
@@ -68,22 +71,23 @@ Models for \code{wle.cv} are specified symbolically.  A typical model has the fo
   The object returned by \code{wle.cv} are:
 
 \item{wcv}{Weighted Cross-Validation for each submodels}
-\item{coefficients}{the parameters estimator, one row vector for each root found and each submodel.}
-\item{scale}{an estimation of the error scale, one value for each root found and each submodel.}
-\item{residuals}{the unweighted residuals from the estimated model, one column vector for each root found and each submodel.}
-\item{tot.weights}{the sum of the weights divide by the number of observations, one value for each root found and each submodel.}
-\item{weights}{the weights associated to each observation, one column vector for each root found and each submodel.}
+\item{coefficients}{the parameters estimator, one row vector for each root found in the full model.}
+\item{scale}{an estimation of the error scale, one value for each root found in the full model.}
+\item{residuals}{the unweighted residuals from the estimated model, one column vector for each root found in the full model.}
+\item{tot.weights}{the sum of the weights divide by the number of observations, one value for each root found in the full model.}
+\item{weights}{the weights associated to each observation, one column vector for each root found in the full model.}
 \item{freq}{the number of starting points converging to the roots.}
 \item{index}{position of the root used for the weights.}
 \item{call}{the match.call().}
-\item{contrasts}{}
-\item{xlevels}{}
+\item{contrasts}{ }
+\item{xlevels}{ }
 \item{terms}{the model frame.}
 \item{model}{if \code{model=TRUE} a matrix with first column the dependent variable and the remain column the explanatory variables for the full model.}
 \item{x}{if \code{x=TRUE} a matrix with the explanatory variables for the full model.}
 \item{y}{if \code{y=TRUE} a vector with the dependent variable.}
 \item{info}{not well working yet, if 0 no error occurred.}
 }
+
 
 \references{
 Agostinelli, C., (1999). Robust model selection by Cross-Validation via weighted likelihood methodology, \emph{Working Paper n. 1999.37}, Department of Statistics, University of Padova.
@@ -126,7 +130,7 @@ summary(result)
 
 }
 
-\keyword{regression
+\keyword{regression}
 \keyword{robust}
 
 

@@ -3,14 +3,14 @@
 #	MLE.CV function                                     #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@stat.unipd.it                       #
-#	Date: December, 19, 2000                            #
-#	Version: 0.3                                        #
+#	Date: August, 2, 2001                               #
+#	Version: 0.4                                        #
 #                                                           #
-#	Copyright (C) 2000 Claudio Agostinelli              #
+#	Copyright (C) 2001 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
-mle.cv <- function(formula, data=list(), model=TRUE, x=FALSE, y=FALSE, monte.carlo=500, split, contrasts=NULL)
+mle.cv <- function(formula, data=list(), model=TRUE, x=FALSE, y=FALSE, monte.carlo=500, split, contrasts=NULL, verbose=FALSE)
 {
 
 if (missing(split)) {
@@ -24,6 +24,7 @@ split <- 0
     mf <- cl <- match.call()
     mf$monte.carlo <- mf$split <- mf$contrasts <- NULL
     mf$model <- mf$x <- mf$y <- NULL
+    mf$verbose <- NULL
     mf$drop.unused.levels <- TRUE
     mf[[1]] <- as.name("model.frame")
     mf <- eval(mf, sys.frame(sys.parent()))
@@ -46,15 +47,15 @@ if (length(ydata)!=size) stop("'y' and 'x' are not compatible")
 
 nrep <- 2^nvar-1
 
-if(size<nvar+1){stop("Number of observation must be at least equal to the number of predictors (including intercept) + 1")}
+if (size<nvar+1) {stop("Number of observation must be at least equal to the number of predictors (including intercept) + 1")}
 
-if(split<nvar+2 | split>(size-2)){
-split <- max(round(size^(3/4)),nvar+2)
-cat("mle.cv: dimension of the split subsample set to default value = ",split,"\n")
+if (split<nvar+2 | split>(size-2)) {
+    split <- max(round(size^(3/4)),nvar+2)
+    if (verbose) cat("mle.cv: dimension of the split subsample set to default value = ",split,"\n")
 }
 maxcarlo <- sum(log(1:size))-(sum(log(1:split))+sum(log(1:(size-split))))
-if(monte.carlo<1 | log(monte.carlo) > maxcarlo){
-stop("MonteCarlo replication not in the range")
+if (monte.carlo<1 | log(monte.carlo) > maxcarlo){
+    stop("MonteCarlo replication not in the range")
 }
 
   z <- .Fortran("mlecv",
@@ -93,7 +94,7 @@ return(result)
 
 }
 
-summary.mle.cv <- function (object, num.max=20, ...) {
+summary.mle.cv <- function (object, num.max=20, verbose=FALSE, ...) {
 
 z <- .Alias(object)
 if (is.null(z$terms)) {
@@ -101,8 +102,8 @@ if (is.null(z$terms)) {
 }
 
 if (num.max<1) {
-cat("summary.mle.cv: num.max can not less than 1, num.max=1 \n")
-num.max <- 1
+    if (verbose) cat("summary.mle.cv: num.max can not less than 1, num.max=1 \n")
+    num.max <- 1
 }
 
 ans <- list()

@@ -1,7 +1,7 @@
 \name{mle.cv.summaries}
 \title{Summaries and methods for mle.cv}
 \usage{
-summary.mle.cv(object, num.max=20, ...)
+summary.mle.cv(object, num.max=20, verbose=FALSE, ...)
 
 print.mle.cv(x, digits = max(3, getOption("digits") - 3), ...)
 
@@ -15,7 +15,13 @@ print.summary.mle.cv(x, digits = max(3, getOption("digits") - 3), ...)
 \arguments{
  \item{object}{an object of class \code{mle.cv}.}
  \item{x}{an object of class \code{mle.cv} or \code{summary.mle.cv}.}
+ \item{digits}{number of digits to be used for most numbers.}
  \item{num.max}{the max number of models should be reported.}
+ \item{verbose}{if \code{TRUE} warnings are printed.}
+ \item{...}{additional arguments affecting the summary produced (in
+   \code{summary.mle.cv}) or further arguments passed to or from other methods
+   (in \code{print.mle.cv} and \code{print.summary.mle.cv}).}
+
 }
 
 \description{All these functions are \code{\link{methods}} for class \code{mle.cv} or \code{summary.mle.cv}.}

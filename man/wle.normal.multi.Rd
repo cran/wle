@@ -1,9 +1,10 @@
 \name{wle.normal.multi}
 \title{Robust Estimation in the Normal Multivariate Model}
 \usage{
-wle.normal.multi_function(x, boot=30, group, num.sol=1,
-                          raf="HD", smooth, tol=10^(-6), 
-                          equal=10^(-3), max.iter=500)
+wle.normal.multi(x, boot=30, group, num.sol=1,
+                 raf="HD", smooth, tol=10^(-6), 
+                 equal=10^(-3), max.iter=500,
+                 verbose=FALSE)
 }
 \alias{wle.normal.multi}
 \arguments{
@@ -30,6 +31,8 @@ wle.normal.multi_function(x, boot=30, group, num.sol=1,
   \item{equal}{the absolute value for which two roots are considered the same. (This parameter must be greater than \code{tol}).}
 
   \item{max.iter}{maximum number of iterations.}
+
+  \item{verbose}{if \code{TRUE} warnings are printed.}
 }
 
 \description{
@@ -48,6 +51,9 @@ wle.normal.multi_function(x, boot=30, group, num.sol=1,
 \item{variance}{the estimator of the covariance matrix, one matrix for each root found.}
 \item{tot.weights}{the sum of the weights divide by the number of observations, one value for each root found.}
 \item{weights}{the weights associated to each observation, one column vector for each root found.}
+\item{f.density}{the non-parametric density estimation.}
+\item{m.density}{the smoothed model.}
+\item{delta}{the Pearson residuals.}
 \item{freq}{the number of starting points converging to the roots.}
 \item{tot.sol}{the number of solutions found.}
 \item{call}{the match.call().}
@@ -57,9 +63,9 @@ wle.normal.multi_function(x, boot=30, group, num.sol=1,
 
 \references{
 
-Markatou, M., Basu, A. and Lindsay, B.G., (1998). Weighted likelihood estimating equations with a bootstrap root search, \emph{ Journal of the American Statistical Association}, 93, 740-750.
+Markatou, M., Basu, A. and Lindsay, B.G., (1998) Weighted likelihood estimating equations with a bootstrap root search, \emph{ Journal of the American Statistical Association}, 93, 740-750.
 
-Agostinelli, C., (1998). Inferenza statistica robusta basata sulla funzione di verosimiglianza pesata: alcuni sviluppi, \emph{ Ph.D Thesis}, Department of Statistics, University of Padova.}
+Agostinelli, C., (1998) Inferenza statistica robusta basata sulla funzione di verosimiglianza pesata: alcuni sviluppi, \emph{ Ph.D Thesis}, Department of Statistics, University of Padova.}
 
 \author{Claudio Agostinelli}
 
@@ -91,5 +97,5 @@ barplot(result$weights,col=2,xlab="Observations",
 \keyword{models}
 \keyword{multivariate}
 \keyword{robust}
- 
- 
+
+

@@ -10,8 +10,7 @@
 #                                                           #
 #############################################################
 
-wle.onestep <- function(formula, data=list(), model=TRUE, x=FALSE, y=FALSE, ini.param, ini.scale, raf="HD", smooth=0.0320018, num.step=1, contrasts=NULL)
-{
+wle.onestep <- function(formula, data=list(), model=TRUE, x=FALSE, y=FALSE, ini.param, ini.scale, raf="HD", smooth=0.031, num.step=1, contrasts=NULL, verbose=FALSE) {
 
 raf <- switch(raf,
 	HD = 1,
@@ -29,6 +28,7 @@ if (raf==-1) stop("Please, choose the RAF: HD=Hellinger Disparity, NED=Negative 
     mf$ini.param <- mf$ini.scale <- mf$smooth <- NULL
     mf$num.step <- mf$raf <- mf$contrasts <- NULL
     mf$model <- mf$x <- mf$y <- NULL
+    mf$verbose <- NULL
     mf$drop.unused.levels <- TRUE
     mf[[1]] <- as.name("model.frame")
     mf <- eval(mf, sys.frame(sys.parent()))
@@ -56,12 +56,12 @@ stop("The initial scale error must be non negative")
 }
 
 if (!(num.step>=1)) {
-cat("wle.onestep: number of steps can not be negative, set to 1 \n")
-num.step <- 1
+    if (verbose) cat("wle.onestep: number of steps can not be negative, set to 1 \n")
+    num.step <- 1
 }
 
 if (smooth<10^(-5)) {
-cat("wle.onestep: the smooth parameter seems too small \n")
+    if (verbose) cat("wle.onestep: the smooth parameter seems too small \n")
 }
 
 ini.var <- ini.scale^2
@@ -82,19 +82,43 @@ ini.var <- ini.scale^2
 	var=double(1),
 	resid=double(size),
 	totweight=double(1),
-	weight=double(size))
+	weight=double(size),
+	density=double(size),
+	model=double(size),
+	delta=double(size),
+        PACKAGE = "wle")
 
-if(z$var>0) {
+if (z$var>0) {
 
-devparam <- sqrt(z$var*diag(solve(t(xdata)%*%diag(z$weight)%*%xdata)))
+    devparam <- sqrt(z$var*diag(solve(t(xdata)%*%diag(z$weight)%*%xdata)))
 
-result$coefficients <- z$param
-result$standard.error <- devparam
-result$scale <- sqrt(z$var)
-result$residuals <- z$resid
-result$fitted.values <- as.vector(xdata%*%z$param)
-result$weights <- z$weight
-result$tot.weights <- z$totweight
+    result$coefficients <- z$param
+    result$standard.error <- devparam
+    result$scale <- sqrt(z$var)
+    result$residuals <- z$resid
+    result$fitted.values <- as.vector(xdata%*%z$param)
+    result$weights <- z$weight
+    result$f.density <- z$density
+    result$m.density <- z$model
+    result$delta <- z$delta
+    result$tot.weights <- z$totweight
+
+} else {
+    if (verbose) cat("The initial estimates do not seems very good: the total sum of the weights is less than number of independent variables\n")
+
+
+    result$coefficients <- rep(NA,nvar)
+    result$standard.error <- rep(NA,nvar)
+    result$scale <- NA
+    result$residuals <- rep(NA,size)
+    result$fitted.values <- rep(NA,size)
+    result$weights <- rep(NA,size)
+    result$f.density <- rep(NA,size)
+    result$m.density <- rep(NA,size)
+    result$delta <- rep(NA,size)
+    result$tot.weights <- NA
+}
+
 result$call <- cl
 result$contrasts <- attr(xdata, "contrasts")
 result$xlevels <- xlev
@@ -108,23 +132,19 @@ if (ret.y)
     result$y <- ydata
 
 if (is.null(names(ini.param))) {
-dn <- colnames(xdata)
+    dn <- colnames(xdata)
 } else {
-dn <- names(ini.param)
+    dn <- names(ini.param)
 }
 
 if (is.null(nrow(result$coefficients))) {
-names(result$coefficients) <- dn
+    names(result$coefficients) <- dn
 } else {
-dimnames(result$coefficients) <- list(NULL,dn)
+    dimnames(result$coefficients) <- list(NULL,dn)
 }
 
 class(result) <- "wle.onestep"
-
 return(result)
-} else {
-stop("The initial estimates do not seems very good: the total sum of the weights is less than number of independent variables")
-}
 }
 
 print.wle.onestep <- function(x, digits = max(3, getOption("digits") - 3), ...)

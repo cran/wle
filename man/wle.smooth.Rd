@@ -29,7 +29,7 @@ wle.smooth(weight=0.31,costant=3,level=0.2,
 
   \item{tol}{the absolute accuracy to be used to achieve convergence of the algorithm.}
 
-  \item{maxiter}{maximum number of iterations.}
+  \item{max.iter}{maximum number of iterations.}
 }
 \description{
 The bandwidth of the kernel is choose for normal model and normal kernel in such a way a contaminated point \code{costant} times away from the mean of the distribution in scale units and mass \code{level} has a weight no bigger than \code{weight}.
@@ -53,11 +53,11 @@ point. iter and estim.prec give the number of iterations used and an approximate
 
 \references{
 
-Agostinelli, C., (1998). Inferenza statistica robusta basata sulla funzione di verosimiglianza pesata: alcuni sviluppi, \emph{ Ph.D. thesis},  Department of Statistics, University of Padova.
+Agostinelli, C., (1998) Inferenza statistica robusta basata sulla funzione di verosimiglianza pesata: alcuni sviluppi, \emph{ Ph.D. thesis},  Department of Statistics, University of Padova.
 
-Markatou, M., Basu, A. and Lindsay, B.G. (1998). Weighted likelihood estimating equations with a bootstrap root search. \emph{ Journal of the American Statistical Association}, 93, 740-750.
+Markatou, M., Basu, A. and Lindsay, B.G. (1998) Weighted likelihood estimating equations with a bootstrap root search. \emph{ Journal of the American Statistical Association}, 93, 740-750.
 
-Agostinelli, C., and Markatou, M., (2000). Test of hypotheses based on the Weighted Likelihood Methodology, \emph{Statistica Sinica}, in press.
+Agostinelli, C., and Markatou, M., (2001) Test of hypotheses based on the Weighted Likelihood Methodology, \emph{Statistica Sinica},  vol. 11, n. 2, 499-514.
 }
 
 \author{Claudio Agostinelli}

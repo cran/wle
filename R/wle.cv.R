@@ -3,14 +3,14 @@
 #	WLE.CV function                                     #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@stat.unipd.it                       #
-#	Date: December, 19, 2000                            #
-#	Version: 0.3                                        #
+#	Date: August, 2, 2001                               #
+#	Version: 0.4                                        #
 #                                                           #
-#	Copyright (C) 2000 Claudio Agostinelli              #
+#	Copyright (C) 2001 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
-wle.cv <- function(formula, data=list(), model=TRUE, x=FALSE, y=FALSE, monte.carlo=500, split, boot=30, group, num.sol=1, raf="HD", smooth=0.031, tol=10^(-6), equal=10^(-3), max.iter=500, min.weight=0.5, contrasts=NULL)
+wle.cv <- function(formula, data=list(), model=TRUE, x=FALSE, y=FALSE, monte.carlo=500, split, boot=30, group, num.sol=1, raf="HD", smooth=0.031, tol=10^(-6), equal=10^(-3), max.iter=500, min.weight=0.5, contrasts=NULL, verbose=FALSE)
 {
 
 raf <- switch(raf,
@@ -40,6 +40,7 @@ split <- 0
     mf$min.weight <- mf$max.iter <- mf$raf <- NULL
     mf$contrasts <- NULL
     mf$model <- mf$x <- mf$y <- NULL
+    mf$verbose <- NULL
     mf$drop.unused.levels <- TRUE
     mf[[1]] <- as.name("model.frame")
     mf <- eval(mf, sys.frame(sys.parent()))
@@ -67,54 +68,54 @@ stop("Number of observations must be at least equal to the number of predictors 
 }
 
 if (group<nvar) {
-group <- max(round(size/4),nvar)
-cat("wle.cv: dimension of the subsample set to default value = ",group,"\n")
+    group <- max(round(size/4),nvar)
+    if (verbose) cat("wle.cv: dimension of the subsample set to default value = ",group,"\n")
 }
 
 maxboot <- sum(log(1:size))-(sum(log(1:group))+sum(log(1:(size-group))))
 
 if (boot<1 | log(boot) > maxboot) {
-stop("Bootstrap replication not in the range")
+    stop("Bootstrap replication not in the range")
 }
 
 if (split<nvar+2 | split>(size-2)) {
-split <- max(round(size^(3/4)),nvar+2)
-cat("wle.cv: dimension of the split subsample set to default value = ",split,"\n")
+    split <- max(round(size^(3/4)),nvar+2)
+    if (verbose) cat("wle.cv: dimension of the split subsample set to default value = ",split,"\n")
 }
 
 maxcarlo <- sum(log(1:size))-(sum(log(1:split))+sum(log(1:(size-split))))
 
 if (monte.carlo<1 | log(monte.carlo) > maxcarlo) {
-stop("MonteCarlo replication not in the range")
+    stop("MonteCarlo replication not in the range")
 }
 
 if (!(num.sol>=1)) {
-cat("wle.cv:number of solution to report set to 1 \n")
-num.sol <- 1
+    if (verbose) cat("wle.cv:number of solution to report set to 1 \n")
+    num.sol <- 1
 }
 
 if (max.iter<1) {
-cat("wle.cv: max number of iteration set to 500 \n")
-max.iter <- 500
+    if (verbose) cat("wle.cv: max number of iteration set to 500 \n")
+    max.iter <- 500
 }
 
 if (smooth<10^(-5)) {
-cat("wle.cv: the smooth parameter seems too small \n")
+    if (verbose) cat("wle.cv: the smooth parameter seems too small \n")
 }
 
-if (tol<0) {
-cat("wle.cv: the accuracy can not be negative, using default value \n")
-tol <- 10^(-6)
+if (tol<=0) {
+    if (verbose) cat("wle.cv: the accuracy must be positive, using default value: 10^(-6) \n")
+    tol <- 10^(-6)
 }
 
-if (equal<0) {
-cat("wle.cv: the equal parameter can not be negative, using default value \n")
-equal <- 10^(-3)
+if (equal<=tol) {
+    if (verbose) cat("wle.cv: the equal parameter must be greater than tol, using default value: tol+10^(-3) \n")
+    equal <- tol+10^(-3)
 }
 
 if (min.weight<0) {
-cat("wle.cv: the minimum sum of the weights can not be negative, using default value \n")
-min.weight <- 0.5
+    if (verbose) cat("wle.cv: the minimum sum of the weights can not be negative, using default value \n")
+    min.weight <- 0.5
 }
 
   z <- .Fortran("wlecv",
@@ -179,11 +180,9 @@ dimnames(result$wcv) <- list(NULL,c(dn,"wcv"))
 class(result) <- "wle.cv"
 
 return(result)
-
 }
 
-
-summary.wle.cv <- function (object, num.max=20, ...) {
+summary.wle.cv <- function (object, num.max=20, verbose=FALSE, ...) {
 
 z <- .Alias(object)
 if (is.null(z$terms)) {
@@ -191,8 +190,8 @@ if (is.null(z$terms)) {
 }
 
 if (num.max<1) {
-cat("summary.wle.cv: num.max can not less than 1, num.max=1 \n")
-num.max <- 1
+    if (verbose) cat("summary.wle.cv: num.max can not less than 1, num.max=1 \n")
+    num.max <- 1
 }
 
 ans <- list()

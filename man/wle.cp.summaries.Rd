@@ -1,7 +1,7 @@
 \name{wle.cp.summaries}
 \title{Summaries and methods for wle.cp}
 \usage{
-summary.wle.cp(object, num.max=20, ...)
+summary.wle.cp(object, num.max=20, verbose=FALSE, ...)
 
 print.wle.cp(x, digits = max(3, getOption("digits") - 3), ...)
 
@@ -15,7 +15,12 @@ print.summary.wle.cp(x, digits = max(3, getOption("digits") - 3), ...)
 \arguments{
  \item{object}{an object of class \code{wle.cp}.}
  \item{x}{an object of class \code{wle.cp} or \code{summary.wle.cp}.}
+ \item{digits}{number of digits to be used for most numbers.}
  \item{num.max}{the max number of models should be reported.}
+ \item{verbose}{if \code{TRUE} warnings are printed.}
+ \item{...}{additional arguments affecting the summary produced (in
+   \code{summary.wle.cp}) or further arguments passed to or from other methods
+   (in \code{print.wle.cp} and \code{print.summary.wle.cp}).}
 }
 
 \description{All these functions are \code{\link{methods}} for class \code{wle.cp} or \code{summary.wle.cp}.}

@@ -3,7 +3,8 @@
 \usage{
 wle.onestep(formula, data=list(), model=TRUE, x=FALSE, 
             y=FALSE, ini.param, ini.scale, raf="HD", 
-            smooth=0.0320018, num.step=1, contrasts=NULL)
+            smooth=0.031, num.step=1, 
+            contrasts=NULL, verbose=FALSE)
 }
 \alias{wle.onestep}
 
@@ -37,6 +38,8 @@ wle.onestep(formula, data=list(), model=TRUE, x=FALSE,
 
   \item{contrasts}{an optional list. See the \code{contrasts.arg}
     of \code{model.matrix.default}.}
+
+  \item{verbose}{if \code{TRUE} warnings are printed.}
 }
 
 \description{This function evaluate the One-step weighted likelihood estimator for the regression and scale parameters.}
@@ -57,6 +60,9 @@ wle.onestep(formula, data=list(), model=TRUE, x=FALSE,
 \item{fitted.values}{the fitted values from the estimated model.}
 \item{tot.weights}{the sum of the weights divide by the number of observations.}
 \item{weights}{the weights associated to each observation.}
+\item{f.density}{the non-parametric density estimation.}
+\item{m.density}{the smoothed model.}
+\item{delta}{the Pearson residuals.}
 \item{call}{the match.call().}
 \item{contrasts}{}
 \item{xlevels}{}
@@ -69,13 +75,13 @@ wle.onestep(formula, data=list(), model=TRUE, x=FALSE,
 
 \references{
 
-Agostinelli, C., (1997). A one-step robust estimator based on the weighted likelihood methodology, \emph{ Working Paper n. 1997.16}, Department of Statistics, University of Padova.
+Agostinelli, C., (1997) A one-step robust estimator based on the weighted likelihood methodology, \emph{ Working Paper n. 1997.16}, Department of Statistics, University of Padova.
 
-Agostinelli, C., (1998). Inferenza statistica robusta basata sulla funzione di verosimiglianza pesata: alcuni sviluppi, \emph{ Ph.D Thesis}, Department of Statistics, University of Padova.
+Agostinelli, C., (1998) Inferenza statistica robusta basata sulla funzione di verosimiglianza pesata: alcuni sviluppi, \emph{ Ph.D Thesis}, Department of Statistics, University of Padova.
 
-Agostinelli, C., Markatou, M., (1998). A one-step robust estimator for regression based on the weighted likelihood reweighting scheme, \emph{ Statistics \& Probability Letters}, Vol. 37, n. 4, 341-350.
+Agostinelli, C., Markatou, M., (1998) A one-step robust estimator for regression based on the weighted likelihood reweighting scheme, \emph{ Statistics \& Probability Letters}, Vol. 37, n. 4, 341-350.
 
-Agostinelli, C., (1998). Verosimiglianza pesata nel modello di regressione lineare,  \emph{ XXXIX Riunione scientifica della Societ\`a Italiana di Statistica}, Sorrento 1998.
+Agostinelli, C., (1998) Verosimiglianza pesata nel modello di regressione lineare,  \emph{ XXXIX Riunione scientifica della Societ\`a Italiana di Statistica}, Sorrento 1998.
 
 }
 

@@ -2,7 +2,8 @@
 \title{Akaike Information Criterion}
 \usage{
 mle.aic(formula, data=list(), model=TRUE, x=FALSE, 
-        y=FALSE, var.full=0, alpha=2, contrasts = NULL)
+        y=FALSE, var.full=0, alpha=2, contrasts = NULL, 
+        verbose=FALSE)
 }
 \alias{mle.aic}
 \arguments{
@@ -22,6 +23,9 @@ mle.aic(formula, data=list(), model=TRUE, x=FALSE,
 
  \item{contrasts}{an optional list. See the \code{contrasts.arg}
     of \code{model.matrix.default}.}
+
+ \item{verbose}{if \code{TRUE} warnings are printed.}
+
 }
 
 \description{The Akaike Information Criterion is evaluated for each submodel.}
@@ -50,6 +54,10 @@ mle.aic(formula, data=list(), model=TRUE, x=FALSE,
 }
 
 \author{Claudio Agostinelli}
+
+\references{
+Akaike, H., (1973) Information theory and an extension of the maximum likelihood principle, in: B.N. Petrov and F. Cs\'aki, eds., \emph{Proc. 2nd International Symposium of Information Theory}, Akad\'emiai Kiad\'o, Budapest, 267-281.
+}
 
 %\seealso{}
 

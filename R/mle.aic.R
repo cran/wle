@@ -3,14 +3,14 @@
 #	MLE.AIC function                                    #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@stat.unipd.it                       #
-#	Date: December, 19, 2000                            #
-#	Version: 0.3                                        #
+#	Date: August, 2, 2001                               #
+#	Version: 0.4                                        #
 #                                                           #
-#	Copyright (C) 2000 Claudio Agostinelli              #
+#	Copyright (C) 2001 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
-mle.aic <- function(formula, data=list(), model=TRUE, x=FALSE, y=FALSE, var.full=0, alpha=2, contrasts = NULL) {
+mle.aic <- function(formula, data=list(), model=TRUE, x=FALSE, y=FALSE, var.full=0, alpha=2, contrasts = NULL, verbose=FALSE) {
 
     ret.x <- x
     ret.y <- y
@@ -19,6 +19,7 @@ mle.aic <- function(formula, data=list(), model=TRUE, x=FALSE, y=FALSE, var.full
     mf <- cl <- match.call()
     mf$var.full <- mf$alpha <- mf$contrasts <- NULL
     mf$model <- mf$x <- mf$y <- NULL
+    mf$verbose <- NULL
     mf$drop.unused.levels <- TRUE
     mf[[1]] <- as.name("model.frame")
     mf <- eval(mf, sys.frame(sys.parent()))
@@ -43,8 +44,8 @@ nrep <- 2^nvar-1
 
 if (size<nvar+1) {stop("Number of observation must be at least equal to the number of predictors (including intercept) + 1")}
 if (var.full<0) {
-cat("mle.aic: the variance of the full model can not be negative, using default value \n")
-var.full <- 0
+    if (verbose) cat("mle.aic: the variance of the full model can not be negative, using default value \n")
+    var.full <- 0
 }
 
   z <- .Fortran("mleaic",
@@ -89,7 +90,7 @@ class(result) <- "mle.aic"
 return(result)
 }
 
-summary.mle.aic <- function (object, num.max=20, ...) {
+summary.mle.aic <- function (object, num.max=20, verbose=FALSE, ...) {
 
 z <- .Alias(object)
 if (is.null(z$terms)) {
@@ -97,8 +98,8 @@ if (is.null(z$terms)) {
 }
 
 if (num.max<1) {
-cat("summary.mle.aic: num.max can not less than 1, num.max=1 \n")
-num.max <- 1
+    if (verbose) cat("summary.mle.aic: num.max can not less than 1, num.max=1 \n")
+    num.max <- 1
 }
 
 ans <- list()

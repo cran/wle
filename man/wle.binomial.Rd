@@ -2,7 +2,8 @@
 \title{Robust Estimation in the Binomial Model}
 \usage{
 wle.binomial(x, size, boot=30, group, num.sol=1, raf="HD", 
-             tol=10^(-6), equal=10^(-3), max.iter=500)
+             tol=10^(-6), equal=10^(-3), max.iter=500,
+             verbose=FALSE)
 }
 \alias{wle.binomial}
 \alias{print.wle.binomial}
@@ -31,6 +32,8 @@ wle.binomial(x, size, boot=30, group, num.sol=1, raf="HD",
   \item{equal}{the absolute value for which two roots are considered the same. (This parameter must be greater than \code{tol}).}
 
   \item{max.iter}{maximum number of iterations.}
+
+  \item{verbose}{if \code{TRUE} warnings are printed.}
 }
 \description{
 \code{wle.binomial} is used to robust estimate the proportion parameters via Weighted Likelihood.
@@ -47,6 +50,9 @@ wle.binomial(x, size, boot=30, group, num.sol=1, raf="HD",
 \item{p}{the estimator of the proportion parameter, one value for each root found.}
 \item{tot.weights}{the sum of the weights divide by the number of observations, one value for each root found.}
 \item{weights}{the weights associated to each observation, one column vector for each root found.}
+\item{f.density}{the non-parametric density estimation.}
+\item{m.density}{the smoothed model.}
+\item{delta}{the Pearson residuals.}
 \item{call}{the match.call().}
 \item{tot.sol}{the number of solutions found.}
 \item{not.conv}{the number of starting points that does not converge after the \code{max.iter} iteration are reached.}
@@ -56,6 +62,12 @@ wle.binomial(x, size, boot=30, group, num.sol=1, raf="HD",
 \author{Claudio Agostinelli}
 
 %\seealso{}
+
+\references{
+Markatou, M., Basu, A., and Lindsay, B.G., (1997) Weighted likelihood estimating equations: The discrete case with applications to logistic regression, \emph{Journal of Statistical Planning and Inference}, 57, 215-232.
+
+Agostinelli, C., (1998) Inferenza statistica robusta basata sulla funzione di verosimiglianza pesata: alcuni sviluppi, \emph{Ph.D Thesis}, Department of Statistics, University of Padova.}
+}
 
 \examples{
 library(wle)
