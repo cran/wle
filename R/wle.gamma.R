@@ -1,16 +1,18 @@
 #############################################################
 #                                                           #
-#	wle.gamma function                                  #
-#	Author: Claudio Agostinelli                         #
-#	E-mail: claudio@unive.it                            #
-#	Date: August, 2, 2001                               #
-#	Version: 0.2                                        #
+#	wle.gamma function                                      #
+#	Author: Claudio Agostinelli                             #
+#	E-mail: claudio@unive.it                                #
+#	Date: February, 28, 2003                                #
+#	Version: 0.3                                            #
 #                                                           #
-#	Copyright (C) 2001 Claudio Agostinelli              #
+#	Copyright (C) 2003 Claudio Agostinelli                  #
 #                                                           #
 #############################################################
 
-wle.gamma <- function(x, boot=30, group, num.sol=1, raf="HD", smooth=0.008, tol=10^(-6), equal=10^(-3), max.iter=500, shape.int=c(0.01,100), shape.tol=10, use.smooth=TRUE, tol.int, verbose=FALSE) {
+wle.gamma <- function(x, boot=30, group, num.sol=1, raf="HD", smooth=0.008, tol=10^(-6), equal=10^(-3), max.iter=500, shape.int=c(0.01, 100), use.smooth=TRUE, tol.int, verbose=FALSE, maxiter=1000) {
+
+sem <- options()$show.error.messages
 
 wsolve <- function (o, media, medialog) {
    medialog + log(o/media) - digamma(o)
@@ -53,8 +55,13 @@ if (!(num.sol>=1)) {
 }
 
 if (max.iter<1) {
-    if (verbose) cat("wle.gamma: max number of iteration set to 500 \n")
+    if (verbose) cat("wle.gamma: max number of iterations set to 500 \n")
     max.iter <- 500
+}
+
+if (max.iter<1) {
+    if (verbose) cat("wle.gamma: max number of iterations for the uniroot function set to 1000 \n")
+    max.iter <- 1000
 }
 
 if (smooth<10^(-5)) {
@@ -78,8 +85,7 @@ if (!is.logical(use.smooth)) {
 
 if (length(shape.int)!=2) stop("shape.int must be a vector of length 2 \n")
 
-shape.int <- rev(sort(shape.int))
-shape.first <- shape.int
+shape.int <- sort(shape.int, decreasing = FALSE)
 
 if (shape.int[2] <= 0) {
     stop("the elements of shape.int must be positive \n")
@@ -89,11 +95,6 @@ if (shape.int[1] <= 0) {
     if (verbose) cat("wle.gamma: the elements of shape.int must be positive, using default value \n")
     shape.int[1] <- tol
 }
-
-if (shape.tol <=0) {
-    if (verbose) cat("wle.gamma: shape.tol must be positive, using default value \n")
-    shape.tol <- 10
-} 
 
 if (missing(tol.int)) {
    tol.int <- tol*10^(-4)
@@ -110,63 +111,81 @@ iboot <- 0
 
 xlog <- log(x)
 
-while (tot.sol < num.sol & iboot < boot) {
-   iboot <- iboot + 1
-   x.boot <- x[round(runif(group,0.501,size+0.499))]
-   xlog.boot <- log(x.boot)
+while (tot.sol < num.sol & iboot <= boot) {
+   cont <- TRUE
+   i <- 0
+   while (cont & iboot <= boot) {
+          i <- i + 1
+          iboot <- iboot + 1
+          x.boot <- x[sample(1:size, group, replace = FALSE)]
+          xlog.boot <- log(x.boot)
 
-   media <- sum(x.boot)/group
-   medialog<- sum(xlog.boot)/group
+          media <- sum(x.boot)/group
+          medialog<- sum(xlog.boot)/group
 
-   o <- uniroot(wsolve,interval=shape.first, media=media, medialog=medialog)$root
+          options(show.error.messages=FALSE)
+          o <- try(uniroot(wsolve, interval=shape.int, media=media, medialog=medialog, tol=tol, maxiter=maxiter)$root)
+          options(show.error.messages=sem)
+          
+          if (!is.character(o)) {
+              cont <- FALSE
+          }
+   }
 
-   if (o < tol) o <- 2*tol
+   if (!is.character(o)) {
+   
+       if (o < tol) o <- 2*tol
 
-   l <- media/o
+       l <- media/o
 
-xdiff <- tol + 1
-iter <- 0
-while (xdiff > tol & iter < max.iter) {
+       xdiff <- tol + 1
+       iter <- 0
+       while (xdiff > tol & iter < max.iter) {
 
-iter <- iter + 1
-shape <- o
-lambda <- 1/l
-temp <- shape/lambda^2
-dsup <- max(x)+ 3*smooth*temp
+       iter <- iter + 1
+       shape <- o
+       lambda <- 1/l
+       temp <- shape/lambda^2
+       dsup <- max(x)+ 3*smooth*temp
 
-   z <- .Fortran("wlegamma",
-	as.double(x), 
-	as.integer(size),
-	as.integer(raf),
-	as.double(smooth*temp),
+       z <- .Fortran("wlegamma",
+	    as.double(x), 
+	    as.integer(size),
+	    as.integer(raf),
+	    as.double(smooth*temp),
         as.integer(1*use.smooth),
         as.double(dsup),
-	as.double(tol),
+	    as.double(tol),
         as.double(tol.int),
-	as.double(lambda),
-	as.double(shape),
-	weights=double(size),
-	density=double(size),
-	model=double(size),
+	    as.double(lambda),
+	    as.double(shape),
+	    weights=double(size),
+	    density=double(size),
+	    model=double(size),
         PACKAGE = "wle")
 
-ww <- z$weights
-wsum <- sum(ww)
-wmedia <- ww%*%x/wsum
-wmedialog <- ww%*%xlog/wsum
+       ww <- z$weights
+       wsum <- sum(ww)
+       wmedia <- ww%*%x/wsum
+       wmedialog <- ww%*%xlog/wsum
 
-shape.int <- c(max(tol,(o-shape.tol)),(o+shape.tol))
+       options(show.error.messages=FALSE)
+       o <- try(uniroot(wsolve, interval=shape.int, media=wmedia, medialog=wmedialog, tol=tol, maxiter=maxiter)$root)
+       options(show.error.messages=sem)
+       
+       if (!is.character(o)) {
+           if (o < tol) o <- 2*tol
 
-o <- uniroot(wsolve, interval=shape.int, media=wmedia, medialog=wmedialog)$root
+           l <- wmedia/o
 
-if (o < tol) o <- 2*tol
+           xdiff <- max(abs(c(o-shape,l-1/lambda)))
+       } else {
+           xdiff <- 0
+           iter <- max.iter+1
+       }
+   }
 
-l <- wmedia/o
-
-xdiff <- max(abs(c(o-shape,l-1/lambda)))
-}
-
-   if (iter < max.iter) {
+   if (iter <= max.iter) {
 
    if (tot.sol==0) {
       o.store <- o
@@ -189,14 +208,16 @@ xdiff <- max(abs(c(o-shape,l-1/lambda)))
    }
 
    } else not.conv <- not.conv + 1
-   
+   } else not.conv <- not.conv + i
 
 }
 ##### end of while (tot.sol < num.sol & iboot < boot)
 
 if (tot.sol) {
    result$scale <- c(l.store)
+   result$rate <- c(1/l.store)  
    result$shape <- o.store
+   
    if (tot.sol>1) {
        tot.w <- apply(w.store,1,sum)/size
    } else tot.w <- sum(w.store)/size
@@ -212,6 +233,7 @@ if (tot.sol) {
 } else{
    if (verbose) cat("wle.gamma: No solutions are fuond, checks the parameters\n")
    result$scale <- NA
+   result$rate <- NA
    result$shape <- NA
    result$tot.weights <- NA
    result$weights <- rep(NA,size)
@@ -224,19 +246,18 @@ if (tot.sol) {
 }
 
    class(result) <- "wle.gamma"
-
    return(result)
 }
 
 #############################################################
 #                                                           #
-#	print.wle.gamma function                            #
-#	Author: Claudio Agostinelli                         #
-#	E-mail: claudio@unive.it                            #
-#	Date: August, 2, 2001                               #
-#	Version: 0.2                                        #
+#	print.wle.gamma function                                #
+#	Author: Claudio Agostinelli                             #
+#	E-mail: claudio@unive.it                                #
+#	Date: August, 28, 2003                                  #
+#	Version: 0.3                                            #
 #                                                           #
-#	Copyright (C) 2001 Claudio Agostinelli              #
+#	Copyright (C) 2003 Claudio Agostinelli                  #
 #                                                           #
 #############################################################
 
@@ -246,6 +267,10 @@ print.wle.gamma <- function(x, digits = max(3, getOption("digits") - 3), ...) {
     print.default(format(x$scale, digits=digits),
 		  print.gap = 2, quote = FALSE)
     cat("\n")
+    cat("Rate:\n")
+    print.default(format(x$rate, digits=digits),
+		  print.gap = 2, quote = FALSE)
+    cat("\n")  
     cat("Shape:\n")
     print.default(format(x$shape, digits=digits),
 		  print.gap = 2, quote = FALSE)

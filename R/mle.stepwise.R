@@ -1,6 +1,6 @@
 #############################################################
 #                                                           #
-#	MLE.STEPWISE function                               #
+#	mle.stepwise function                               #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@stat.unipd.it                       #
 #	Date: August,  2, 2001                              #

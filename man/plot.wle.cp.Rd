@@ -51,21 +51,15 @@ Agostinelli, C., (1998) Verosimiglianza pesata nel modello di regressione linear
 
 \examples{
 library(wle)
-
 x.data <- c(runif(60,20,80),runif(5,73,78))
 e.data <- rnorm(65,0,0.6)
 y.data <- 8*log(x.data+1)+e.data
 y.data[61:65] <- y.data[61:65]-4
 z.data <- c(rep(0,60),rep(1,5))
-
-plot(x.data,y.data,xlab="X",ylab="Y")
-
-xx.data <- cbind(x.data,x.data^2,x.data^3,log(x.data+1))
-
+plot(x.data, y.data, xlab="X", ylab="Y")
+xx.data <- cbind(x.data, x.data^2, x.data^3, log(x.data+1))
 result <- wle.cp(y.data~xx.data)
-
 plot(result,num.max=15)
-
 }
 
 \keyword{regression}

@@ -3,10 +3,10 @@
 #       wle.ar.ao function                                  #
 #	Author: Claudio Agostinelli                             #
 #	E-mail: claudio@unive.it                                #
-#	Date: April, 02, 2002                                   #
-#	Version: 0.1-1                                          #
+#	Date: March, 04, 2003                                   #
+#	Version: 0.1-2                                          #
 #                                                           #
-#	Copyright (C) 2002 Claudio Agostinelli                  #
+#	Copyright (C) 2003 Claudio Agostinelli                  #
 #                                                           #
 #############################################################
 
@@ -57,7 +57,7 @@ temp <- vector(length=0)
 for (j in 1:length(ao.list[[i]])) {
 temp <- c(temp,(1:length(pos))[pos==ao.list[[i]][j]])
 }
-model.in <- c(model.in,sum(2^(temp-1)))
+model.in <- c(model.in, sum(2^(temp-1)))
 }
 }
 
@@ -66,7 +66,9 @@ num.pos <- (2^sum(ao))-1
 dim.dim <- floor(log(num.pos,2))+1
 w.tilde <- rep(0,num.model)
 
-model.in <- c(model.in,wle.riunif((num.model-length(model.in)),1,num.pos))
+model.in <- c(model.in, sample(x=(1:num.pos), size=(num.model-length(model.in)), replace=TRUE))
+
+##########wle.riunif((num.model-length(model.in)),1,num.pos))
 
 for(isearch in 1:num.model) {
 
@@ -119,8 +121,11 @@ pos.bbb <- min((num.model.sel:num.model)[cum.wtilde > temp[2]])
 pos.aa <- pos[binary(model.in[pos.aaa],dim.dim)$dicotomy]
 pos.bb <- pos[binary(model.in[pos.bbb],dim.dim)$dicotomy]
 
-pos.child <- c(pos.aa,pos.bb,pos[wle.riunif(elements.random,1,length(pos))])
-pos.child <- pos.child[as.logical(wle.riunif(length(pos.child),0,1))]
+pos.child <- c(pos.aa,pos.bb,pos[sample(x=(1:length(pos)), size=elements.random, replace=TRUE)])
+###############wle.riunif(elements.random,1,length(pos))])
+pos.child <- pos.child[as.logical(sample(x=c(0,1), size=length(pos.child), replace=TRUE))]
+###############wle.riunif(length(pos.child),0,1))]
+
 pos.child <- sort(unique(pos.child))
 }
 

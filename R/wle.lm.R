@@ -3,10 +3,10 @@
 #	wle.lm function                                     #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@unive.it                            #
-#	Date: August, 2, 2001                               #
+#	Date: August, 9, 2002                               #
 #	Version: 0.4                                        #
 #                                                           #
-#	Copyright (C) 2001 Claudio Agostinelli              #
+#	Copyright (C) 2002 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
@@ -55,46 +55,61 @@ group <- 0
 if (is.null(size <- nrow(xdata)) | is.null(nvar <- ncol(xdata))) stop("'x' must be a matrix")
 if (length(ydata)!=size) stop("'y' and 'x' are not compatible")
 
-if (size<nvar) {
-    stop("Number of observations must be at least equal to the number of predictors (including intercept)")
-}
+if (size <= nvar+2) {
+    if (verbose) cat("wle.lm: since the number of observations is less than the number of variables plus 2 we perform ordinary least square using function 'lm' \n")
+    res <- lm(formula=formula, data=data, model=model, x=x, y=y, contrasts=contrasts)
+    res.s <- summary(res)
+    result$coefficients <- res$coefficients
+    result$standard.error <- res.s$coefficients[,2]
+    result$scale <- res.s$sigma
+    result$residuals <- res$residuals
+    result$fitted.values <- res$fitted.values
+    result$weights <- rep(1, size)
+    result$f.density <- rep(NA,size)
+    result$m.density <- rep(NA,size)
+    result$delta <- rep(NA,size)
+    result$tot.weights <- 1
+    result$tot.sol <- 1
+    result$not.conv <- 0
+    result$freq <- boot
+    result$info <- 0
+} else {
+    if (group<=nvar) {
+        group <- max(round(size/4),(nvar+1))
+        if (verbose) cat("wle.lm: dimension of the subsample set to default value: ", group,"\n")
+    }
 
-if (group<nvar) {
-    group <- max(round(size/4),nvar)
-    if (verbose) cat("wle.lm: dimension of the subsample set to default value: ", group,"\n")
-}
+    maxboot <- sum(log(1:size))-(sum(log(1:group))+sum(log(1:(size-group))))
 
-maxboot <- sum(log(1:size))-(sum(log(1:group))+sum(log(1:(size-group))))
+    if (boot<1 | log(boot) > maxboot) {
+        stop("Bootstrap replication not in the range")
+    }
 
-if (boot<1 | log(boot) > maxboot) {
-    stop("Bootstrap replication not in the range")
-}
+    if (!(num.sol>=1)) {
+        if (verbose) cat("wle.lm: number of solution to report set to 1 \n")
+        num.sol <- 1
+    }
 
-if (!(num.sol>=1)) {
-    if (verbose) cat("wle.lm: number of solution to report set to 1 \n")
-    num.sol <- 1
-}
+    if (max.iter<1) {
+        if (verbose) cat("wle.lm: max number of iteration set to 500 \n")
+        max.iter <- 500
+    }
 
-if (max.iter<1) {
-    if (verbose) cat("wle.lm: max number of iteration set to 500 \n")
-    max.iter <- 500
-}
+    if (smooth<10^(-5)) {
+        if (verbose) cat("wle.lm: the smooth parameter seems too small \n")
+    }
 
-if (smooth<10^(-5)) {
-    if (verbose) cat("wle.lm: the smooth parameter seems too small \n")
-}
+    if (tol<=0) {
+        if (verbose) cat("wle.lm: the accuracy must be positive, using default value: 10^(-6) \n")
+        tol <- 10^(-6)
+    }
 
-if (tol<=0) {
-    if (verbose) cat("wle.lm: the accuracy must be positive, using default value: 10^(-6) \n")
-    tol <- 10^(-6)
-}
+    if (equal<=tol) {
+        if (verbose) cat("wle.lm: the equal parameter must be greater than tol, using default value: tol+10^(-3) \n")
+        equal <- tol+10^(-3)
+    }
 
-if (equal<=tol) {
-    if (verbose) cat("wle.lm: the equal parameter must be greater than tol, using default value: tol+10^(-3) \n")
-    equal <- tol+10^(-3)
-}
-
-  z <- .Fortran("wleregfix",
+    z <- .Fortran("wleregfix",
 	as.double(ydata),
 	as.matrix(xdata),
 	as.integer(0), 
@@ -122,78 +137,82 @@ if (equal<=tol) {
 	nconv=integer(1),
 	PACKAGE = "wle")
 
-if (z$nsol>0) {
-    z$var <- z$var[1:z$nsol]
-    z$totweight <- z$totweight[1:z$nsol]
-    z$same <- z$same[1:z$nsol]
+    if (z$nsol>0) {
+        z$var <- z$var[1:z$nsol]
+        z$totweight <- z$totweight[1:z$nsol]
+        z$same <- z$same[1:z$nsol]
 
-    if (num.sol==1) {
-        z$param <- c(z$param)
-        z$resid <- c(z$resid)
-        z$weight <- c(z$weight)
-        z$density <- c(z$density)
-        z$model <- c(z$model)
-        z$delta <- c(z$delta)        
-    } else {
-        if (nvar==1) {      
-            z$param <- z$param[1:z$nsol]
+        if (num.sol==1) {
+            z$param <- c(z$param)
+            z$resid <- c(z$resid)
+            z$weight <- c(z$weight)
+            z$density <- c(z$density)
+            z$model <- c(z$model)
+            z$delta <- c(z$delta)        
         } else {
-            z$param <- z$param[1:z$nsol,]
-        }  
-        z$resid <- z$resid[1:z$nsol,]
-        z$weight <- z$weight[1:z$nsol,]
-        z$density <- z$density[1:z$nsol,]
-        z$model <- z$model[1:z$nsol,]
-        z$delta <- z$delta[1:z$nsol,]
-   }
-
-    y.fit <- t(xdata%*%matrix(z$param,ncol=z$nsol,byrow=TRUE))
-
-    if (z$nsol==1) {
-        devparam <- sqrt(z$var*diag(solve(t(xdata)%*%diag(z$weight)%*%xdata,tol=1e-100)))
-        y.fit <- as.vector(y.fit)
-    } else {
-        devparam <- sqrt(z$var[1]*diag(solve(t(xdata)%*%diag(z$weight[1,])%*%xdata,tol=1e-100)))
-        for (i in 2:z$nsol) {
-             devparam <- rbind(devparam,sqrt(z$var[i]*diag(solve(t(xdata)%*%diag(z$weight[i,])%*%xdata,tol=1e-100))))
+            if (nvar==1) {      
+                z$param <- z$param[1:z$nsol]
+            } else {
+                z$param <- z$param[1:z$nsol,]
+            }  
+            z$resid <- z$resid[1:z$nsol,]
+            z$weight <- z$weight[1:z$nsol,]
+            z$density <- z$density[1:z$nsol,]
+            z$model <- z$model[1:z$nsol,]
+            z$delta <- z$delta[1:z$nsol,]
         }
+
+        y.fit <- t(xdata%*%matrix(z$param,ncol=z$nsol,byrow=TRUE))
+
+        if (z$nsol==1) {
+            devparam <- sqrt(z$var*diag(solve(t(xdata)%*%diag(z$weight)%*%xdata,tol=1e-100)))
+            y.fit <- as.vector(y.fit)
+        } else {
+            devparam <- sqrt(z$var[1]*diag(solve(t(xdata)%*%diag(z$weight[1,])%*%xdata,tol=1e-100)))
+            for (i in 2:z$nsol) {
+                 devparam <- rbind(devparam,sqrt(z$var[i]*diag(solve(t(xdata)%*%diag(z$weight[i,])%*%xdata,tol=1e-100))))
+            }
+        }
+
+        result$coefficients <- z$param
+        result$standard.error <- devparam
+        result$scale <- sqrt(z$var)
+        result$residuals <- z$resid
+        result$fitted.values <- y.fit
+        result$weights <- z$weight
+        result$f.density <- z$density
+        result$m.density <- z$model
+        result$delta <- z$delta
+        result$tot.weights <- z$totweight
+        result$tot.sol <- z$nsol
+        result$not.conv <- z$nconv
+        result$freq <- z$same
+    } else {
+        if (verbose) cat("wle.lm: No solutions are fuond, checks the parameters\n")
+        result$coefficients <- rep(NA,nvar)
+        result$standard.error <- rep(NA,nvar)
+        result$scale <- NA
+        result$residuals <- rep(NA,size)
+        result$fitted.values <- rep(NA,size)
+        result$weights <- rep(NA,size)
+        result$f.density <- rep(NA,size)
+        result$m.density <- rep(NA,size)
+        result$delta <- rep(NA,size)
+        result$tot.weights <- NA
+        result$tot.sol <- 0
+        result$not.conv <- boot
+        result$freq <- NA
     }
 
-    result$coefficients <- z$param
-    result$standard.error <- devparam
-    result$scale <- sqrt(z$var)
-    result$residuals <- z$resid
-    result$fitted.values <- y.fit
-    result$weights <- z$weight
-    result$f.density <- z$density
-    result$m.density <- z$model
-    result$delta <- z$delta
-    result$tot.weights <- z$totweight
-    result$tot.sol <- z$nsol
-    result$not.conv <- z$nconv
-    result$freq <- z$same
-} else {
-    if (verbose) cat("wle.lm: No solutions are fuond, checks the parameters\n")
-    result$coefficients <- rep(NA,nvar)
-    result$standard.error <- rep(NA,nvar)
-    result$scale <- NA
-    result$residuals <- rep(NA,size)
-    result$fitted.values <- rep(NA,size)
-    result$weights <- rep(NA,size)
-    result$f.density <- rep(NA,size)
-    result$m.density <- rep(NA,size)
-    result$delta <- rep(NA,size)
-    result$tot.weights <- NA
-    result$tot.sol <- 0
-    result$not.conv <- boot
-    result$freq <- NA
+result$info <- z$info
+
 }
 
 result$call <- cl
-result$info <- z$info
 result$contrasts <- attr(xdata, "contrasts")
 result$xlevels <- xlev
-result$terms <- mt
+result$terms <- mt 
+
 
 if (model)
     result$model <- mf

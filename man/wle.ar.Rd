@@ -102,6 +102,7 @@ Agostinelli C., (2002) Robust time series estimation via weighted likelihood: so
 \author{Claudio Agostinelli}
 
 \examples{
+library(wle)
 library(ts)
 data(lh)
 wle.ar(x=lh, order=c(3,0), group=30) 

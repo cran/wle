@@ -70,7 +70,8 @@ wle.fracdiff.ao <- function(d, sigma2, x, M=100, x.init=rep(0,M), x.mean=0, use.
          dim.dim <- floor(log(num.pos,2))+1
          w.tilde <- rep(0,num.model)
 
-         model.in <- c(model.in,wle.riunif((num.model-length(model.in)),1,num.pos))
+         model.in <- c(model.in, sample(x=(1:num.pos), size=(num.model-length(model.in)), replace=TRUE))
+#################wle.riunif((num.model-length(model.in)),1,num.pos))
 
          for (isearch in 1:num.model) {
               pos.ao <- sort(pos[binary(model.in[isearch],dim.dim)$dicotomy])
@@ -103,8 +104,11 @@ wle.fracdiff.ao <- function(d, sigma2, x, M=100, x.init=rep(0,M), x.mean=0, use.
                        pos.aa <- pos[binary(model.in[pos.aaa],dim.dim)$dicotomy]
                        pos.bb <- pos[binary(model.in[pos.bbb],dim.dim)$dicotomy]
 
-                       pos.child <- c(pos.aa,pos.bb,pos[wle.riunif(elements.random,1,length(pos))])
-                       pos.child <- pos.child[as.logical(wle.riunif(length(pos.child),0,1))]
+                       pos.child <- c(pos.aa,pos.bb,pos[sample(x=(1:length(pos)), size=elements.random, replace=TRUE)])
+#####################wle.riunif(elements.random,1,length(pos))])
+                       
+                       pos.child <- pos.child[as.logical(sample(x=c(0,1), size=length(pos.child), replace=TRUE))]
+######################wle.riunif(length(pos.child),0,1))]
                        pos.child <- sort(unique(pos.child))
                 }
 

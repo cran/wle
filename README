@@ -1,13 +1,13 @@
 This package contains a library for the robust approach to statistics. It is based on Weighted Likelihood approach.
 
-On the actual version 0.7-3 (see STATUS file) the package contains function for robust estimation of normal location and scale in univariate and multivariate model, shape and scale in gamma model, p in binomial model, lambda in poisson model, linear regression and one step estimation, robust model selection criterion based on Mallows Cp, AIC, Cross-validation, Stepwise, Backward and Forward, t-test and variance test. There is also experimental code for univariate normal mixture models, seasonal autoregressive models and for fractional models (only estimation of the fractional parameter).
+On the actual version 0.7-4 (see STATUS file) the package contains function for robust estimation of normal location and scale in univariate and multivariate model, shape and scale in gamma model, p in binomial model, lambda in poisson model, linear regression and one step estimation, robust model selection criterion based on Mallows Cp, AIC, Cross-validation, Stepwise, Backward and Forward, t-test and variance test. There is also experimental code for univariate normal mixture models, seasonal autoregressive models and for fractional models (only estimation of the fractional parameter).
 
 I have installed and run successfully the package under this system:
 
 OS: Linux Mandrake 8.1 on AMD Atholon
 Fortran compiler: GNU project Fortran Compiler (v0.5.24)
 C compiler: GNU project C and C++ Compiler (gcc-2.96)
-R: version 1.5.0 (2002-03-25) under development
+R: version 1.7.0 Under development (unstable) (2003-03-03)
 
 To install the package, use the command R CMD INSTALL wle.
 

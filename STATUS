@@ -1,5 +1,8 @@
 Library wle
 ===========
+Version 0.7-4, 2003/03/04
+Fix problems in wle.gamma, the function wle.riunif is removed, wle.ar and wle.fracdiff now use function sample instead of wle.riunif.
+
 Version 0.7-3, 2002/06/24
 Replace all the underscore (_) with <-.
 
