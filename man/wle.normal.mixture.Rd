@@ -10,7 +10,7 @@ wle.normal.mixture(x, m, boot=5, group, num.sol=1, raf="HD",
                    max.iter=1000, all.comp=TRUE, min.size=0.02,
                    min.weights=0.3, boot.start=10, group.start=3, 
                    tol.start=10^(-6), equal.start=10^(-3),
-                   smooth.start=0.003, max.iter.start=100, 
+                   smooth.start=0.003, max.iter.start=500, 
                    max.iter.boot=25, verbose=FALSE)
 
 wle.normal.mixture.start(x, m, boot=5, group, raf="HD", 

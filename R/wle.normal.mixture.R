@@ -1,16 +1,16 @@
 #############################################################
 #                                                           #
-#	wle.normal.mixture function                         #
-#	Author: Claudio Agostinelli                         #
-#	E-mail: claudio@unive.it                            #
-#	Date: October, 3, 2001                              #
-#	Version: 0.2                                        #
+#	wle.normal.mixture function                             #
+#	Author: Claudio Agostinelli                             #
+#	E-mail: claudio@unive.it                                #
+#	Date: November, 19, 2003                                #
+#	Version: 0.2-1                                          #
 #                                                           #
-#	Copyright (C) 2001 Claudio Agostinelli              #
+#	Copyright (C) 2003 Claudio Agostinelli                  #
 #                                                           #
 #############################################################
 
-wle.normal.mixture <- function(x, m, boot=5, group, num.sol=1, raf="HD", smooth=0.003, tol=10^(-15), equal=10^(-2), max.iter=1000, all.comp=TRUE, min.size=0.02, min.weights=0.3, boot.start=10, group.start=3, tol.start=10^(-6), equal.start=10^(-3), smooth.start=0.003, max.iter.start=500, max.iter.boot=20, verbose=FALSE) {
+wle.normal.mixture <- function(x, m, boot=5, group, num.sol=1, raf="HD", smooth=0.003, tol=10^(-15), equal=10^(-2), max.iter=1000, all.comp=TRUE, min.size=0.02, min.weights=0.3, boot.start=10, group.start=3, tol.start=10^(-6), equal.start=10^(-3), smooth.start=0.003, max.iter.start=500, max.iter.boot=25, verbose=FALSE) {
 
 raf <- switch(raf,
 	HD = 1,

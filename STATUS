@@ -1,5 +1,7 @@
 Library wle
 ===========
+Version 0.7-7, 2003/11/18
+Fix a typo in the documentation of wle.normal.mixture function. 
 
 Version 0.7-6, 2003/10/28
 Fix a problem in print method for functions wle.lm, wle.cp, wle.aic, wle.stepwise, wle.cv, mle.cp, mle.aic, mle.stepwise and wle.cv. Add functions wle.vonmises and wle.wrappednormal. Fix a bug in summary.wle.cp, and summary.mle.cp. Fix a bug in plot.wle.cp and plot.mle.cp 
