@@ -141,9 +141,8 @@ library(wle)
 
 data(selection)
 
-result <- wle.stepwise(ydata~xdata,,boot=100,group=6,
-            num.sol=3,min.weight=0.8,type="Stepwise",
-            method="WLS")
+result <- wle.stepwise(ydata~xdata, boot=100, group=6, num.sol=3,
+min.weight=0.8, type="Stepwise", method="WLS")
 
 summary(result)
 }

@@ -176,13 +176,13 @@ return(result)
 
 #############################################################
 #                                                           #
-#	summary.wle.cp function                             #
-#	Author: Claudio Agostinelli                         #
-#	E-mail: claudio@unive.it                            #
-#	Date: August, 2, 2001                               #
-#	Version: 0.4                                        #
+#	summary.wle.cp function                                 #
+#	Author: Claudio Agostinelli                             #
+#	E-mail: claudio@unive.it                                #
+#	Date: October, 28, 2003                                 #
+#	Version: 0.4-1                                          #
 #                                                           #
-#	Copyright (C) 2001 Claudio Agostinelli              #
+#	Copyright (C) 2003 Claudio Agostinelli                  #
 #                                                           #
 #############################################################
 
@@ -206,7 +206,7 @@ if (nmodel!=1) {
     nvar <- ncol(wcp)-1
     nparam <- apply(wcp[,(1:nvar)],1,sum)
     wcp <- wcp[wcp[,(nvar+1)]<=(nparam+0.00001),]
-    if(!is.null(nrow(wcp)) & nrow(wcp)>1) {
+    if (!is.null(nrow(wcp)) && nrow(wcp)>1) {
 	num.max <- min(nrow(wcp),num.max)
     	wcp <- wcp[order(wcp[,(nvar+1)]),]
     	wcp <- wcp[1:num.max,]
@@ -223,18 +223,18 @@ return(ans)
 
 #############################################################
 #                                                           #
-#	print.wle.cp function                               #
-#	Author: Claudio Agostinelli                         #
-#	E-mail: claudio@unive.it                            #
-#	Date: August, 2, 2001                               #
-#	Version: 0.4                                        #
+#	print.wle.cp function                                   #
+#	Author: Claudio Agostinelli                             #
+#	E-mail: claudio@unive.it                                #
+#	Date: October, 27, 2003                                 #
+#	Version: 0.4-1                                          #
 #                                                           #
-#	Copyright (C) 2001 Claudio Agostinelli              #
+#	Copyright (C) 2003 Claudio Agostinelli                  #
 #                                                           #
 #############################################################
 
-print.wle.cp <- function (x, digits = max(3, getOption("digits") - 3), ...) {
-    res <- summary.wle.cp(object=x, num.max=nrow(x$wcp), ...)
+print.wle.cp <- function (x, digits = max(3, getOption("digits") - 3), num.max=max(1, nrow(x$wcp)),  ...) {
+    res <- summary.wle.cp(object=x, num.max=num.max, ...)
     print.summary.wle.cp(res, digits=digits, ...)
 }
 

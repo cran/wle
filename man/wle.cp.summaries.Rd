@@ -3,7 +3,8 @@
 \usage{
 \method{summary}{wle.cp}(object, num.max=20, verbose=FALSE, ...)
 
-\method{print}{wle.cp}(x, digits = max(3, getOption("digits") - 3), ...)
+\method{print}{wle.cp}(x, digits = max(3, getOption("digits") - 3),
+num.max=max(1, nrow(x$wcp)), ...)
 
 \method{print}{summary.wle.cp}(x, digits = max(3, getOption("digits") - 3), ...)
 }

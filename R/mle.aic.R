@@ -133,18 +133,18 @@ return(ans)
 
 #############################################################
 #                                                           #
-#	print.mle.aic function                              #
-#	Author: Claudio Agostinelli                         #
-#	E-mail: claudio@unive.it                            #
-#	Date: August, 2, 2001                               #
-#	Version: 0.4                                        #
+#	print.mle.aic function                                  #
+#	Author: Claudio Agostinelli                             #
+#	E-mail: claudio@unive.it                                #
+#	Date: October, 27, 2003                                 #
+#	Version: 0.4-1                                          #
 #                                                           #
-#	Copyright (C) 2001 Claudio Agostinelli              #
+#	Copyright (C) 2003 Claudio Agostinelli                  #
 #                                                           #
 #############################################################
 
-print.mle.aic <- function (x, digits = max(3, getOption("digits") - 3), ...) {
-   res <- summary.mle.aic(object=x, num.max=nrow(x$aic), ...)
+print.mle.aic <- function (x, digits = max(3, getOption("digits") - 3), num.max=max(1, nrow(x$aic)), ...) {
+   res <- summary.mle.aic(object=x, num.max=num.max, ...)
    print.summary.mle.aic(res, digits=digits, ...)
 }
 

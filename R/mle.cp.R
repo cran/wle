@@ -99,10 +99,10 @@ return(result)
 #	summary.mle.cp function                             #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@unive.it                            #
-#	Date: December, 3, 2001                             #
+#	Date: October, 28, 2003                             #
 #	Version: 0.4-1                                      #
 #                                                           #
-#	Copyright (C) 2001 Claudio Agostinelli              #
+#	Copyright (C) 2003 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
@@ -126,7 +126,7 @@ if (nmodel!=1) {
     nvar <- ncol(cp)-1
     nparam <- apply(cp[,(1:nvar)],1,sum)
     cp <- cp[cp[,(nvar+1)]<=(nparam+0.00001),]
-    if(!is.null(nrow(cp)) & nrow(cp)>1) {
+    if (!is.null(nrow(cp)) && nrow(cp)>1) {
 	num.max <- min(nrow(cp),num.max)
     	cp <- cp[order(cp[,(nvar+1)]),]
     	cp <- cp[1:num.max,]
@@ -143,18 +143,18 @@ return(ans)
 
 #############################################################
 #                                                           #
-#	print.mle.cp function                               #
-#	Author: Claudio Agostinelli                         #
-#	E-mail: claudio@unive.it                            #
-#	Date: August, 2, 2001                               #
-#	Version: 0.4                                        #
+#	print.mle.cp function                                   #
+#	Author: Claudio Agostinelli                             #
+#	E-mail: claudio@unive.it                                #
+#	Date: October, 27, 2003                                 #
+#	Version: 0.4-1                                          #
 #                                                           #
-#	Copyright (C) 2001 Claudio Agostinelli              #
+#	Copyright (C) 2003 Claudio Agostinelli                  #
 #                                                           #
 #############################################################
 
-print.mle.cp <- function (x, digits = max(3, getOption("digits") - 3), ...) {
-    res <- summary.mle.cp(object=x, num.max=nrow(x$cp), ...)
+print.mle.cp <- function (x, digits = max(3, getOption("digits") - 3),  num.max=max(1, nrow(x$cp)), ...) {
+    res <- summary.mle.cp(object=x, num.max=num.max, ...)
     print.summary.mle.cp(res, digits=digits, ...)
 }
 

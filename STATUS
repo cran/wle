@@ -1,8 +1,11 @@
 Library wle
 ===========
 
+Version 0.7-6, 2003/10/28
+Fix a problem in print method for functions wle.lm, wle.cp, wle.aic, wle.stepwise, wle.cv, mle.cp, mle.aic, mle.stepwise and wle.cv. Add functions wle.vonmises and wle.wrappednormal. Fix a bug in summary.wle.cp, and summary.mle.cp. Fix a bug in plot.wle.cp and plot.mle.cp 
+
 Version 0.7-5, 2003/04/17
-Fix a bug in wle.var.test. Small modification in mleaic.f code. Now plot.wle.lm as several new arguments: which, whiich.main, roots, col, ...
+Fix a bug in wle.var.test. Small modification in mleaic.f code. Now plot.wle.lm as several new arguments: which, which.main, roots, col, ...
 
 Version 0.7-4, 2003/03/04
 Fix problems in wle.gamma, the function wle.riunif is removed, wle.ar and wle.fracdiff now use function sample instead of wle.riunif.

@@ -3,7 +3,8 @@
 \usage{
 \method{summary}{wle.stepwise}(object, num.max=20, verbose=FALSE, ...)
 
-\method{print}{wle.stepwise}(x, digits = max(3, getOption("digits") - 3), ...)
+\method{print}{wle.stepwise}(x, digits = max(3, getOption("digits") -
+3), num.max=max(1, nrow(x$wstep)), ...)
 
 \method{print}{summary.wle.stepwise}(x, digits = max(3, getOption("digits") - 3), ...)
 }

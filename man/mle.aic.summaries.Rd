@@ -3,7 +3,8 @@
 \usage{
 \method{summary}{mle.aic}(object, num.max=20, verbose=FALSE, ...)
 
-\method{print}{mle.aic}(x, digits = max(3, getOption("digits") - 3), ...)
+\method{print}{mle.aic}(x, digits = max(3, getOption("digits") - 3),
+num.max=max(1, nrow(x$aic)), ...)
 
 \method{print}{summary.mle.aic}(x, digits = max(3, getOption("digits") - 3), ...)
 }

@@ -14,11 +14,7 @@
 
 }
 
-\synopsis{wle.fracdiff(x, lower, upper, M, group, na.action = na.fail, tol = 10^(-6), equal = 10^(-3), raf = "HD", smooth = 0.0031, smooth.ao = smooth, boot = 10, num.sol = 1, x.init = rep(0, M), use.uniroot = FALSE, use.init = FALSE, max.iter.out = 20, max.iter.in = 100, max.iter.step = 5000, max.iter.start = max.iter.step, verbose = FALSE, w.level = 0.4, min.weights = 0.5, popolation.size = 10, popolation.choose = 5, elements.random = 2, init.values = NULL, num.max = length(x), include.mean = FALSE, ao.list = list(0))}
-
-\usage{
-wle.fracdiff(x, lower, upper, M, group)
-}
+\usage{wle.fracdiff(x, lower, upper, M, group, na.action = na.fail, tol = 10^(-6), equal = 10^(-3), raf = "HD", smooth = 0.0031, smooth.ao = smooth, boot = 10, num.sol = 1, x.init = rep(0, M), use.uniroot = FALSE, use.init = FALSE, max.iter.out = 20, max.iter.in = 100, max.iter.step = 5000, max.iter.start = max.iter.step, verbose = FALSE, w.level = 0.4, min.weights = 0.5, popolation.size = 10, popolation.choose = 5, elements.random = 2, init.values = NULL, num.max = length(x), include.mean = FALSE, ao.list = list(0))}
 
 \arguments{
   \item{x}{a univariate time series.}

@@ -137,8 +137,8 @@ class(ans) <- "summary.mle.stepwise"
 return(ans)
 }
 
-print.mle.stepwise <- function (x, digits = max(3, getOption("digits") - 3), ...) {
-res <- summary.mle.stepwise(object=x, num.max=nrow(x$step), ...)
+print.mle.stepwise <- function (x, digits = max(3, getOption("digits") - 3), num.max=max(1,nrow(x$step)), ...) {
+res <- summary.mle.stepwise(object=x, num.max=num.max, ...)
 print.summary.mle.stepwise(res, digits=digits, ...)
 }
 

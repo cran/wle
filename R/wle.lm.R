@@ -383,13 +383,13 @@ if (tot.sol>1) {
 
 #############################################################
 #                                                           #
-#	print.summary.wle.lm.root function                  #
-#	Author: Claudio Agostinelli                         #
-#	E-mail: claudio@unive.it                            #
-#	Date: March, 25, 2002                             #
-#	Version: 0.2                                        #
+#	print.summary.wle.lm.root function                      #
+#	Author: Claudio Agostinelli                             #
+#	E-mail: claudio@unive.it                                #
+#	Date: October, 15, 2003                                 #
+#	Version: 0.2-1                                          #
 #                                                           #
-#	Copyright (C) 2002 Claudio Agostinelli              #
+#	Copyright (C) 2002 Claudio Agostinelli                  #
 #                                                           #
 #############################################################
 
@@ -420,7 +420,8 @@ print.summary.wle.lm.root <- function (x, digits = max(3, getOption("digits") - 
 	    " not defined because of singularities)\n", sep = "")
     else cat("\nCoefficients:\n")
 
-    print.coefmat(x$coef, digits=digits, signif.stars=signif.stars, ...)
+
+    printCoefmat(x$coef, digits=digits, signif.stars=signif.stars, ...)
     ##
     cat("\nResidual standard error:",
 	format(signif(x$sigma, digits)), "on", rdf, "degrees of freedom\n")

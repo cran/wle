@@ -3,7 +3,7 @@
 \usage{
 \method{summary}{mle.cv}(object, num.max=20, verbose=FALSE, ...)
 
-\method{print}{mle.cv}(x, digits = max(3, getOption("digits") - 3), ...)
+\method{print}{mle.cv}(x, digits = max(3, getOption("digits") - 3), num.max=max(1, nrow(x$cv)), ...)
 
 \method{print}{summary.mle.cv}(x, digits = max(3, getOption("digits") - 3), ...)
 }

@@ -3,8 +3,8 @@
 #	wle.stepwise function                                   #
 #	Author: Claudio Agostinelli                             #
 #	E-mail: claudio@unive.it                                #
-#	Date: April, 02, 2002                                   #
-#	Version: 0.4-1                                          #
+#	Date: October, 27, 2003                                 #
+#	Version: 0.4-2                                          #
 #                                                           #
 #	Copyright (C) 2002 Claudio Agostinelli                  #
 #                                                           #
@@ -31,7 +31,7 @@ if (ntype==-1) stop("The type must be Forward, Backward or Stepwise")
 
 nmethod <- switch(method,
 		WLE = 0,
-	        WLS = 1,
+	    WLS = 1,
 		-1)
 
 if (nmethod==-1) stop("The method must be WLE, or WLS the default value is WLE")
@@ -244,18 +244,18 @@ return(ans)
 
 #############################################################
 #                                                           #
-#	print.wle.stepwise function                         #
-#	Author: Claudio Agostinelli                         #
-#	E-mail: claudio@unive.it                            #
-#	Date: December, 3, 2001                             #
-#	Version: 0.4                                        #
+#	print.wle.stepwise function                             #
+#	Author: Claudio Agostinelli                             #
+#	E-mail: claudio@unive.it                                #
+#	Date: October, 27, 2003                                 #
+#	Version: 0.4-1                                          #
 #                                                           #
-#	Copyright (C) 2001 Claudio Agostinelli              #
+#	Copyright (C) 2003 Claudio Agostinelli                  #
 #                                                           #
 #############################################################
 
-print.wle.stepwise <- function (x, digits = max(3, getOption("digits") - 3), ...) {
-res <- summary.wle.stepwise(object=x, num.max=nrow(x$wstep), ...)
+print.wle.stepwise <- function (x, digits = max(3, getOption("digits") - 3), num.max=max(1, nrow(x$wstep)), ...) {
+res <- summary.wle.stepwise(object=x, num.max=num.max, ...)
 print.summary.wle.stepwise(res, digits=digits, ...)
 }
 

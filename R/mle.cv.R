@@ -136,18 +136,18 @@ summary.mle.cv <- function (object, num.max=20, verbose=FALSE, ...) {
 
 #############################################################
 #                                                           #
-#	print.mle.cv function                               #
-#	Author: Claudio Agostinelli                         #
-#	E-mail: claudio@unive.it                            #
-#	Date: August, 2, 2001                               #
-#	Version: 0.4                                        #
+#	print.mle.cv function                                   #
+#	Author: Claudio Agostinelli                             #
+#	E-mail: claudio@unive.it                                #
+#	Date: October, 27, 2003                                 #
+#	Version: 0.4-1                                          #
 #                                                           #
-#	Copyright (C) 2001 Claudio Agostinelli              #
+#	Copyright (C) 2003 Claudio Agostinelli                  #
 #                                                           #
 #############################################################
 
-print.mle.cv <- function (x, digits = max(3, getOption("digits") - 3), ...) {
-    res <- summary.mle.cv(object=x, num.max=nrow(x$cv), ...)
+print.mle.cv <- function (x, digits = max(3, getOption("digits") - 3), num.max=max(1, nrow(x$cv)), ...) {
+    res <- summary.mle.cv(object=x, num.max=num.max, ...)
     print.summary.mle.cv(res, digits=digits, ...)
 }
 

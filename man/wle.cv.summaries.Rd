@@ -3,7 +3,8 @@
 \usage{
 \method{summary}{wle.cv}(object, num.max=20, verbose=FALSE, ...)
 
-\method{print}{wle.cv}(x, digits = max(3, getOption("digits") - 3), ...)
+\method{print}{wle.cv}(x, digits = max(3, getOption("digits") - 3),
+num.max=max(1, nrow(x$wcv)), ...)
 
 \method{print}{summary.wle.cv}(x, digits = max(3, getOption("digits") - 3), ...)
 }

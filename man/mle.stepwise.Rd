@@ -84,7 +84,7 @@ data(hald)
 
 cor(hald)
 
-result <- mle.stepwise(y.hald~x.hald, )
+result <- mle.stepwise(y.hald~x.hald)
 
 summary(result)
 

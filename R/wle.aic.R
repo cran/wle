@@ -216,18 +216,18 @@ return(ans)
 
 #############################################################
 #                                                           #
-#	print.wle.aic function                              #
-#	Author: Claudio Agostinelli                         #
-#	E-mail: claudio@unive.it                            #
-#	Date: August, 2, 2001                               #
-#	Version: 0.4                                        #
+#	print.wle.aic function                                  #
+#	Author: Claudio Agostinelli                             #
+#	E-mail: claudio@unive.it                                #
+#	Date: October, 27, 2003                                 #
+#	Version: 0.4-1                                          #
 #                                                           #
-#	Copyright (C) 2001 Claudio Agostinelli              #
+#	Copyright (C) 2003 Claudio Agostinelli                  #
 #                                                           #
 #############################################################
 
-print.wle.aic <- function (x, digits = max(3, getOption("digits") - 3), ...) {
-    res <- summary.wle.aic(object=x, num.max=nrow(x$waic), ...)
+print.wle.aic <- function (x, digits = max(3, getOption("digits") - 3), num.max=max(1, nrow(x$waic)), ...) {
+    res <- summary.wle.aic(object=x, num.max=num.max, ...)
     print.summary.wle.aic(res, digits=digits, ...)
 }
 

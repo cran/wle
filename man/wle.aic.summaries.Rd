@@ -3,7 +3,8 @@
 \usage{
 \method{summary}{wle.aic}(object, num.max=20, verbose=FALSE, ...)
 
-\method{print}{wle.aic}(x, digits = max(3, getOption("digits") - 3), ...)
+\method{print}{wle.aic}(x, digits = max(3, getOption("digits") - 3),
+num.max=max(1, nrow(x$waic)), ...)
 
 \method{print}{summary.wle.aic}(x, digits = max(3, getOption("digits") - 3), ...)
 }

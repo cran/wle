@@ -264,7 +264,7 @@ C         write(*,*) xparam
           endif  
 
 9999  continue
-      write(*,*) ''
+C      write(*,*) ''
       ipos=1
       ntotin=0
 

@@ -225,18 +225,18 @@ return(ans)
 
 #############################################################
 #                                                           #
-#	print.wle.cv function                               #
-#	Author: Claudio Agostinelli                         #
-#	E-mail: claudio@unive.it                            #
-#	Date: August, 2, 2001                               #
-#	Version: 0.4                                        #
+#	print.wle.cv function                                   #
+#	Author: Claudio Agostinelli                             #
+#	E-mail: claudio@unive.it                                #
+#	Date: October, 27, 2003                                 #
+#	Version: 0.4-1                                          #
 #                                                           #
-#	Copyright (C) 2001 Claudio Agostinelli              #
+#	Copyright (C) 2003 Claudio Agostinelli                  #
 #                                                           #
 #############################################################
 
-print.wle.cv <- function (x, digits = max(3, getOption("digits") - 3), ...) {
-    res <- summary.wle.cv(object=x, num.max=nrow(x$wcv), ...)
+print.wle.cv <- function (x, digits = max(3, getOption("digits") - 3), num.max=max(1, nrow(x$wcv)), ...) {
+    res <- summary.wle.cv(object=x, num.max=num.max, ...)
     print.summary.wle.cv(res, digits=digits, ...)
 }
 

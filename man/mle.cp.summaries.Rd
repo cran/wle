@@ -3,7 +3,8 @@
 \usage{
 \method{summary}{mle.cp}(object, num.max=20, verbose=FALSE, ...)
 
-\method{print}{mle.cp}(x, digits = max(3, getOption("digits") - 3), ...)
+\method{print}{mle.cp}(x, digits = max(3, getOption("digits") - 3),
+num.max=max(1, nrow(x$cp)), ...)
 
 \method{print}{summary.mle.cp}(x, digits = max(3, getOption("digits") - 3), ...)
 }
