@@ -77,3 +77,5 @@ artificial <- matrix(c(10.1,  19.6,  28.3,   9.7,
 y.artificial <- artificial[,4]
 x.artificial <- artificial[,1:3]
 
+dimnames(artificial) <- list(NULL, c(paste("x", 1:3, sep=""), "y"))
+artificial <- as.data.frame(artificial)

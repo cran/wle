@@ -125,7 +125,7 @@ C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
       dsize=nsize
-      dcol=ncol
+CCCCC      dcol=ncol
       iinfo=0
 
 C

@@ -11,9 +11,9 @@ data(artificial)
 }
 
 \format{
-  \code{artificial} is matrix with 75 cases (rows) and 4 variables
+  \code{artificial} is a data frame with 75 cases (rows) and 4 variables
   (columns) where the last column is the dependent variable,
-  \code{y.artificial} and \code{x.artificial} are also available.
+  \code{y.artificial} and \code{x.artificial} (as a matrix) are also available.
 }
 
 \source{

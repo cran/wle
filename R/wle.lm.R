@@ -3,15 +3,14 @@
 #	wle.lm function                                     #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@unive.it                            #
-#	Date: August, 9, 2002                               #
-#	Version: 0.4                                        #
+#	Date: April, 5, 2003                                #
+#	Version: 0.4-1                                      #
 #                                                           #
-#	Copyright (C) 2002 Claudio Agostinelli              #
+#	Copyright (C) 2003 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
-wle.lm <- function(formula, data=list(), model=TRUE, x=FALSE, y=FALSE, boot=30, group, num.sol=1, raf="HD", smooth=0.031, tol=10^(-6), equal=10^(-3), max.iter=500, contrasts=NULL, verbose=FALSE)
-{
+wle.lm <- function (formula, data=list(), model=TRUE, x=FALSE, y=FALSE, boot=30, group, num.sol=1, raf="HD", smooth=0.031, tol=10^(-6), equal=10^(-3), max.iter=500, contrasts=NULL, verbose=FALSE) {
 
 raf <- switch(raf,
 	HD = 1,
@@ -22,7 +21,7 @@ raf <- switch(raf,
 if (raf==-1) stop("Please, choose the RAF: HD=Hellinger Disparity, NED=Negative Exponential Disparity, SCHI2=Symmetric Chi-squares Disparity")
 
 if (missing(group)) {
-group <- 0
+    group <- 0
 }
 
     ret.x <- x
@@ -47,6 +46,7 @@ group <- 0
 	    xlev[!sapply(xlev, is.null)]
 	}
     ydata <- model.response(mf, "numeric")
+    nomi <- names(ydata)
     if (is.empty.model(mt)) 
 	stop("The model is empty")
     else 
@@ -65,6 +65,7 @@ if (size <= nvar+2) {
     result$residuals <- res$residuals
     result$fitted.values <- res$fitted.values
     result$weights <- rep(1, size)
+    names(result$weights) <- nomi
     result$f.density <- rep(NA,size)
     result$m.density <- rep(NA,size)
     result$delta <- rep(NA,size)
@@ -224,10 +225,17 @@ if (ret.y)
 dn <- colnames(xdata)
 
 if (is.null(nrow(result$coefficients))) {
-names(result$coefficients) <- dn
+    names(result$coefficients) <- dn
 } else {
-dimnames(result$coefficients) <- list(NULL,dn)
+    dimnames(result$coefficients) <- list(NULL,dn)
 }
+
+if (is.null(nrow(result$residuals))) {
+    names(result$residuals) <- names(result$fitted.values) <- names(result$weights) <- names(result$f.density) <- names(result$m.density) <- names(result$delta) <- nomi
+} else {
+    dimnames(result$residuals) <- dimnames(result$fitted.values) <- dimnames(result$weights) <- dimnames(result$f.density) <- dimnames(result$m.density) <- dimnames(result$delta) <- list(NULL, nomi)
+}
+
 class(result) <- "wle.lm"
 
 return(result)

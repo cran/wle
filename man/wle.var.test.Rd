@@ -51,20 +51,20 @@ Agostinelli, C., and Markatou, M., (2001) Test of hypotheses based on the Weight
 
 \examples{
 
-set.seed(1234)
+set.seed(2345)
 
-x <- rnorm(30,0,1)
-y <- rnorm(30,10,1)
+x <- rnorm(50,0,1)
+y <- rnorm(50,10,1)
 
 res.x <- wle.normal(x,group=5)
 res.y <- wle.normal(y,group=5)
 
 wle.var.test(res.x, res.y) # Do x and y have the same variance?
 
-set.seed(1234)
+set.seed(2345)
 
-x <- c(rnorm(30,0,1),rnorm(10,10,1))
-y <- c(rnorm(30,10,1),rnorm(10,0,5))
+x <- c(rnorm(50,0,1),rnorm(20,10,1))
+y <- c(rnorm(50,10,1),rnorm(10,0,5))
 
 res.x <- wle.normal(x,group=5,num.sol=2)
 res.y <- wle.normal(y,group=5)

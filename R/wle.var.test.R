@@ -3,10 +3,10 @@
 #	wle.var.test function                               #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@unive.it                            #
-#	Date: Febraury 21, 2001                             #
-#	Version: 0.1                                        #
+#	Date: April 3, 2003                                 #
+#	Version: 0.2                                        #
 #                                                           #
-#	Copyright (C) 2001 Claudio Agostinelli              #
+#	Copyright (C) 2003 Claudio Agostinelli              #
 #                                                           #
 #	Based on var.test function in                       #
 #       ctest package version 1.2.0                         #
@@ -71,7 +71,6 @@ wle.var.test <- function(x, y, ratio = 1, alternative = c("two.sided", "less", "
 
     if (inherits(x, "wle.normal") && inherits(y, "wle.normal")) {
 
-
        x.tot.sol <- x$tot.sol
         if (x.tot.sol<x.root) {
             stop(paste("'x' Root ",x.root," not found"))
@@ -83,8 +82,9 @@ wle.var.test <- function(x, y, ratio = 1, alternative = c("two.sided", "less", "
             x.res <- x$residuals
             x.w <- x$weights
         }
-        
-        DF.x <- x$tot.weights[x.root] - 1 
+        x.n <- length(x.w)
+       
+        DF.x <- x$tot.weights[x.root]*x.n - 1 
 
         y.tot.sol <- y$tot.sol
         if (y.tot.sol<y.root) {
@@ -98,8 +98,9 @@ wle.var.test <- function(x, y, ratio = 1, alternative = c("two.sided", "less", "
             y.res <- y$residuals
             y.w <- y$weights
         }
-
-        DF.y <- y$tot.weights[y.root] - 1
+        y.n <- length(y.w)
+       
+        DF.y <- y$tot.weights[y.root]*y.n - 1
     
       } else {
           stop("'x' and 'y' must be of class wle.lm or wle.normal")
