@@ -44,9 +44,9 @@
 \description{All these functions are \code{\link{methods}} for class \code{wle.lm} or \code{summary.wle.lm}.}
 
 \details{\code{print.summary.wle.lm} and \code{print.summary.wle.lm.root} tries formatting for each root the coefficients, standard errors, etc. and additionally gives ``significance stars'' if \code{signif.stars} is \code{TRUE}.
-}
 
 The generic accessor functions \code{coefficients}, \code{fitted.values}, \code{residuals} and \code{weights} can be used to extract various useful features of the value returned by \code{wle.lm}. 
+}
 
 \value{
   The function \code{summary.wle.lm} (the \code{summary.wle.lm.root} do the same for just one selected root) computes and returns, for each selected root, a list of summary statistics of the fitted linear model given in \code{object}, using the components (list elements) \code{"call"} and \code{"terms"} from its argument, plus 
