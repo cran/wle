@@ -1,11 +1,11 @@
 \name{wle.cp.summaries}
 \title{Summaries and methods for wle.cp}
 \usage{
-summary.wle.cp(object, num.max=20, verbose=FALSE, ...)
+\method{summary}{wle.cp}(object, num.max=20, verbose=FALSE, ...)
 
-print.wle.cp(x, digits = max(3, getOption("digits") - 3), ...)
+\method{print}{wle.cp}(x, digits = max(3, getOption("digits") - 3), ...)
 
-print.summary.wle.cp(x, digits = max(3, getOption("digits") - 3), ...)
+\method{print}{summary.wle.cp}(x, digits = max(3, getOption("digits") - 3), ...)
 }
 
 \alias{summary.wle.cp}

@@ -1,11 +1,11 @@
 \name{mle.cv.summaries}
 \title{Summaries and methods for mle.cv}
 \usage{
-summary.mle.cv(object, num.max=20, verbose=FALSE, ...)
+\method{summary}{mle.cv}(object, num.max=20, verbose=FALSE, ...)
 
-print.mle.cv(x, digits = max(3, getOption("digits") - 3), ...)
+\method{print}{mle.cv}(x, digits = max(3, getOption("digits") - 3), ...)
 
-print.summary.mle.cv(x, digits = max(3, getOption("digits") - 3), ...)
+\method{print}{summary.mle.cv}(x, digits = max(3, getOption("digits") - 3), ...)
 }
 
 \alias{summary.mle.cv}

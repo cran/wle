@@ -1,12 +1,12 @@
 #############################################################
 #                                                           #
-#	wle.weights function                                #
-#	Author: Claudio Agostinelli                         #
-#	E-mail: claudio@unive.it                            #
-#	Date: December, 4, 2001                             #
-#	Version: 0.1-2                                      #
+#	wle.weights function                                    #
+#	Author: Claudio Agostinelli                             #
+#	E-mail: claudio@unive.it                                #
+#	Date: April, 02, 2002                                   #
+#	Version: 0.1-4                                          #
 #                                                           #
-#	Copyright (C) 2001 Claudio Agostinelli              #
+#	Copyright (C) 2002 Claudio Agostinelli                  #
 #                                                           #
 #############################################################
 
@@ -33,7 +33,10 @@ wle.weights <- function(x, y=NULL, smooth=0.0031, sigma2, raf=1, location=FALSE,
            loc.old <- loc
            if (location) {
                y <- z <- x - loc
-           }    
+           } else {
+               z <- x
+           }
+
            w.temp <- .Fortran("wlew",
 	              as.double(z), 
 	              as.integer(nx),
@@ -43,7 +46,8 @@ wle.weights <- function(x, y=NULL, smooth=0.0031, sigma2, raf=1, location=FALSE,
 	              as.double(smooth),
 	              as.double(sigma2),
 	              totweight=double(1),
-	              weights=double(nx))
+	              weights=double(nx),
+				  PACKAGE="wle")
 
            loc <- sum(w.temp$weights*x)/sum(w.temp$weights)
 

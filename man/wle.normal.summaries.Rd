@@ -1,7 +1,7 @@
 \name{wle.normal.summaries}
 \title{Summaries and methods for wle.normal}
 \usage{
-print.wle.normal(x, digits = max(3, getOption("digits") - 3), ...)
+\method{print}{wle.normal}(x, digits = max(3, getOption("digits") - 3), ...)
 }
 
 \alias{print.wle.normal}

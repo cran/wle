@@ -1,7 +1,7 @@
 \name{wle.onestep.summaries}
 \title{Summaries and methods for wle.onestep}
 \usage{
-print.wle.onestep(x, digits = max(3, getOption("digits") - 3), ...)
+\method{print}{wle.onestep}(x, digits = max(3, getOption("digits") - 3), ...)
 }
 
 \alias{print.wle.onestep}

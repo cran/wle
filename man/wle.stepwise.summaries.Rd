@@ -1,11 +1,11 @@
 \name{wle.stepwise.summaries}
 \title{Accessing summaries for wle.stepwise}
 \usage{
-summary.wle.stepwise(object, num.max=20, verbose=FALSE, ...)
+\method{summary}{wle.stepwise}(object, num.max=20, verbose=FALSE, ...)
 
-print.wle.stepwise(x, digits = max(3, getOption("digits") - 3), ...)
+\method{print}{wle.stepwise}(x, digits = max(3, getOption("digits") - 3), ...)
 
-print.summary.wle.stepwise(x, digits = max(3, getOption("digits") - 3), ...)
+\method{print}{summary.wle.stepwise}(x, digits = max(3, getOption("digits") - 3), ...)
 }
 
 \alias{summary.wle.stepwise}

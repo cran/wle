@@ -1,12 +1,12 @@
 #############################################################
 #                                                           #
-#	wle.normal.multi function                           #
-#	Author: Claudio Agostinelli                         #
-#	E-mail: claudio@unive.it                            #
-#	Date: August, 2, 2001                               #
-#	Version: 0.4                                        #
+#	wle.normal.multi function                               #
+#	Author: Claudio Agostinelli                             #
+#	E-mail: claudio@unive.it                                #
+#	Date: April, 02, 2002                                   #
+#	Version: 0.4-1                                          #
 #                                                           #
-#	Copyright (C) 2001 Claudio Agostinelli              #
+#	Copyright (C) 2002 Claudio Agostinelli                  #
 #                                                           #
 #############################################################
 
@@ -97,7 +97,8 @@ if (equal<=tol) {
 	delta=mat.or.vec(num.sol,size),
 	same=integer(num.sol),
 	nsol=integer(1),
-	nconv=integer(1))
+	nconv=integer(1),
+	PACKAGE="wle")
 
 dn <- colnames(x)
 

@@ -1,11 +1,11 @@
 \name{mle.cp.summaries}
 \title{Summaries and methods for mle.cp}
 \usage{
-summary.mle.cp(object, num.max=20, verbose=FALSE, ...)
+\method{summary}{mle.cp}(object, num.max=20, verbose=FALSE, ...)
 
-print.mle.cp(x, digits = max(3, getOption("digits") - 3), ...)
+\method{print}{mle.cp}(x, digits = max(3, getOption("digits") - 3), ...)
 
-print.summary.mle.cp(x, digits = max(3, getOption("digits") - 3), ...)
+\method{print}{summary.mle.cp}(x, digits = max(3, getOption("digits") - 3), ...)
 }
 
 \alias{summary.mle.cp}

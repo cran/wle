@@ -1,7 +1,7 @@
 \name{wle.normal.multi.summaries}
 \title{Summaries and methods for wle.normal.multi}
 \usage{
-print.wle.normal.multi(x, digits = max(3, getOption("digits") - 3), ...)
+\method{print}{wle.normal.multi}(x, digits = max(3, getOption("digits") - 3), ...)
 }
 
 \alias{print.wle.normal.multi}

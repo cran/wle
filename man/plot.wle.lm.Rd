@@ -1,7 +1,7 @@
 \name{plot.wle.lm}
 \title{Plots for the Linear Model}
 \usage{
-plot.wle.lm(x, level.weight=0.5, 
+\method{plot}{wle.lm}(x, level.weight=0.5, 
    ask = interactive() && .Device != "postscript", verbose=FALSE, ...)
 }
 \alias{plot.wle.lm}

@@ -1,12 +1,12 @@
 #############################################################
 #                                                           #
-#	wle.cv function                                     #
-#	Author: Claudio Agostinelli                         #
-#	E-mail: claudio@unive.it                            #
-#	Date: August, 2, 2001                               #
-#	Version: 0.4                                        #
+#	wle.cv function                                         #
+#	Author: Claudio Agostinelli                             #
+#	E-mail: claudio@unive.it                                #
+#	Date: April, 02, 2002                                   #
+#	Version: 0.4-1                                          #
 #                                                           #
-#	Copyright (C) 2001 Claudio Agostinelli              #
+#	Copyright (C) 2002 Claudio Agostinelli                  #
 #                                                           #
 #############################################################
 
@@ -143,7 +143,8 @@ if (min.weight<0) {
 	weight=mat.or.vec(num.sol,size),
 	same=integer(num.sol),
 	index=integer(1),
-	info=integer(1))
+	info=integer(1),
+	PACKAGE="wle")
 
 delnull <- z$same==0
 

@@ -1,12 +1,12 @@
 #############################################################
 #                                                           #
 #       wle.ar.ao function                                  #
-#	Author: Claudio Agostinelli                         #
-#	E-mail: claudio@unive.it                            #
-#	Date: September, 26, 2001                           #
-#	Version: 0.1                                        #
+#	Author: Claudio Agostinelli                             #
+#	E-mail: claudio@unive.it                                #
+#	Date: April, 02, 2002                                   #
+#	Version: 0.1-1                                          #
 #                                                           #
-#	Copyright (C) 2001 Claudio Agostinelli              #
+#	Copyright (C) 2002 Claudio Agostinelli                  #
 #                                                           #
 #############################################################
 
@@ -26,7 +26,8 @@ weights <- .Fortran("wlew",
 	as.double(smooth),
 	as.double(sigma2),
 	totweight=double(1),
-	weights=double(nused))$weights
+	weights=double(nused),
+	PACKAGE="wle")$weights
 
 ao.position <- 0
 pos.temp <- 1:nused
@@ -341,7 +342,8 @@ while(iboot<=boot & tot.sol<num.sol) {
 	as.double(smooth.ao),
 	as.double(sigma2.init),
 	totweights=double(1),
-	weights=double(nused))$weights
+	weights=double(nused),
+	PACKAGE="wle")$weights
 
    if (sum(weights)/nused >= min.weights) {
 

@@ -1,7 +1,7 @@
 \name{plot.wle.cp}
 \title{Plot the Weighted Mallows Cp}
 \usage{
-plot.wle.cp(x, base.line=0, num.max=20, 
+\method{plot}{wle.cp}(x, base.line=0, num.max=20, 
            plot.it=TRUE, log.scale=FALSE, 
            xlab="Number of Predictors", ylab=NULL,
            verbose=FALSE, ...)

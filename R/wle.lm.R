@@ -345,7 +345,7 @@ if (tot.sol>1) {
 	df.int <- if (attr(object$terms, "intercept")) 1 else 0
 	ans$r.squared <- mss/(mss + rss)
 	ans$adj.r.squared <- 1 - (1 - ans$r.squared) *
-	    ((n - df.int)/rdf)
+	    ((sum(w) - df.int)/rdf)
 	ans$fstatistic <- c(value = (mss/(p - df.int))/resvar,
 			    numdf = p - df.int, dendf = rdf)
     }
@@ -359,10 +359,10 @@ if (tot.sol>1) {
 #	print.summary.wle.lm.root function                  #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@unive.it                            #
-#	Date: December, 3, 2001                             #
-#	Version: 0.1                                        #
+#	Date: March, 25, 2002                             #
+#	Version: 0.2                                        #
 #                                                           #
-#	Copyright (C) 2001 Claudio Agostinelli              #
+#	Copyright (C) 2002 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
@@ -399,12 +399,12 @@ print.summary.wle.lm.root <- function (x, digits = max(3, getOption("digits") - 
 	format(signif(x$sigma, digits)), "on", rdf, "degrees of freedom\n")
     if (!is.null(x$fstatistic)) {
 	cat("Multiple R-Squared:", formatC(x$r.squared, digits=digits))
-	cat(",\tAdjusted R-squared:",formatC(x$adj.r.squared,d=digits),
+	cat(",\tAdjusted R-squared:",formatC(x$adj.r.squared,digits=digits),
 	    "\nF-statistic:", formatC(x$fstatistic[1], digits=digits),
 	    "on", x$fstatistic[2], "and",
 	    x$fstatistic[3], "degrees of freedom,\tp-value:",
 	    formatC(1 - pf(x$fstatistic[1], x$fstatistic[2],
-			   x$fstatistic[3]), dig=digits),
+			   x$fstatistic[3]), digits=digits),
 	    "\n")
     }
 

@@ -1,11 +1,11 @@
 \name{mle.stepwise.summaries}
 \title{Accessing summaries for mle.stepwise}
 \usage{
-summary.mle.stepwise(object, num.max=20, verbose=FALSE, ...)
+\method{summary}{mle.stepwise}(object, num.max=20, verbose=FALSE, ...)
 
-print.mle.stepwise(x, digits = max(3, getOption("digits") - 3), ...)
+\method{print}{mle.stepwise}(x, digits = max(3, getOption("digits") - 3), ...)
 
-print.summary.mle.stepwise(x, digits = max(3, getOption("digits") - 3), ...)
+\method{print}{summary.mle.stepwise}(x, digits = max(3, getOption("digits") - 3), ...)
 }
 
 \alias{summary.mle.stepwise}

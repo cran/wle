@@ -89,7 +89,7 @@ The algorithm used to classify the observations as additive outliers is made by 
     \item{weights.with.ao}{the weights with the additive outliers effects.}
     \item{weights.without.ao}{the weights without the additive outliers effects}
     \item{tot.sol}{the number of solutions found.}
-    \item{not.conv}{the number of starting points that does not converge after the \code{max.iter.outer} iteration are reached.}
+    \item{not.conv}{the number of starting points that does not converge after the \code{max.iter.out} iteration are reached.}
     \item{ao.position}{the position of the additive outliers.}
 }
 

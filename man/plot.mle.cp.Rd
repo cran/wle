@@ -1,7 +1,7 @@
 \name{plot.mle.cp}
 \title{Plot the Mallows Cp}
 \usage{
-plot.mle.cp(x, base.line=0, num.max=20, 
+\method{plot}{mle.cp}(x, base.line=0, num.max=20, 
            plot.it=TRUE, log.scale=FALSE, 
            xlab="Number of Predictors", ylab=NULL,
            verbose=FALSE, ...)

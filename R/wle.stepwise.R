@@ -1,12 +1,12 @@
 #############################################################
 #                                                           #
-#	wle.stepwise function                               #
-#	Author: Claudio Agostinelli                         #
-#	E-mail: claudio@unive.it                            #
-#	Date: August, 3, 2001                               #
-#	Version: 0.4                                        #
+#	wle.stepwise function                                   #
+#	Author: Claudio Agostinelli                             #
+#	E-mail: claudio@unive.it                                #
+#	Date: April, 02, 2002                                   #
+#	Version: 0.4-1                                          #
 #                                                           #
-#	Copyright (C) 2001 Claudio Agostinelli              #
+#	Copyright (C) 2002 Claudio Agostinelli                  #
 #                                                           #
 #############################################################
 
@@ -152,7 +152,8 @@ nrep <- 2^nvar-1
 	indice=integer(1),
 	info=integer(1),
 	imodel=integer(1),
-	nsol=integer(1))
+	nsol=integer(1),
+	PACKAGE="wle")
 
 result$wstep <- z$wstep[1:z$imodel,]
 result$coefficients <- z$param[1:z$nsol,]

@@ -1,12 +1,12 @@
 #############################################################
 #                                                           #
-#	mle.cv function                                     #
-#	Author: Claudio Agostinelli                         #
-#	E-mail: claudio@unive.it                            #
-#	Date: August, 2, 2001                               #
-#	Version: 0.4                                        #
+#	mle.cv function                                         #
+#	Author: Claudio Agostinelli                             #
+#	E-mail: claudio@unive.it                                #
+#	Date: April, 02, 2002                                   #
+#	Version: 0.4                                            #
 #                                                           #
-#	Copyright (C) 2001 Claudio Agostinelli              #
+#	Copyright (C) 2001 Claudio Agostinelli                  #
 #                                                           #
 #############################################################
 
@@ -67,7 +67,8 @@ if (monte.carlo<1 | log(monte.carlo) > maxcarlo){
 	as.integer(monte.carlo),
 	as.integer(split),
 	cv=mat.or.vec(nrep,nvar+1),
-	info=integer(1))
+	info=integer(1),
+	PACKAGE="wle")
 
 
 result$cv <- z$cv

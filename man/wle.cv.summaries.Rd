@@ -1,11 +1,11 @@
 \name{wle.cv.summaries}
 \title{Summaries and methods for wle.cv}
 \usage{
-summary.wle.cv(object, num.max=20, verbose=FALSE, ...)
+\method{summary}{wle.cv}(object, num.max=20, verbose=FALSE, ...)
 
-print.wle.cv(x, digits = max(3, getOption("digits") - 3), ...)
+\method{print}{wle.cv}(x, digits = max(3, getOption("digits") - 3), ...)
 
-print.summary.wle.cv(x, digits = max(3, getOption("digits") - 3), ...)
+\method{print}{summary.wle.cv}(x, digits = max(3, getOption("digits") - 3), ...)
 }
 
 \alias{summary.wle.cv}

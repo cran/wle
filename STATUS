@@ -1,5 +1,11 @@
 Library wle
 ===========
+Version 0.7-2, 2002/04/02
+Fix the documentation (.Rd) file for *.summaries.Rd file. Include a preliminary version of the wle.fracdiff function with related functions. The R^2-adjusted is now evaluated according to the sum of the weights instead of the number of observations.
+
+Version 0.7-1, 2002/03/25
+Fix a bugs in wle.weights. Now it works also when location=FALSE
+Fix the problems in print.summary.wle.lm.root with formatC
 
 Version 0.7, 2002/01/02 
 Fix the 56th observation in Hawkins, Bradu, Kass dataset. Fix a bugs in the wle.cv introduced in Version 0.6 and 0.6-1 of the package. Rewrite some parts of wleregfix subroutine (for wle.lm function and wle.aic, wle.cp, wle.cv and in some others functions). Delete all .Alias calls. Preliminary version of wle.ar.
@@ -11,7 +17,7 @@ Version 0.6, 2001/09/05
 Most of the functions return the Pearson residuals, the smoothed model and the non parametric density estimator for each observation. I fix the definition of the SCHI2 Residual Adjustment Function. It is added a preliminary version of a function for the parameter estimation in a univariate normal mixture models.  
 
 Version 0.5, 2001/05/20
-Only minor changes, and minor bug fix
+Only minor changes, and minor bug fix.
 
 Version 0.4, 2001/03/02
 
@@ -30,4 +36,4 @@ Version 0.1, 1998/12/01
 This is a small experimental library with only some functions, i.e., wle.normal, wle.smooth and wle.lm, not completly working. No documentation is provided.
 
 
-Claudio Agostinelli <claudio@stat.unipd.it>
+Claudio Agostinelli <claudio@unive.it>

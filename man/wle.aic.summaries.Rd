@@ -1,11 +1,11 @@
 \name{wle.aic.summaries}
 \title{Summaries and methods for wle.aic}
 \usage{
-summary.wle.aic(object, num.max=20, verbose=FALSE, ...)
+\method{summary}{wle.aic}(object, num.max=20, verbose=FALSE, ...)
 
-print.wle.aic(x, digits = max(3, getOption("digits") - 3), ...)
+\method{print}{wle.aic}(x, digits = max(3, getOption("digits") - 3), ...)
 
-print.summary.wle.aic(x, digits = max(3, getOption("digits") - 3), ...)
+\method{print}{summary.wle.aic}(x, digits = max(3, getOption("digits") - 3), ...)
 }
 
 \alias{summary.wle.aic}

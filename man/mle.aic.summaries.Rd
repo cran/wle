@@ -1,11 +1,11 @@
 \name{mle.aic.summaries}
 \title{Summaries and methods for mle.aic}
 \usage{
-summary.mle.aic(object, num.max=20, verbose=FALSE, ...)
+\method{summary}{mle.aic}(object, num.max=20, verbose=FALSE, ...)
 
-print.mle.aic(x, digits = max(3, getOption("digits") - 3), ...)
+\method{print}{mle.aic}(x, digits = max(3, getOption("digits") - 3), ...)
 
-print.summary.mle.aic(x, digits = max(3, getOption("digits") - 3), ...)
+\method{print}{summary.mle.aic}(x, digits = max(3, getOption("digits") - 3), ...)
 }
 
 \alias{summary.mle.aic}
