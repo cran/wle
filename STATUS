@@ -1,6 +1,9 @@
 Library wle
 ===========
 
+Version 0.6-1, 2001/09/14
+Bug fix in wle.lm and wle.var.test
+
 Version 0.6, 2001/09/05
 Most of the functions return the Pearson residuals, the smoothed model and the non parametric density estimator for each observation. I fix the definition of the SCHI2 Residual Adjustment Function. It is added a preliminary version of a function for the parameter estimation in a univariate normal mixture models.  
 

@@ -28,7 +28,7 @@ wle.var.test <- function(x, y, ratio = 1, alternative = c("two.sided", "less", "
 
         x.tot.sol <- x$tot.sol
         if (x.tot.sol<x.root) {
-            stop(paste("'x' Root ",root," not found"))
+            stop(paste("'x' Root ",x.root," not found"))
         }
         if (x.tot.sol!=1) {
             x.res <- x$residuals[x.root,]
@@ -47,7 +47,7 @@ wle.var.test <- function(x, y, ratio = 1, alternative = c("two.sided", "less", "
 
         y.tot.sol <- y$tot.sol
         if (y.tot.sol<y.root) {
-            stop(paste("'y' Root ",root," not found"))
+            stop(paste("'y' Root ",y.root," not found"))
         }
 
         if (y.tot.sol!=1) {
@@ -72,7 +72,7 @@ wle.var.test <- function(x, y, ratio = 1, alternative = c("two.sided", "less", "
 
        x.tot.sol <- x$tot.sol
         if (x.tot.sol<x.root) {
-            stop(paste("'x' Root ",root," not found"))
+            stop(paste("'x' Root ",x.root," not found"))
         }
         if (x.tot.sol!=1) {
             x.res <- x$residuals[x.root,]
@@ -86,7 +86,7 @@ wle.var.test <- function(x, y, ratio = 1, alternative = c("two.sided", "less", "
 
         y.tot.sol <- y$tot.sol
         if (y.tot.sol<y.root) {
-            stop(paste("'y' Root ",root," not found"))
+            stop(paste("'y' Root ",y.root," not found"))
         }
 
         if (y.tot.sol!=1) {

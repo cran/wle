@@ -135,7 +135,11 @@ if (z$nsol>0) {
         z$model <- c(z$model)
         z$delta <- c(z$delta)        
     } else {
-        z$param <- z$param[1:z$nsol,]
+        if (nvar==1) {      
+            z$param <- z$param[1:z$nsol]
+        } else {
+            z$param <- z$param[1:z$nsol,]
+        }  
         z$resid <- z$resid[1:z$nsol,]
         z$weight <- z$weight[1:z$nsol,]
         z$density <- z$density[1:z$nsol,]

@@ -1,6 +1,6 @@
 This package contains a library for the robust approach to statistics. It is based on Weighted Likelihood approach.
 
-On the actual version 0.6 (see STATUS file) the package contains function for robust estimation of normal location and scale in univariate and multivariate model, shape and scale in gamma model, p in binomial model, lambda in poisson model, linear regression and one step estimation, robust model selection criterion based on Mallows Cp, AIC, Cross-validation, Stepwise, Backward and Forward, t-test and variance test. There is also an experimental code for univariate normal mixture models.
+On the actual version 0.6-1 (see STATUS file) the package contains function for robust estimation of normal location and scale in univariate and multivariate model, shape and scale in gamma model, p in binomial model, lambda in poisson model, linear regression and one step estimation, robust model selection criterion based on Mallows Cp, AIC, Cross-validation, Stepwise, Backward and Forward, t-test and variance test. There is also an experimental code for univariate normal mixture models.
 
 I have installed and run successfully the package under this system:
 

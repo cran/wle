@@ -3,14 +3,14 @@
 #	WLE.NORMAL.MIXTURE function                         #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@stat.unipd.it                       #
-#	Date: August, 12, 2001                              #
+#	Date: October, 3, 2001                              #
 #	Version: 0.2                                        #
 #                                                           #
 #	Copyright (C) 2001 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
-wle.normal.mixture <- function(x, m, boot=5, group, num.sol=1, raf="HD", smooth=0.003, tol=10^(-15), equal=10^(-2), max.iter=1000, all.comp=TRUE, min.size=0.02, min.weights=0.3, boot.start=10, group.start=3, tol.start=10^(-6), equal.start=10^(-3), smooth.start=0.003, max.iter.start=25, max.iter.boot=20, verbose=FALSE) {
+wle.normal.mixture <- function(x, m, boot=5, group, num.sol=1, raf="HD", smooth=0.003, tol=10^(-15), equal=10^(-2), max.iter=1000, all.comp=TRUE, min.size=0.02, min.weights=0.3, boot.start=10, group.start=3, tol.start=10^(-6), equal.start=10^(-3), smooth.start=0.003, max.iter.start=500, max.iter.boot=20, verbose=FALSE) {
 
 raf <- switch(raf,
 	HD = 1,
@@ -76,9 +76,14 @@ if (max.iter<1) {
     max.iter <- 1000
 }
 
-if (max.iter<1) {
-    if (verbose) cat("wle.normal.mixture: max number of iteration in the starting process set to 100 \n")
-    max.iter <- 100
+if (max.iter.boot<1) {
+    if (verbose) cat("wle.normal.mixture: max number of iteration in the boot step set to 20 \n")
+    max.iter.boot <- 20
+}
+
+if (max.iter.start<1) {
+    if (verbose) cat("wle.normal.mixture: max number of iteration in the starting process set to 500 \n")
+    max.iter.start <- 500
 }
 
 if (!is.logical(all.comp)) {
@@ -91,6 +96,12 @@ all.comp <- as.numeric(all.comp)
 if (smooth<10^(-5)) {
     if (verbose) cat("wle.normal.mixture: the smooth parameter seems too small \n")
 }
+
+if (smooth.start<10^(-5)) {
+    if (verbose) cat("wle.normal.mixture: the smooth.start parameter seems too small \n")
+}
+
+
 
 if (tol<=0) {
     if (verbose) cat("wle.normal.mixture: the accuracy must be positive, using default value: 10^(-6) \n")
