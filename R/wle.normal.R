@@ -3,54 +3,73 @@
 #	WLE.NORMAL function                                 #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@stat.unipd.it                       #
-#	Date: October, 10, 1999                             #
-#	Version: 0.2                                        #
+#	Date: December, 19, 2000                            #
+#	Version: 0.3                                        #
 #                                                           #
-#	Copyright (C) 1999 Claudio Agostinelli              #
+#	Copyright (C) 2000 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
-wle.normal_function(data,boot,group,num.sol=1,raf=1,smooth=0.00300996,tol=10^(-6),equal=10^(-3),max.iter=500)
+wle.normal <- function(x, boot=30, group, num.sol=1, raf="HD", smooth=0.003, tol=10^(-6), equal=10^(-3), max.iter=500)
 {
 
-data_as.vector(data)
-size_length(data)
+raf <- switch(raf,
+	HD = 1,
+	NED = 2,
+	SCHI2 = 3,
+	-1)
 
-if(size<3){stop("wle.normal: Number of observation must be at least equal to 3")}
-if(!(group>1)){
-group_max(round(size/4),3)
-warning("wle.normal: dimension of the subsample set to default value")
+if (raf==-1) stop("Please, choose the RAF: HD=Hellinger Disparity, NED=Negative Exponential Disparity, SCHI2=Symmetric Chi-squares Disparity")
+
+if (missing(group)) {
+group <- 0
 }
-maxboot_sum(log(1:size))-(sum(log(1:group))+sum(log(1:(size-group))))
-if(boot<1 | log(boot) > maxboot){
-stop("wle.normal: bootstrap replication not in the range")
+
+x <- as.vector(x)
+size <- length(x)
+result <- list()
+
+if (size<2) {
+stop("Number of observation must be at least equal to 2")
 }
-if(!(num.sol>=1)){
-warning("wle.normal: number of solution to report set to 1")
-num.sol_1
+
+if (group<2) {
+group <- max(round(size/4),2)
+cat("wle.normal: dimension of the subsample set to default value: ",group,"\n")
 }
-if(!(raf==1 | raf==2 | raf==3)){
-warning("wle.normal: Helliger Residual Adjustment Function is used")
-raf_1
+
+maxboot <- sum(log(1:size))-(sum(log(1:group))+sum(log(1:(size-group))))
+
+if (boot<1 | log(boot) > maxboot) {
+stop("Bootstrap replication not in the range")
 }
-if(max.iter<1){
-warning("wle.normal: max number of iteration set to 500")
-max.iter_500
+
+if (!(num.sol>=1)) {
+cat("wle.normal: number of solution to report set to 1 \n")
+num.sol <- 1
 }
-if(smooth<10^(-5)){
-warning("wle.normal: the smooth parameter seems too small")
+
+if (max.iter<1) {
+cat("wle.normal: max number of iteration set to 500 \n")
+max.iter <- 500
 }
-if(tol<0){
-warning("wle.normal: the accuracy can not be negative, using default value")
-tol_10^(-6)
+
+if (smooth<10^(-5)) {
+cat("wle.normal: the smooth parameter seems too small \n")
 }
-if(equal<0){
-warning("wle.normal: the equal parameter can not be negative, using default value")
-equal_10^(-3)
+
+if (tol<0) {
+cat("wle.normal: the accuracy can not be negative, using default value \n")
+tol <- 10^(-6)
+}
+
+if (equal<0) {
+cat("wle.normal: the equal parameter can not be negative, using default value \n")
+equal <- 10^(-3)
 }
 
   z <- .Fortran("wlenorm",
-	as.double(data), 
+	as.double(x), 
 	as.integer(size),
 	as.integer(boot),
 	as.integer(group),
@@ -66,16 +85,47 @@ equal_10^(-3)
 	weight=mat.or.vec(num.sol,size),
 	same=integer(num.sol),
 	nsol=integer(1),
-	nconv=integer(1))
+	nconv=integer(1),
+	PACKAGE = "wle")
 
+if (z$nsol>0) {
+result$location <- z$mean[1:z$nsol]
+result$scale <- sqrt(z$var[1:z$nsol])
+     if (z$nsol>1) {
+          result$residuals <- matrix(rep(x,z$nsol),nrow=z$nsol,byrow=TRUE) - matrix(rep(z$mean[1:z$nsol],size),nrow=z$nsol,byrow=FALSE)
+     } else {
+          result$residuals <- x - result$location
+     }
+result$tot.weights <- z$totweight[1:z$nsol]
+result$weights <- z$weight[1:z$nsol,]
+result$freq <- z$same[1:z$nsol]
+result$tot.sol <- z$nsol
+result$not.conv <- z$nconv
+result$call <- match.call()
 
+class(result) <- "wle.normal"
 
-
-
-return(list(location=z$mean[1:z$nsol],scale=sqrt(z$var)[1:z$nsol],tot.weights=z$totweight[1:z$nsol],weights=z$weight[1:z$nsol,],freq=z$same[1:z$nsol],tot.sol=z$nsol,not.conv=z$nconv))
-
+return(result)
+} else{
+stop("No solutions are fuond, checks the parameters")
+}
 }
 
+print.wle.normal <- function(x, digits = max(3, getOption("digits") - 3), ...)
+{
+    cat("\nCall:\n",deparse(x$call),"\n\n",sep="")
+    cat("Location:\n")
+    print.default(format(x$location, digits=digits),
+		  print.gap = 2, quote = FALSE)
+    cat("\n")
+    cat("Scale:\n")
+    print.default(format(x$scale, digits=digits),
+		  print.gap = 2, quote = FALSE)
+    cat("\n")
+    cat("\nNumber of solutions ",x$tot.sol,"\n")
+    cat("\n")
+    invisible(x)
+}
 
 
 

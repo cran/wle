@@ -1,4 +1,4 @@
-      SUBROUTINE WLENORM (DATA,NSIZE,NBOOT,NGRP,NREP,IRAF,RK,
+      SUBROUTINE WLENORM (DATI,NSIZE,NBOOT,NGRP,NREP,IRAF,RK,
      & RPREC,REQUAL,IMAX,dmedia,varia,totpesi,pesi,nsame,nsol,
      & nconv)
 
@@ -15,13 +15,13 @@ C             ITALIA
 C
 C     E-mail: claudio@stat.unipd.it
 C
-C     October, 10 1999
+C     December, 19 2000
 C
-C     Version: 0.2
+C     Version: 0.3
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
-C    Copyright (C) 1999 Claudio Agostinelli
+C    Copyright (C) 2000 Claudio Agostinelli
 C
 C    This program is free software; you can redistribute it and/or modify
 C    it under the terms of the GNU General Public License as published by
@@ -41,14 +41,14 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
 C     PARAMETER:
 C     NAME:     I/O:    TYPE:  DIMENSIONS:   DESCRIPTIONS:
-C     DATA      input    D      NSIZE        vector of the data
+C     DATI      input    D      NSIZE        vector of the data
 C     NSIZE     input    I      1            length of the data 
 C     NBOOT     input    I      1            number of bootstrap replication
 C     NGRP      input    I      1            dimension of the subsample 
 C     NREP      input    I      1            number of solution be reported
 C     IRAF      input    I      1            type of RAF
 C                                            1: Hellinger distance 
-C                                            2: Negative Exponential disparity 
+C                                            2: Negative Exponentia`l disparity 
 C                                            3: Chi squared disparity
 C     RK        input    D      1            smoothing parameter
 C     RPREC     input    D      1            precision of the convergence 
@@ -61,7 +61,7 @@ C     dmedia     output   D      NREP         the WLE mean
 C     varia     output   D      NREP         the WLE variance
 C     totpesi   output   D      NREP         the total sum of the weights
 C     pesi      output   D      NREP*NSIZE   the weights
-C     nsame     output   I      1            frequencies of each root
+C     nsame     output   I      NREP         frequencies of each root
 C     nsol      output   I      1            the total number of solutions
 C     nconv     output   I      1            number of boostrap sampling that 
 C                                            does not converge
@@ -97,9 +97,9 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       implicit double precision(a-h,o-z)
       implicit integer (n,i,j)
 
+      parameter(dzero=0.0d00)
       parameter(duno=1.0d00)
       parameter(ddue=2.0d00)
-      parameter(dqu=2.0d00)
 
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C     rerr: The smallest double precision number can be treated
@@ -110,13 +110,11 @@ C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       dimension d(nsize),rm(nsize),delta(nsize),adelta(nsize)
       dimension ds(nsize),rw(nsize)
-      dimension data(nsize)
+      dimension dati(nsize)
       dimension dmedia(nrep),varia(nrep), totpesi(nrep)
-      dimension pesi(nrep,nsize),nsame(nboot)
+      dimension pesi(nrep,nsize),nsame(nrep)
   
       dimension sub(ngrp), nstart(nsize)
-      dimension storep(nboot,3)
-      dimension storew(nboot,nsize)
       dimension nrand(nboot,ngrp)
 
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
@@ -127,20 +125,16 @@ C     the genprm subroutine generate a permuation of an array
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
-      do 30 i=1,nboot
+      do 30 i=1,nrep
          nsame(i)=0
-      do 40 j=1,3
-         storep(i,j)=0.0d00
-
- 40   continue
  30   continue
       
       do 50 i=1,nsize
          nstart(i)=i
  50   continue
 
-C      nconv=0 
-C      nsol=0
+      nconv=0 
+      nsol=0
 
 
 C Start bootstrapping
@@ -169,7 +163,7 @@ C Initial values
  60   continue
 
       do 90 i=1,ngrp
-         sub(i)=data(nstart(i))
+         sub(i)=dati(nstart(i))
          nrand(iboot,i)=nstart(i)
  90   continue
 
@@ -209,12 +203,14 @@ C     Iteration Steps until convergence achieved
          rm(i)=0.0d00
 
          do 120 ik=1,nsize
-      ds(ik)=dexp(-((data(i)-data(ik))**dqu)/(dqu*rnowh))/dsqrt(rnowh)
+      ds(ik)=dexp(-((dati(i)-dati(ik))**ddue)/(ddue*rnowh))/
+     &       dsqrt(rnowh)
             d(i)=d(i)+ds(ik)
  120      continue
 
          d(i)=d(i)/nsize      
-	rm(i)=dexp(-((data(i)-rnowm)**dqu)/(dqu*rnowhs))/dsqrt(rnowhs)
+	rm(i)=dexp(-((dati(i)-rnowm)**ddue)/(ddue*rnowhs))/
+     &        dsqrt(rnowhs)
 
  130  continue
 
@@ -229,10 +225,10 @@ C IRAF = 2 Negative Exponential disparity
 C IRAF = 3 Chi Squared disparity
 
           if(iraf.eq.1) then   
-             adelta(i)=dqu*(dsqrt(delta(i)+duno)-duno)
+             adelta(i)=ddue*(dsqrt(delta(i)+duno)-duno)
           endif
           if(iraf.eq.2) then
-             adelta(i)=dqu - (dqu+delta(i))*dexp(-delta(i))
+             adelta(i)=ddue - (ddue+delta(i))*dexp(-delta(i))
           endif   
           if(iraf.ne.3) then
              rw(i)=(adelta(i)+duno)/(delta(i)+duno)
@@ -241,32 +237,32 @@ C IRAF = 3 Chi Squared disparity
      &       ddue))
           endif
 
-             if(rw(i).lt.0.0) then 
-                rw(i)=0.0d00
+             if(rw(i).lt.dzero) then 
+                rw(i)=dzero
              endif
-             if(rw(i).gt.1.0) then
-                rw(i)=1.0d00
+             if(rw(i).gt.duno) then
+                rw(i)=duno
              endif
              
          else
-             rw(i)=0.0d00
+             rw(i)=dzero
          endif         
  140   continue
 
-      tot=0.0d00
-      totloc=0.0d00
-      totvar=0.0d00
+      tot=dzero
+      totloc=dzero
+      totvar=dzero
 
       do 150 i=1,nsize
          tot=tot+rw(i)
-         totloc=totloc+rw(i)*data(i)
+         totloc=totloc+rw(i)*dati(i)
  150   continue   
 
       roldm=rnowm
       rnowm=totloc/tot
 
       do 160 i=1,nsize
-         totvar=totvar+rw(i)*((data(i)-rnowm)**2)
+         totvar=totvar+rw(i)*((dati(i)-rnowm)**2)
  160   continue
 
       rolds=rnows
@@ -294,16 +290,16 @@ C
       if(nsol.eq.0) then
          nsol=nsol+1
          nsame(1)=1 
-         storep(nsol,1)=rnowm
-         storep(nsol,2)=rnows
-         storep(nsol,3)=tot
+         dmedia(nsol)=rnowm
+         varia(nsol)=rnows
+         totpesi(nsol)=tot
          do 170 i=1,nsize
-            storew(nsol,i)=rw(i)
+            pesi(nsol,i)=rw(i)
  170     continue
       else
          do 180 isol=1,nsol
-            diffm=abs(rnowm-storep(isol,1))
-            diffs=abs(rnows-storep(isol,2))
+            diffm=abs(rnowm-dmedia(isol))
+            diffs=abs(rnows-varia(isol))
             if(diffm.lt.requal.and.diffs.lt.requal
      &          ) then
                    nsame(isol)=nsame(isol)+1
@@ -312,11 +308,11 @@ C
  180     continue
                    nsol=nsol+1
 		   nsame(nsol)=1
-      		   storep(nsol,1)=rnowm
-      		   storep(nsol,2)=rnows
-      		   storep(nsol,3)=tot
+      		   dmedia(nsol)=rnowm
+      		   varia(nsol)=rnows
+      		   totpesi(nsol)=tot
                    do 200 i=1,nsize
-                      storew(nsol,i)=rw(i)
+                      pesi(nsol,i)=rw(i)
  200               continue
  190               continue
       endif 
@@ -330,58 +326,8 @@ C
 
  900  continue
 
-C write down the results and return
-
  6666 continue
-
-      do 210 isol=1,nsol 
-         dmedia(isol)=storep(isol,1)
-         varia(isol)=storep(isol,2)
-         totpesi(isol)=storep(isol,3)
-  210  continue
-
-      do 220 isol=1,nsol 
-         do 230 i=1,nsize
-            pesi(isol,i)=storew(isol,i)
- 230     continue 
- 220  continue
 
       return
       end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

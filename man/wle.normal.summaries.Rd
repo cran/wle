@@ -1,0 +1,22 @@
+\name{wle.normal.summaries}
+\title{Summaries and methods for wle.normal}
+\usage{
+print.wle.normal(x, digits = max(3, getOption("digits") - 3), ...)
+}
+
+\alias{print.wle.normal}
+
+\arguments{
+ \item{x}{an object of class \code{wle.normal}.}
+}
+
+\description{Until now, only print \code{\link{methods}} is available for class \code{wle.normal}. \code{print.wle.normal} print nicely the output.}
+
+\author{Claudio Agostinelli}
+
+\seealso{\code{\link{wle.normal}} a function for estimating normal location and scale models.}
+
+%\examples{}
+
+\keyword{Weighted Likelihood}
+\keyword{robust}

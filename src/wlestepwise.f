@@ -16,9 +16,9 @@ C             ITALIA
 C
 C     E-mail: claudio@stat.unipd.it
 C
-C     October, 10 1999
+C     July, 6, 2000
 C
-C     Version: 0.2
+C     Version: 0.3
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
@@ -26,8 +26,8 @@ C    Copyright (C) 1999 Claudio Agostinelli
 C
 C    This program is free software; you can redistribute it and/or modify
 C    it under the terms of the GNU General Public License as published by
-C    the Free Software Foundation; version 2 of the License.
-C 
+C    the Free Software Foundation; either version 2 of the License, or
+C    (at your option) any later version.
 C
 C   This program is distributed in the hope that it will be useful,
 C    but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -333,11 +333,6 @@ C          write(*,*) 'dpesi: ',dpesi
                 
           endif   
 
-C
-C     Modificare per altri metodi 
-C
-
-
  9999 continue
 
 C      write(*,*) 'nmodel: ', nmodel
@@ -446,10 +441,10 @@ C         write(*,*) 'dvarmod ',dvarmod
 
          if (ntype.eq.1) then
             ftest(ipos,isol) = (dvarmod - avaria(isol))
-     &           / (avaria(isol)/(nsize-jpos-1))
+     &           / (avaria(isol)/((dtotpesi*dsize)-jpos-1))
          elseif(ntype.eq.2) then
             ftest(ipos,isol) = (avaria(isol) - dvarmod)
-     &           / (dvarmod/(nsize-jpos))            
+     &           / (dvarmod/((dtotpesi*dsize)-jpos))            
          endif   
 
 

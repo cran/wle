@@ -1,23 +1,34 @@
 Some of the source files are not written by the author of this package. This is a complete list of these files:
 
-getcgn.f         
-d1mach.f          i1mach.f         
-dasum.f           idamax.f          
-daxpy.f           ignlgi.f          xgetun.f
-dcopy.f           ignuin.f          xerbla.f
-ddot.f            initgn.f          xermax.f
-dgeco.f           j4save.f          xerclr.f
-dgedi.f           lsame.f           xercnt.f
-dgefa.f           inrgcm.f          xerdmp.f
-dgemm.f           genprm.f          xerhlt.f
-dnrm2.f           mltmod.f          xermsg.f
-dqrdc.f           qrgnin.f          xerprn.f
-dqrsl.f           r1mach.f          xersve.f
-dscal.f           setall.f          xgetf.f
-dswap.f                     	    xgetua.f
-fdump.f
-dgemv.f          
-        
+d1mach.f          dqrdc.f           
+d9lgmc.f          dqrsl.f           
+dasum.f           dscal.f           
+daxpy.f           dswap.f           
+dcopy.f           fdump.f           
+dcsevl.f          genprm.f         
+ddot.f            getcgn.f          
+i1mach.f          xerbla.f
+dgamlm.f          idamax.f          
+dgamma.f          ignlgi.f          
+dgeco.f           ignuin.f          
+dgedi.f           initds.f          
+dgefa.f           initgn.f          
+dgemm.f           inrgcm.f         
+dgemv.f           j4save.f          
+dnrm2.f           lsame.f          
+dqagi.f           xermax.f
+dqagie.f          xermsg.f
+dqagp.f           xerprn.f
+dqagpe.f          xersve.f
+dqelg.f           mltmod.f          
+dqk15i.f          qrgnin.f         
+dqk21.f           r1mach.f  
+dqpsrt.f          setall.f
+xerclr.f          xgetf.f
+xercnt.f          xgetua.f
+xerdmp.f          xgetun.f
+xerhlt.f
+      
 Some of these files are from the library SLATEC Common Mathematical Library (and some from LINPACK and BLAS) and some others are from the RANLIB.F library. You can find booth complete library in www.netlib.org
 
 RANLIB.F library ACM Transactions policy, hereafter follows the entire LEGALITIES:

@@ -3,70 +3,120 @@
 #	WLE.AIC function                                    #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@stat.unipd.it                       #
-#	Date: October, 10, 1999                             #
-#	Version: 0.2                                        #
+#	Date: December, 19, 2000                            #
+#	Version: 0.3                                        #
 #                                                           #
-#	Copyright (C) 1999 Claudio Agostinelli              #
+#	Copyright (C) 2000 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
-wle.aic_function(ydata,xdata,boot=100,group,inter=1,var.full=0,num.sol=1,raf=1,smooth=0.0320018,tol=10^(-6),equal=10^(-3),max.iter=500,min.weight=0.5,type=0,alpha=2)
+wle.aic<- function(formula, data=list(), model=TRUE, x=FALSE, y=FALSE, boot=30, group, var.full=0, num.sol=1, raf="HD", smooth=0.031, tol=10^(-6), equal=10^(-3), max.iter=500, min.weight=0.5, method="full", alpha=2, contrasts=NULL)
 {
-size_length(ydata)
-nvar_length(xdata)/length(ydata)
-nrep_(2^(nvar+inter))-1
 
-if(size<nvar+inter+2){stop("wle.aic: Number of observation must be at least equal to the number of predictors (including intercept) + 2")}
-if(nvar<1){stop("Warning: wle.aic: the number of the predictors must be at least one")}
-maxboot_sum(log(1:size))-(sum(log(1:group))+sum(log(1:(size-group))))
-if(boot<1 | log(boot) > maxboot){
-stop("wle.aic: bootstrap replication not in the range")
+raf <- switch(raf,
+	HD = 1,
+	NED = 2,
+	SCHI2 = 3,
+	-1)
+
+if (raf==-1) stop("Please, choose the RAF: HD=Hellinger Disparity, NED=Negative Exponential Disparity, SCHI2=Symmetric Chi-squares Disparity")
+
+type <- switch(method,
+	full = 0,
+	reduced = 1,
+	-1)
+
+if (type==-1) stop("Please, choose the method: full=wieghts based on full model, reduced=weights based on the actual model")
+
+if (missing(group)) {
+group <- 0
 }
-if(!(inter==1)){inter_0}
-if(!(group>1)){
-group_max(round(size/4),nvar+inter+2)
-warning("wle.aic: dimension of the subsample set to default value")
+
+    ret.x <- x
+    ret.y <- y
+    result <- list()	
+    mt <- terms(formula, data = data)
+    mf <- cl <- match.call()
+    mf$boot <- mf$group <- mf$smooth <- NULL
+    mf$tol <- mf$equal <- mf$num.sol <- NULL
+    mf$min.weight <- mf$max.iter <- mf$raf <- NULL
+    mf$var.full <- mf$alpha <- mf$contrasts <- NULL
+    mf$model <- mf$x <- mf$y <- mf$method <- NULL
+    mf$drop.unused.levels <- TRUE
+    mf[[1]] <- as.name("model.frame")
+    mf <- eval(mf, sys.frame(sys.parent()))
+    xvars <- as.character(attr(mt, "variables"))[-1]
+    inter <- attr(mt, "intercept")
+    if((yvar <- attr(mt, "response")) > 0) xvars <- xvars[-yvar]
+    xlev <-
+	if(length(xvars) > 0) {
+	    xlev <- lapply(mf[xvars], levels)
+	    xlev[!sapply(xlev, is.null)]
+	}
+    ydata <- model.response(mf, "numeric")
+    if (is.empty.model(mt)) 
+	stop("The model is empty")
+    else 
+	xdata <- model.matrix(mt, mf, contrasts)
+
+if (is.null(size <- nrow(xdata)) | is.null(nvar <- ncol(xdata))) stop("'x' must be a matrix")
+if (length(ydata)!=size) stop("'y' and 'x' are not compatible")
+
+nrep <- 2^nvar-1
+
+if (size<nvar) {
+stop("Number of observations must be at least equal to the number of predictors (including intercept)")
 }
-if(!(num.sol>=1)){
-warning("wle.aic: number of solution to report set to 1")
-num.sol_1
+
+if (group<nvar) {
+group <- max(round(size/4),nvar)
+cat("wle.aic: dimension of the subsample set to default value = ",group,"\n")
 }
-if(!(raf==1 | raf==2 | raf==3)){
-warning("wle.aic: Helliger Residual Adjustment Function is used")
-raf_1
+
+maxboot <- sum(log(1:size))-(sum(log(1:group))+sum(log(1:(size-group))))
+
+if (boot<1 | log(boot) > maxboot) {
+stop("bootstrap replication not in the range")
 }
-if(max.iter<1){
-warning("wle.aic: max number of iteration set to 500")
-max.iter_500
+
+if (!(num.sol>=1)) {
+cat("wle.aic: number of solution to report set to 1 \n")
+num.sol <- 1
 }
-if(smooth<10^(-5)){
-warning("wle.aic: the smooth parameter seems too small")
+
+if(max.iter<1) {
+cat("wle.aic: max number of iteration set to 500 \n")
+max.iter <- 500
 }
-if(tol<0){
-warning("wle.aic: the accuracy can not be negative, using default value")
-tol_10^(-6)
+
+if (smooth<10^(-5)) {
+cat("wle.aic: the smooth parameter seems too small \n")
 }
-if(equal<0){
-warning("wle.aic: the equal parameter can not be negative, using default value")
-equal_10^(-3)
+
+if (tol<0) {
+cat("wle.aic: the accuracy can not be negative, using default value \n")
+tol <- 10^(-6)
 }
-if(var.full<0){
-warning("wle.aic: the variance of the full model can not be negative, using default value")
-var.full_0
+
+if (equal<0) {
+cat("wle.aic: the equal parameter can not be negative, using default value \n")
+equal <- 10^(-3)
 }
-if(min.weight<0){
-warning("wle.aic: the minimum sum of the weights can not be negative, using default value")
-min.weight_0.5
+
+if (var.full<0) {
+cat("wle.aic: the variance of the full model can not be negative, using default value \n")
+var.full <- 0
 }
-if(!(type==0 | type==1)){
-warning("wle.aic: the type must be 0 or 1, the default value is 0")
-type_0
+
+if (min.weight<0) {
+cat("wle.aic: the minimum sum of the weights can not be negative, using default value \n")
+min.weight <- 0.5
 }
 
   z <- .Fortran("wleaic",
 	as.double(ydata),
 	as.matrix(xdata),
-	as.integer(inter), 
+	as.integer(0), 
 	as.integer(size),
 	as.integer(nvar),
 	as.integer(boot),
@@ -82,24 +132,106 @@ type_0
 	as.double(min.weight),
 	as.integer(type),
 	as.double(alpha),
-	cp=mat.or.vec(nrep*num.sol,nvar+inter+1),
-	param=mat.or.vec(nrep*num.sol,nvar+inter),
+	waic=mat.or.vec(nrep*num.sol,nvar+1),
+	param=mat.or.vec(nrep*num.sol,nvar),
 	var=double(nrep*num.sol),
 	resid=mat.or.vec(nrep*num.sol,size),
 	totweight=double(nrep*num.sol),
 	weight=mat.or.vec(nrep*num.sol,size),
 	same=integer(nrep*num.sol),
-	info=integer(1))
+	info=integer(1),
+	PACKAGE="wle")
 
-delnull_z$same==0
-cp_z$cp[!delnull,]
-param_z$param[!delnull,]
-var_z$var[!delnull]
-resid_z$resid[!delnull,]
-totweight_z$totweight[!delnull]
-weight_z$weight[!delnull,]
-same_z$same[!delnull]
+delnull <- z$same==0
 
-return(list(waic=cp,coefficients=param,scale=sqrt(var),residuals=resid,tot.weights=totweight,weights=weight,freq=same,info=z$info))
+result$waic <- z$waic[!delnull,]
+result$coefficients <- z$param[!delnull,]
+result$scale <- sqrt(z$var[!delnull])
+result$residuals <- z$resid[!delnull]
+result$weights <- z$weight[!delnull,]
+result$tot.weights <- z$totweight[!delnull]
+result$freq <- z$same[!delnull]
+result$call <- cl
+result$info <- z$info
+result$contrasts <- attr(xdata, "contrasts")
+result$xlevels <- xlev
+result$terms <- mt
 
+if (model)
+    result$model <- mf
+if (ret.x)
+    result$x <- xdata
+if (ret.y)
+    result$y <- ydata
+
+dn <- colnames(xdata)
+dimnames(result$coefficients) <- list(NULL,dn)
+dimnames(result$waic) <- list(NULL,c(dn,"waic"))
+
+class(result) <- "wle.aic"
+
+return(result)
 }
+
+
+summary.wle.aic <- function (object, num.max=20, ...) {
+
+z <- .Alias(object)
+if (is.null(z$terms)) {
+    stop("invalid \'wle.aic\' object")
+}
+
+if (num.max<1) {
+cat("summary.wle.aic: num.max can not less than 1, num.max=1 \n")
+num.max <- 1
+}
+
+ans <- list()
+waic <- z$waic
+if (is.null(nmodel <- nrow(waic))) nmodel <- 1
+num.max <- min(nmodel,num.max)
+if (nmodel!=1) { 
+    nvar <- ncol(waic)-1
+    waic <- waic[order(waic[,(nvar+1)]),]
+    waic <- waic[1:num.max,]
+}
+
+ans$waic <- waic
+ans$num.max <- num.max
+ans$call <- z$call
+
+class(ans) <- "summary.wle.aic"
+return(ans)
+}
+
+print.wle.aic <- function (x, digits = max(3, getOption("digits") - 3), ...) {
+res_summary.wle.aic(object=x, num.max=nrow(x$waic), ...)
+print.summary.wle.aic(res, digits=digits, ...)
+}
+
+print.summary.wle.aic <- function (x, digits = max(3, getOption("digits") - 3), ...) {
+    cat("\nCall:\n")
+    cat(paste(deparse(x$call), sep="\n", collapse = "\n"), "\n\n", sep="")
+
+    cat("\nWeighted Akaike Information Criterion (WAIC):\n")
+    if(x$num.max>1) {
+    nvar <- ncol(x$waic)-1
+    x$waic[,(nvar+1)] <- signif(x$waic[,(nvar+1)],digits)
+    } else {
+    nvar <- length(x$waic)-1
+    x$waic[(nvar+1)] <- signif(x$waic[(nvar+1)],digits)
+    }
+    print(x$waic)
+    cat("\n")
+
+    cat("Printed the first ",x$num.max," best models \n") 
+    invisible(x)
+}
+
+
+
+
+
+
+
+

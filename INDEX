@@ -2,9 +2,10 @@ artificial               Hawkins, Bradu, Kass's Artificial Data
 cavendish                Cavendish's determinations of the mean density
                          of the earth Data
 hald                     Hald Data
-mle.aic                  Classical Akaike Information Criterion
-mle.cp                   Classical Mallows Cp
+mle.aic                  Akaike Information Criterion
+mle.cp                   Mallows Cp
 mle.cv                   Cross Validation Selection Method
+mle.stepwise             Stepwise, Backward and Forward selection methods
 plot.mle.cp              Plot the Mallows Cp
 plot.wle.cp              Plot the Weighted Mallows Cp
 plot.wle.lm              Plots for the Linear Model
@@ -12,7 +13,7 @@ selection                Selection's Data
 wle.aic                  Weighted Akaike Information Criterion
 wle.cp                   Weighted Mallows Cp
 wle.cv                   Model Selection by Weighted Cross-Validation
-wle.lm                   Fitting Linear Models
+wle.lm                   Fitting Linear Models using Weighted Likelihood
 wle.normal               Robust Estimation in the Normal Model
 wle.normal.multi         Robust Estimation in the Normal Multivariate
                          Model

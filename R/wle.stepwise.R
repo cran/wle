@@ -3,80 +3,128 @@
 #	WLE.STEPWISE function                               #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@stat.unipd.it                       #
-#	Date: October, 10, 1999                             #
-#	Version: 0.2                                        #
+#	Date: December, 19, 2000                            #
+#	Version: 0.3                                        #
 #                                                           #
-#	Copyright (C) 1999 Claudio Agostinelli              #
+#	Copyright (C) 2000 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
-wle.stepwise_function(ydata,xdata,boot=100,group,inter=1,num.sol=1,raf=1,smooth=0.0320018,tol=10^(-6),equal=10^(-3),max.iter=500,min.weight=0.5,type="Forward",f.in=0.0,f.out=0.0,method="WLE")
+wle.stepwise <- function(formula, data=list(), model=TRUE, x=FALSE, y=FALSE, boot=30, group, num.sol=1, raf="HD", smooth=0.031, tol=10^(-6), equal=10^(-3), max.iter=500, min.weight=0.5, type="Forward", f.in=4.0, f.out=4.0, method="WLE", contrasts=NULL)
 {
-size_length(ydata)
-xdata_as.matrix(xdata)
-nvar_length(c(xdata))/length(ydata)
-nrep_(2^(nvar+inter))-1
 
-if(size<nvar+inter+2){stop("wle.stepwise: Number of observation must be at least equal to the number of predictors (including intercept) + 2")}
-if(nvar<1){stop("wle.stepwise: The number of the predictors must be at least one")}
-maxboot_sum(log(1:size))-(sum(log(1:group))+sum(log(1:(size-group))))
-if(boot<1 | log(boot) > maxboot){
-stop("wle.stepwise: bootstrap replication not in the range")
-}
-if(!(inter==1)){inter_0}
-if(!(group>1)){
-group_max(round(size/4),nvar+inter+2)
-warning("wle.stepwise: dimension of the subsample set to default value")
-}
-if(!(num.sol>=1)){
-warning("wle.stepwise: number of solution to report set to 1")
-num.sol_1
-}
-if(!(raf==1 | raf==2 | raf==3)){
-warning("wle.stepwise: Helliger Residual Adjustment Function is used")
-raf_1
-}
-if(max.iter<1){
-warning("wle.stepwise: max number of iteration set to 500")
-max.iter_500
-}
-if(smooth<10^(-5)){
-warning("wle.stepwise: the smooth parameter seems too small")
-}
-if(tol<0){
-warning("wle.stepwise: the accuracy can not be negative, using default value")
-tol_10^(-6)
-}
-if(equal<0){
-warning("wle.stepwise: the equal parameter can not be negative, using default value")
-equal_10^(-3)
-}
-if(min.weight<0){
-warning("wle.stepwise: the minimum sum of the weights can not be negative, using default value")
-min.weight_0.5
-}
-if(!(type=="Forward" | type=="Backward" | type=="Stepwise")){
-warning("wle.stepwise: the type must be Forward, Backward or Stepwise, the default value is Forward")
-type_"Forward"
+raf <- switch(raf,
+	HD = 1,
+	NED = 2,
+	SCHI2 = 3,
+	-1)
+
+if (raf==-1) stop("Please, choose the RAF: HD=Hellinger Disparity, NED=Negative Exponential Disparity, SCHI2=Symmetric Chi-squares Disparity")
+
+ntype <- switch(type,
+	Forward = 1,
+	Backward = 2,
+	Stepwise = 3,
+	-1)
+
+if (ntype==-1) stop("The type must be Forward, Backward or Stepwise")
+
+nmethod <- switch(method,
+		WLE = 0,
+	        WLS = 1,
+		-1)
+
+if (nmethod==-1) stop("The method must be WLE, or WLS the default value is WLE")
+
+if (missing(group)) {
+group <- 0
 }
 
-if(type=="Forward"){ntype_1}
-if(type=="Backward"){ntype_2}
-if(type=="Stepwise"){ntype_3}
+    ret.x <- x
+    ret.y <- y
+    result <- list()	
+    mt <- terms(formula, data = data)
+    mf <- cl <- match.call()
+    mf$boot <- mf$group <- mf$smooth <- NULL
+    mf$tol <- mf$equal <- mf$num.sol <- NULL
+    mf$max.iter <- mf$raf <- mf$contrasts <- NULL
+    mf$min.weight <- NULL
+    mf$type <- mf$f.in <- mf$f.out <- NULL
+    mf$model <- mf$x <- mf$y <- mf$method <- NULL
+    mf$drop.unused.levels <- TRUE
+    mf[[1]] <- as.name("model.frame")
+    mf <- eval(mf, sys.frame(sys.parent()))
+    xvars <- as.character(attr(mt, "variables"))[-1]
+    inter <- attr(mt, "intercept")
+    if((yvar <- attr(mt, "response")) > 0) xvars <- xvars[-yvar]
+    xlev <-
+	if(length(xvars) > 0) {
+	    xlev <- lapply(mf[xvars], levels)
+	    xlev[!sapply(xlev, is.null)]
+	}
+    ydata <- model.response(mf, "numeric")
+    if (is.empty.model(mt)) 
+	stop("The model is empty")
+    else 
+	xdata <- model.matrix(mt, mf, contrasts)
 
-if(!(method=="WLE" | method=="WLS")){
-warning("wle.stepwise: the method must be WLE, or WLS the default value is WLE")
-method_"WLE"
+if (is.null(size <- nrow(xdata)) | is.null(nvar <- ncol(xdata))) stop("'x' must be a matrix")
+if (length(ydata)!=size) stop("'y' and 'x' are not compatible")
 
+if (size<nvar) {
+stop("Number of observations must be at least equal to the number of predictors (including intercept)")
 }
 
-if(method=="WLE"){nmethod_0}
-if(method=="WLS"){nmethod_1}
+if (f.in<0 | f.out<0) {
+stop("f.in and f.out can not be negative")
+}
+
+if (group<1) {
+group <- max(round(size/4),nvar)
+cat("wle.stepwise: dimension of the subsample set to default value: ",group,"\n")
+}
+
+maxboot <- sum(log(1:size))-(sum(log(1:group))+sum(log(1:(size-group))))
+
+if (boot<1 | log(boot) > maxboot) {
+stop("Bootstrap replication not in the range")
+}
+
+if (!(num.sol>=1)) {
+cat("wle.stepwise: number of solution to report set to 1 \n")
+num.sol <- 1
+}
+
+if (max.iter<1) {
+cat("wle.stepwise: max number of iteration set to 500 \n")
+max.iter <- 500
+}
+
+if (smooth<10^(-5)) {
+cat("wle.stepwise: the smooth parameter seems too small \n")
+}
+
+if (tol<0) {
+cat("wle.stepwise: the accuracy can not be negative, using default value \n")
+tol <- 10^(-6)
+}
+
+if (equal<0) {
+cat("wle.stepwise: the equal parameter can not be negative, using default value \n")
+equal <- 10^(-3)
+}
+
+if (min.weight<0) {
+cat("wle.stepwise: the minimum sum of the weights can not be negative, using default value \n")
+min.weight <- 0.5
+}
+
+nrep <- 2^nvar-1
 
   z <- .Fortran("wstep",
 	as.double(ydata),
 	as.matrix(xdata),
-	as.integer(inter), 
+	as.integer(0), 
 	as.integer(size),
 	as.integer(nvar),
 	as.integer(boot),
@@ -93,8 +141,8 @@ if(method=="WLS"){nmethod_1}
 	as.double(f.in),
 	as.double(f.out),
 	as.integer(nmethod),
-	step=mat.or.vec(nrep,nvar+inter+1),
-	param=mat.or.vec(num.sol,nvar+inter),
+	wstep=mat.or.vec(nrep,nvar+1),
+	param=mat.or.vec(num.sol,nvar),
 	var=double(num.sol),
 	resid=mat.or.vec(num.sol,size),
 	totweight=double(num.sol),
@@ -105,14 +153,116 @@ if(method=="WLS"){nmethod_1}
 	imodel=integer(1),
 	nsol=integer(1))
 
-step_z$step[1:z$imodel,]
-param_z$param[1:z$nsol,]
-var_z$var[1:z$nsol]
-resid_z$resid[1:z$nsol,]
-totweight_z$totweight[1:z$nsol]
-weight_z$weight[1:z$nsol,]
-same_z$same[1:z$nsol]
+result$wstep <- z$wstep[1:z$imodel,]
+result$coefficients <- z$param[1:z$nsol,]
+result$scale <- sqrt(z$var[1:z$nsol])
+result$residuals <- z$resid[1:z$nsol,]
+result$tot.weights <- z$totweight[1:z$nsol]
+result$weights <- z$weight[1:z$nsol,]
+result$freq <- z$same[1:z$nsol]
+result$index <- z$indice
+result$info <- z$info
+result$call <- cl
+result$contrasts <- attr(xdata, "contrasts")
+result$xlevels <- xlev
+result$terms <- mt
+result$type <- type
+result$method <- method
+result$f.in <- f.in
+result$f.out <- f.out
 
-return(list(wstep=step,coefficients=param,scale=sqrt(var),residuals=resid,tot.weights=totweight,weights=weight,tot.sol=z$nsol,freq=same,index=z$indice,info=z$info))
+if (model)
+    result$model <- mf
+if (ret.x)
+    result$x <- xdata
+if (ret.y)
+    result$y <- ydata
+
+dn <- colnames(xdata)
+
+if (is.null(nrow(result$coefficients))) {
+names(result$coefficients) <- dn
+} else {
+dimnames(result$coefficients) <- list(NULL,dn)
+}
+
+if (z$imodel<=1) {
+names(result$wstep) <- c(dn," ")
+} else {
+dimnames(result$wstep) <- list(NULL,c(dn," "))
+}
+
+class(result) <- "wle.stepwise"
+
+return(result)
 
 }
+
+summary.wle.stepwise <- function (object, num.max=20, ...) {
+
+z <- .Alias(object)
+if (is.null(z$terms)) {
+    stop("invalid \'wle.stepwise\' object")
+}
+
+if (num.max<1) {
+cat("summary.wle.stepwise: num.max can not less than 1, num.max=1 \n")
+num.max <- 1
+}
+
+ans <- list()
+wstep <- z$wstep
+if(is.null(nmodel <- nrow(wstep))) nmodel <- 1
+num.max <- min(nmodel,num.max)
+if (nmodel!=1) { 
+    wstep <- wstep[(nmodel-num.max+1):nmodel,]
+}
+
+ans$wstep <- wstep
+ans$num.max <- num.max
+ans$type <- z$type
+ans$f.in <- z$f.in
+ans$f.out <- z$f.out
+ans$call <- z$call
+
+class(ans) <- "summary.wle.stepwise"
+return(ans)
+}
+
+print.wle.stepwise <- function (x, digits = max(3, getOption("digits") - 3), ...) {
+res_summary.wle.stepwise(object=x, num.max=nrow(x$wstep), ...)
+print.summary.wle.stepwise(res, digits=digits, ...)
+}
+
+print.summary.wle.stepwise <- function (x, digits = max(3, getOption("digits") - 3), ...) {
+    cat("\nCall:\n")
+    cat(paste(deparse(x$call), sep="\n", collapse = "\n"), "\n\n", sep="")
+
+    cat("\n",x$type," selection procedure\n")
+    if (x$type=="Forward" | x$type=="Stepwise") {
+	cat("\nF.in: ",x$f.in)
+    } 
+    if (x$type=="Backward" | x$type=="Stepwise") {
+	cat("\nF.out: ",x$f.out)
+    }
+    cat(" \n")
+    cat("\nLast ",x$num.max," iterations:\n")
+
+    if(x$num.max>1) {
+    nvar <- ncol(x$wstep)-1
+    x$wstep[,(nvar+1)] <- signif(x$wstep[,(nvar+1)],digits)
+    } else {
+    nvar <- length(x$wstep)-1
+    x$wstep[(nvar+1)] <- signif(x$wstep[(nvar+1)],digits)
+    }
+    print(x$wstep)
+    cat("\n")
+    invisible(x)
+}
+
+
+
+
+
+
+

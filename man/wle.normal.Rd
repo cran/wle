@@ -1,50 +1,58 @@
 \name{wle.normal}
 \title{Robust Estimation in the Normal Model}
 \usage{
-wle.normal_function(data, boot, group, num.sol=1, raf=1, smooth=0.00300996, tol=10^(-6), equal=10^(-3), max.iter=500)
+wle.normal_function(x, boot=30, group, num.sol=1, raf="HD",
+                    smooth=0.003, tol=10^(-6), equal=10^(-3), 
+                    max.iter=500)
 }
-%- maybe also `usage' for other functions documented here.
 \alias{wle.normal}
-%- Also NEED an `\alias' for EACH other function documented here.
+
 \arguments{
- \item{data}{A vector contain the observations.}
- \item{boot}{The number of starting points based on boostrap subsamples to use in the search of the roots.}
- \item{group}{The dimension of the bootstap subsamples.}
- \item{num.sol}{Maximum number of roots to be searched.}
- \item{raf}{Type of Residual adjustment function to be use:
+  \item{x}{a vector contain the observations.}
 
-\code{raf=1}: Hellinger Distance RAF,
+  \item{boot}{the number of starting points based on boostrap subsamples to use in the search of the roots.}
 
-\code{raf=2}: Negative Exponential Disparity RAF,
+  \item{group}{the dimension of the bootstap subsamples. The default value is \eqn{max(round(size/4),2)} where \eqn{size} is the number of observations.}
 
-\code{raf=3}: Chi-Squared Disparity RAF.
-}
- \item{smooth}{The value of the smoothing parameter.}
- \item{tol}{The absolute accuracy to be used to achieve convergence of the algorithm.
-}
- \item{equal}{The absolute value for which two roots are considered the same. (This parameter must be greater than \code{tol}).}
- \item{max.iter}{Maximum number of iterations.}
+  \item{num.sol}{maximum number of roots to be searched.}
+
+  \item{raf}{type of Residual adjustment function to be use:
+
+\code{raf="HD"}: Hellinger Distance RAF,
+
+\code{raf="NED"}: Negative Exponential Disparity RAF,
+
+\code{raf="SCHI2"}: Symmetric Chi-Squared Disparity RAF.}
+
+  \item{smooth}{the value of the smoothing parameter.}
+
+  \item{tol}{the absolute accuracy to be used to achieve convergence of the algorithm.}
+
+  \item{equal}{the absolute value for which two roots are considered the same. (This parameter must be greater than \code{tol}).}
+
+  \item{max.iter}{maximum number of iterations.}
 }
 \description{
-\code{wle.normal} is used to robust estimate the location and the scale parameters via Weighted Likelihood Methodology, when the sample is iid from a normal distribution with unknown mean and variance.
+\code{wle.normal} is used to robust estimate the location and the scale parameters via Weighted Likelihood, when the sample is iid from a normal distribution with unknown mean and variance.
 }
 
-%\details{}
-
 \value{
-\item{location}{The estimator of the location parameter, one value for each root found.}
 
-\item{scale}{The estimator of the scale parameter, one value for each root found.}
+\code{wle.normal} returns an object of \code{\link{class}} \code{"wle.normal"}.
 
-\item{tot.weights}{The sum of the weights, one value for each root found.}
+  Only print method is implemented for this class.
 
-\item{weights}{The weights associated to each observation, one column vector for each root found.}
+  The object returned by \code{wle.normal} are:
 
-\item{freq}{The number of starting points converging to the roots.}
-
-\item{tot.sol}{The number of solutions found.}
-
-\item{not.conv}{The number of starting points that does not converge after the \code{max.iter} iteration are reached.}
+\item{location}{the estimator of the location parameter, one value for each root found.}
+\item{scale}{the estimator of the scale parameter, one value for each root found.}
+\item{residuals}{the residuals associated to each observation, one column vector for each root found.}
+\item{tot.weights}{the sum of the weights divide by the number of observations, one value for each root found.}
+\item{weights}{the weights associated to each observation, one column vector for each root found.}
+\item{freq}{the number of starting points converging to the roots.}
+\item{call}{the match.call().}
+\item{tot.sol}{the number of solutions found.}
+\item{not.conv}{the number of starting points that does not converge after the \code{max.iter} iteration are reached.}
 
 }
 
@@ -56,8 +64,6 @@ Agostinelli, C., (1998). Inferenza statistica robusta basata sulla funzione di v
 
 \author{Claudio Agostinelli}
 
-%\note{}
-
 \seealso{\link{wle.smooth} an algorithm to choose the smoothing parameter for normal distribution and normal kernel.}
 
 \examples{
@@ -65,13 +71,19 @@ library(wle)
 
 data(cavendish)
 
-result_wle.normal(cavendish,boot=20,group=3,num.sol=3)
+result <- wle.normal(cavendish)
 
-print(result)
+result
 
-barplot(result$weights,col=2,xlab="Observations",ylab="Weights",ylim=c(0,1),names.arg=seq(1:length(result$weights)))
+result <- wle.normal(cavendish,boot=20,num.sol=1)
+
+barplot(result$weights,col=2,xlab="Observations",
+        ylab="Weights",ylim=c(0,1),
+        names.arg=seq(1:length(result$weights)))
 
 }
 
 \keyword{Weighted Likelihood}
+\keyword{robust}
  
+

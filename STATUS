@@ -1,6 +1,14 @@
 Library wle
 ===========
 
+Version 0.4, 2001/03/02
+
+It is added the following functions: wle.binomial, wle.poisson, wle.gamma, wle.t.test and wle.var.test
+
+Version 0.3, 2000/12/20
+
+Now, all the functions (that needs it) use formula, summary and print functions are provided for about all functions. The R code is clean up and some bugs in the fortran code are fixed: one in wlestepwise.f and others in wleregfix.f, wlenorm.f and wlenormalmulti.f. The package use class.  
+
 Version 0.2, 1999/12/25
 
 It is added the following functions: wle.onestep, wle.cp, wle.aic, wle.cv, wle.stepwise, wle.normal.multi, plot.wle.lm, plot.wle.cp and some other functions for classical model selection such as mle.cp, mle.aic, mle.cv and plot.mle.cp. All the function related are documented and some examples and datasets are provided. The error report system from the fortran routine code is set up but not working yet.

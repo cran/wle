@@ -3,75 +3,124 @@
 #	WLE.CV function                                     #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@stat.unipd.it                       #
-#	Date: October, 10, 1999                             #
-#	Version: 0.2                                        #
+#	Date: December, 19, 2000                            #
+#	Version: 0.3                                        #
 #                                                           #
-#	Copyright (C) 1999 Claudio Agostinelli              #
+#	Copyright (C) 2000 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
-wle.cv_function(ydata,xdata,boot=100,group,monte.carlo=500,split,inter=1,num.sol=1,raf=1,smooth=0.0320018,tol=10^(-6),equal=10^(-3),max.iter=500,min.weight=0.5)
+wle.cv <- function(formula, data=list(), model=TRUE, x=FALSE, y=FALSE, monte.carlo=500, split, boot=30, group, num.sol=1, raf="HD", smooth=0.031, tol=10^(-6), equal=10^(-3), max.iter=500, min.weight=0.5, contrasts=NULL)
 {
-size_length(ydata)
-nvar_length(xdata)/length(ydata)
-nrep_(2^(nvar+inter))-1
 
-if(size<nvar+inter+2){stop("wle.cv: Number of observation must be at least equal to the number of predictors (including intercept) + 2")}
-if(nvar<1){stop("wle.cv: the number of the predictors must be at least one")}
+raf <- switch(raf,
+	HD = 1,
+	NED = 2,
+	SCHI2 = 3,
+	-1)
 
-if((!(group>1))|group<(nvar+inter+1)){
-group_max(round(size/4),nvar+inter+2)
-warning("wle.lm: dimension of the subsample set to default value")
-}
+if (raf==-1) stop("Please, choose the RAF: HD=Hellinger Disparity, NED=Negative Exponential Disparity, SCHI2=Symmetric Chi-squares Disparity")
 
-maxboot_sum(log(1:size))-(sum(log(1:group))+sum(log(1:(size-group))))
-if(boot<1 | log(boot) > maxboot){
-stop("wle.cv: bootstrap replication not in the range")
-}
-if(!(inter==1)){inter_0}
-
-if(split<nvar+inter+2 | split>(size-2)){
-split_max(round(size^(3/4)),nvar+inter+2)
-warning(paste("wle.cv: dimension of the split subsample set to default value = ",split))
-}
-maxcarlo_sum(log(1:size))-(sum(log(1:split))+sum(log(1:(size-split))))
-if(monte.carlo<1 | log(monte.carlo) > maxcarlo){
-stop("wle.cv: MonteCarlo replication not in the range")
-}
-if(!(num.sol>=1)){
-warning("wle.cv: number of solution to report set to 1")
-num.sol_1
-}
-if(!(raf==1 | raf==2 | raf==3)){
-warning("wle.cv: Helliger Residual Adjustment Function is used")
-raf_1
-}
-if(max.iter<1){
-warning("wle.cv: max number of iteration set to 500")
-max.iter_500
-}
-if(smooth<10^(-5)){
-warning("wle.cv: the smooth parameter seems too small")
-}
-if(tol<0){
-warning("wle.cv: the accuracy can not be negative, using default value")
-tol_10^(-6)
-}
-if(equal<0){
-warning("wle.cv: the equal parameter can not be negative, using default value")
-equal_10^(-3)
-}
-if(min.weight<0){
-warning("wle.cv: the minimum sum of the weights can not be negative, using default value")
-min.weight_0.5
+if (missing(group)) {
+group <- 0
 }
 
+if (missing(split)) {
+split <- 0
+}
 
+    ret.x <- x
+    ret.y <- y
+    result <- list()	
+    mt <- terms(formula, data = data)
+    mf <- cl <- match.call()
+    mf$monte.carlo <- mf$split <- NULL
+    mf$boot <- mf$group <- mf$smooth <- NULL
+    mf$tol <- mf$equal <- mf$num.sol <- NULL
+    mf$min.weight <- mf$max.iter <- mf$raf <- NULL
+    mf$contrasts <- NULL
+    mf$model <- mf$x <- mf$y <- NULL
+    mf$drop.unused.levels <- TRUE
+    mf[[1]] <- as.name("model.frame")
+    mf <- eval(mf, sys.frame(sys.parent()))
+    xvars <- as.character(attr(mt, "variables"))[-1]
+    inter <- attr(mt, "intercept")
+    if((yvar <- attr(mt, "response")) > 0) xvars <- xvars[-yvar]
+    xlev <-
+	if(length(xvars) > 0) {
+	    xlev <- lapply(mf[xvars], levels)
+	    xlev[!sapply(xlev, is.null)]
+	}
+    ydata <- model.response(mf, "numeric")
+    if (is.empty.model(mt)) 
+	stop("The model is empty")
+    else 
+	xdata <- model.matrix(mt, mf, contrasts)
+
+if (is.null(size <- nrow(xdata)) | is.null(nvar <- ncol(xdata))) stop("'x' must be a matrix")
+if (length(ydata)!=size) stop("'y' and 'x' are not compatible")
+
+nrep <- 2^nvar-1
+
+if (size<nvar) {
+stop("Number of observations must be at least equal to the number of predictors (including intercept)")
+}
+
+if (group<nvar) {
+group <- max(round(size/4),nvar)
+cat("wle.cv: dimension of the subsample set to default value = ",group,"\n")
+}
+
+maxboot <- sum(log(1:size))-(sum(log(1:group))+sum(log(1:(size-group))))
+
+if (boot<1 | log(boot) > maxboot) {
+stop("Bootstrap replication not in the range")
+}
+
+if (split<nvar+2 | split>(size-2)) {
+split <- max(round(size^(3/4)),nvar+2)
+cat("wle.cv: dimension of the split subsample set to default value = ",split,"\n")
+}
+
+maxcarlo <- sum(log(1:size))-(sum(log(1:split))+sum(log(1:(size-split))))
+
+if (monte.carlo<1 | log(monte.carlo) > maxcarlo) {
+stop("MonteCarlo replication not in the range")
+}
+
+if (!(num.sol>=1)) {
+cat("wle.cv:number of solution to report set to 1 \n")
+num.sol <- 1
+}
+
+if (max.iter<1) {
+cat("wle.cv: max number of iteration set to 500 \n")
+max.iter <- 500
+}
+
+if (smooth<10^(-5)) {
+cat("wle.cv: the smooth parameter seems too small \n")
+}
+
+if (tol<0) {
+cat("wle.cv: the accuracy can not be negative, using default value \n")
+tol <- 10^(-6)
+}
+
+if (equal<0) {
+cat("wle.cv: the equal parameter can not be negative, using default value \n")
+equal <- 10^(-3)
+}
+
+if (min.weight<0) {
+cat("wle.cv: the minimum sum of the weights can not be negative, using default value \n")
+min.weight <- 0.5
+}
 
   z <- .Fortran("wlecv",
 	as.double(ydata),
 	as.matrix(xdata),
-	as.integer(inter), 
+	as.integer(0), 
 	as.integer(size),
 	as.integer(nvar),
 	as.integer(boot),
@@ -86,8 +135,8 @@ min.weight_0.5
 	as.integer(max.iter),
 	as.integer(num.sol),
 	as.double(min.weight),
-	cv=mat.or.vec(nrep,nvar+inter+1),
-	param=mat.or.vec(num.sol,nvar+inter),
+	wcv=mat.or.vec(nrep,nvar+1),
+	param=mat.or.vec(num.sol,nvar),
 	var=double(num.sol),
 	resid=mat.or.vec(num.sol,size),
 	totweight=double(num.sol),
@@ -96,15 +145,97 @@ min.weight_0.5
 	index=integer(1),
 	info=integer(1))
 
-delnull_z$same==0
-param_z$param[!delnull,]
-var_z$var[!delnull]
-resid_z$resid[!delnull,]
-totweight_z$totweight[!delnull]
-weight_z$weight[!delnull,]
-same_z$same[!delnull]
+delnull <- z$same==0
 
-return(list(wcv=z$cv,coefficients=param,scale=sqrt(var),residuals=resid,tot.weights=totweight,weights=weight,freq=same,index=z$index,info=z$info))
+result$wcv <- z$wcv[!delnull,]
+result$coefficients <- z$param[!delnull,]
+result$scale <- sqrt(z$var[!delnull])
+result$residuals <- z$resid[!delnull]
+result$weights <- z$weight[!delnull,]
+result$tot.weights <- z$totweight[!delnull]
+result$freq <- z$same[!delnull]
+result$call <- cl
+result$info <- z$info
+result$index <- z$index
+result$contrasts <- attr(xdata, "contrasts")
+result$xlevels <- xlev
+result$terms <- mt
+
+if (model)
+    result$model <- mf
+if (ret.x)
+    result$x <- xdata
+if (ret.y)
+    result$y <- ydata
+
+dn <- colnames(xdata)
+if (is.null(nrow(result$coefficients))) {
+names(result$coefficients) <- dn
+} else {
+dimnames(result$coefficients) <- list(NULL,dn)
+}
+dimnames(result$wcv) <- list(NULL,c(dn,"wcv"))
+
+class(result) <- "wle.cv"
+
+return(result)
 
 }
+
+
+summary.wle.cv <- function (object, num.max=20, ...) {
+
+z <- .Alias(object)
+if (is.null(z$terms)) {
+    stop("invalid \'wle.cv\' object")
+}
+
+if (num.max<1) {
+cat("summary.wle.cv: num.max can not less than 1, num.max=1 \n")
+num.max <- 1
+}
+
+ans <- list()
+wcv <- z$wcv
+if(is.null(nmodel <- nrow(wcv))) nmodel <- 1
+num.max <- min(nmodel,num.max)
+if (nmodel!=1) { 
+nvar <- ncol(wcv)-1
+wcv <- wcv[order(wcv[,(nvar+1)]),]
+wcv <- wcv[1:num.max,]
+}
+
+ans$wcv <- wcv
+ans$num.max <- num.max
+ans$call <- z$call
+
+class(ans) <- "summary.wle.cv"
+return(ans)
+}
+
+print.wle.cv <- function (x, digits = max(3, getOption("digits") - 3), ...) {
+res_summary.wle.cv(object=x, num.max=nrow(x$wcv), ...)
+print.summary.wle.cv(res, digits=digits, ...)
+}
+
+print.summary.wle.cv <- function (x, digits = max(3, getOption("digits") - 3), ...) {
+    cat("\nCall:\n")
+    cat(paste(deparse(x$call), sep="\n", collapse = "\n"), "\n\n", sep="")
+
+    cat("\nWeighted Cross Validation selection criteria:\n")
+    if(x$num.max>1) {
+    nvar <- ncol(x$wcv)-1
+    x$wcv[,(nvar+1)] <- signif(x$wcv[,(nvar+1)],digits)
+    } else {
+    nvar <- length(x$wcv)-1
+    x$wcv[(nvar+1)] <- signif(x$wcv[(nvar+1)],digits)
+    }
+    print(x$wcv)
+    cat("\n")
+
+    cat("Printed the first ",x$num.max," best models \n") 
+    invisible(x)
+}
+
+
 

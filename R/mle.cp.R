@@ -3,49 +3,155 @@
 #	MLE.CP function                                     #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@stat.unipd.it                       #
-#	Date: October, 10, 1999                             #
-#	Version: 0.2                                        #
+#	Date: December, 19, 2000                            #
+#	Version: 0.3                                        #
 #                                                           #
-#	Copyright (C) 1999 Claudio Agostinelli              #
+#	Copyright (C) 2000 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
-mle.cp_function(ydata,xdata,inter=1,var.full=0)
+mle.cp <- function(formula, data=list(), model=TRUE, x=FALSE, y=FALSE, var.full=0, contrasts=NULL)
 {
-size_length(ydata)
-nvar_dim(xdata)[2]
-nrep_(2^(nvar+inter))-1
 
-if(size<nvar+inter+2){stop("mle.cp: Number of observation must be at least equal to the number of predictors (including intercept) + 2")}
-if(nvar<1){stop("mle.cp: the number of the predictors must be at least one")}
-if(!(inter==1)){inter_0}
-if(var.full<0){
-warning("mle.cp: the variance of the full model can not be negative, using default value")
-var.full_0
+    ret.x <- x
+    ret.y <- y
+    result <- list()	
+    mt <- terms(formula, data = data)
+    mf <- cl <- match.call()
+    mf$var.full <- mf$contrasts <- NULL
+    mf$model <- mf$x <- mf$y <- NULL
+    mf$drop.unused.levels <- TRUE
+    mf[[1]] <- as.name("model.frame")
+    mf <- eval(mf, sys.frame(sys.parent()))
+    xvars <- as.character(attr(mt, "variables"))[-1]
+    inter <- attr(mt, "intercept")
+    if((yvar <- attr(mt, "response")) > 0) xvars <- xvars[-yvar]
+    xlev <-
+	if(length(xvars) > 0) {
+	    xlev <- lapply(mf[xvars], levels)
+	    xlev[!sapply(xlev, is.null)]
+	}
+    ydata <- model.response(mf, "numeric")
+    if (is.empty.model(mt)) 
+	stop("The model is empty")
+    else 
+	xdata <- model.matrix(mt, mf, contrasts)
+
+if (is.null(size <- nrow(xdata)) | is.null(nvar <- ncol(xdata))) stop("'x' must be a matrix")
+if (length(ydata)!=size) stop("'y' and 'x' are not compatible")
+
+nrep <- 2^nvar-1
+
+if (size<nvar+1) {
+stop("Number of observation must be at least equal to the number of predictors (including intercept) + 1")
+}
+
+if (var.full<0) {
+cat("mle.cp: the variance of the full model can not be negative, using default value \n")
+var.full <- 0
 }
 
   z <- .Fortran("mlecp",
 	as.double(ydata),
 	as.matrix(xdata),
-	as.integer(inter), 
+	as.integer(0), 
 	as.integer(size),
 	as.integer(nvar),
 	as.integer(nrep),
 	as.double(var.full),
-	cp=mat.or.vec(nrep,nvar+inter+1),
-	param=mat.or.vec(nrep,nvar+inter),
+	cp=mat.or.vec(nrep,nvar+1),
+	param=mat.or.vec(nrep,nvar),
 	var=double(nrep),
 	resid=mat.or.vec(nrep,size),
-	info=integer(1))
+	info=integer(1),
+	PACKAGE="wle")
 
-	
-cp_z$cp
-param_z$param
-var_z$var
-resid_z$resid
 
-return(list(cp=cp,coefficients=param,scale=sqrt(var),residuals=resid,info=z$info))
+result$cp <- z$cp
+result$coefficients <- z$param
+result$scale <- sqrt(z$var)
+result$residuals <- z$resid
+result$call <- cl
+result$info <- z$info
+result$contrasts <- attr(xdata, "contrasts")
+result$xlevels <- xlev
+result$terms <- mt
 
+if (model)
+    result$model <- mf
+if (ret.x)
+    result$x <- xdata
+if (ret.y)
+    result$y <- ydata
+
+dn <- colnames(xdata)
+dimnames(result$coefficients)_list(NULL,dn)
+dimnames(result$cp)_list(NULL,c(dn,"cp"))
+
+class(result) <- "mle.cp" 
+
+return(result)
+
+}
+
+summary.mle.cp <- function (object, num.max=20, ...) {
+
+z <- .Alias(object)
+if (is.null(z$terms)) {
+    stop("invalid \'mle.cp\' object")
+}
+
+ans <- list()
+cp <- z$cp
+
+if (num.max<1) {
+cat("summary.mle.cp: num.max can not less than 1, num.max=1 \n")
+num.max <- 1
+}
+
+if(is.null(nmodel <- nrow(cp))) nmodel <- 1
+num.max <- min(nmodel,num.max)
+if (nmodel!=1) { 
+    nvar <- ncol(cp)-1
+    nparam <- apply(cp[,(1:nvar)],1,sum)
+    cp <- cp[cp[,(nvar+1)]<=(nparam+0.00001),]
+    if(!is.null(nrow(cp)) & nrow(cp)>1) {
+	num.max <- min(nrow(cp),num.max)
+    	cp <- cp[order(cp[,(nvar+1)]),]
+    	cp <- cp[1:num.max,]
+    } else num.max <- 1
+}
+
+ans$cp <- cp
+ans$num.max <- num.max
+ans$call <- z$call
+
+class(ans) <- "summary.mle.cp"
+return(ans)
+}
+
+print.mle.cp <- function (x, digits = max(3, getOption("digits") - 3), ...) {
+res_summary.mle.cp(object=x, num.max=nrow(x$cp), ...)
+print.summary.mle.cp(res, digits=digits, ...)
+}
+
+print.summary.mle.cp <- function (x, digits = max(3, getOption("digits") - 3), ...) {
+    cat("\nCall:\n")
+    cat(paste(deparse(x$call), sep="\n", collapse = "\n"), "\n\n", sep="")
+
+    cat("\nMallows Cp:\n")
+    if(x$num.max>1) {
+    nvar <- ncol(x$cp)-1
+    x$cp[,(nvar+1)] <- signif(x$cp[,(nvar+1)],digits)
+    } else {
+    nvar <- length(x$cp)-1
+    x$cp[(nvar+1)] <- signif(x$cp[(nvar+1)],digits)
+    }
+    print(x$cp)
+    cat("\n")
+
+    cat("Printed the first ",x$num.max," best models \n") 
+    invisible(x)
 }
 
 

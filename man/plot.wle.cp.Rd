@@ -1,33 +1,38 @@
 \name{plot.wle.cp}
 \title{Plot the Weighted Mallows Cp}
 \usage{
-plot.wle.cp(object, base.line=0, num.max=20, plot.it=TRUE, log.scale=FALSE)
+plot.wle.cp(object, base.line=0, num.max=20, 
+           plot.it=TRUE, log.scale=FALSE, 
+           xlab="Number of Predictors", ylab=NULL)
 }
-%- maybe also `usage' for other functions documented here.
+
 \alias{plot.wle.cp}
-%- Also NEED an `\alias' for EACH other function documented here.
+
 \arguments{
- \item{object}{An object from the function \code{wle.cp}.}
- \item{base.line}{The intercept of the line to split the submodels in acceptable (good) and not-acceptable (bad), (the slope is always 1).}
- \item{num.max}{Maximum number of submodels plotted.}
- \item{plot.it}{If TRUE the graph is plotted.}
- \item{log.scale}{If TRUE the y-axis as log10 scale.}
+ \item{object}{an object of class \code{wle.cp}.}
+ \item{base.line}{the intercept of the line to split the submodels in acceptable (good) and not-acceptable (bad), (the slope is always one).}
+ \item{num.max}{maximum number of submodels plotted.}
+ \item{plot.it}{if TRUE the graph is plotted.}
+ \item{log.scale}{if TRUE the y-axis as log10 scale.}
+ \item{xlab}{a title for the x axis.}
+ \item{ylab}{a title for the y axis.}
 }
-\description{Plot the WCp for each submodel.}
-%\details{}
+
+\description{Plot the weighted Mallows Cp based on weighted likelihood.}
 
 \value{
-\item{num.good}{Number of submodels below the \code{base.line}}
-\item{num.bad}{Number of submodels above the \code{base.line}}
-\item{wcp.good}{List of the submodels below the \code{base.line} with their WCp.}
-\item{wcp.bad}{List of the submodels above the \code{base.line} with their WCp.}
+\item{num.good}{number of submodels below the \code{base.line}}
+\item{num.bad}{number of submodels above the \code{base.line}}
+\item{wcp.good}{list of the submodels below the \code{base.line} with their WCp.}
+\item{wcp.bad}{list of the submodels above the \code{base.line} with their WCp.}
 }
+
 
 \references{
 
 Agostinelli, C., (1999). Robust model selection in regression via weighted likelihood methodology, \emph{ Working Paper n. 1999.4}, Department of Statistics, Universiy of Padova.
 
-Agostinelli, C., (1999). Robust model selection in regression via weighted likelihood methodology, submitted to \emph{ Statistics \& Probability Letters}.
+Agostinelli, C., (1999). Robust model selection in regression via weighted likelihood methodology, submitted to \emph{ Statistics \& Probability Letters}, revised december 1999.
 
 Agostinelli, C., (1998). Inferenza statistica robusta basata sulla funzione di verosimiglianza pesata: alcuni sviluppi, \emph{ Ph.D Thesis}, Department of Statistics, University of Padova.
 
@@ -39,7 +44,7 @@ Agostinelli, C., (1998). Verosimiglianza pesata nel modello di regressione linea
 
 %\note{}
 
-\seealso{\link{wle.cp} a function to calculate the Weighted Mallows Cp, \link{wle.lm} a function for estimating linear models with normal distribution error and normal kernel.}
+\seealso{\code{\link{wle.cp}} a function to calculate the Weighted Mallows Cp, \code{\link{wle.lm}} a function for estimating linear models with normal distribution error and normal kernel.}
 
 \examples{
 library(wle)
@@ -52,12 +57,16 @@ z.data_c(rep(0,60),rep(1,5))
 
 plot(x.data,y.data,xlab="X",ylab="Y")
 
-xx.data_cbind(x.data,x.data^2,x.data^3,log(x.data+1))
+xx.data <- cbind(x.data,x.data^2,x.data^3,log(x.data+1))
 
-result_wle.cp(y.data,xx.data,boot=20,group=10,num.sol=3)
+result <- wle.cp(y.data~xx.data)
 
-plot.wle.cp(result,num.max=15)
+plot(result,num.max=15)
 
 }
 
 \keyword{Weighted Likelihood}
+\keyword{model selection}
+\keyword{Weighted Mallows Cp}
+\keyword{WCp}
+

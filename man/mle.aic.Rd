@@ -1,25 +1,52 @@
 \name{mle.aic}
-\title{Classical Akaike Information Criterion}
+\title{Akaike Information Criterion}
 \usage{
-mle.aic(ydata, xdata, inter = 1, var.full = 0, alpha = 2)
+mle.aic(formula, data=list(), model=TRUE, x=FALSE, 
+        y=FALSE, var.full=0, alpha=2, contrasts = NULL)
 }
-%- maybe also `usage' for other functions documented here.
 \alias{mle.aic}
-%- Also NEED an `\alias' for EACH other function documented here.
 \arguments{
- \item{ydata}{A vector containing the observations from the response variable.}
- \item{xdata}{A matrix containing the observations from the explanatory variables.}
- \item{inter}{If 1, intercept is include in the model.}
- \item{var.full}{The value of variance to be used, if 0 the variance estimated from the full model is used.}
- \item{alpha}{The penalized constant.}
+  \item{formula}{a symbolic description of the model to be fit.
+    The details of model specification are given below.}
+
+  \item{data}{an optional data frame containing the variables
+    in the model.  By default the variables are taken from
+    the environment which \code{mle.aic} is called from.}
+
+  \item{model, x, y}{logicals.  If \code{TRUE} the corresponding components of the fit (the model frame, the model matrix, the
+    response.)}
+
+ \item{var.full}{the value of variance to be used, if 0 the variance estimated from the full model is used.}
+
+ \item{alpha}{the penalized constant.}
+
+ \item{contrasts}{an optional list. See the \code{contrasts.arg}
+    of \code{model.matrix.default}.}
 }
+
 \description{The Akaike Information Criterion is evaluated for each submodel.}
-\value{
-\item{aic}{The AIC for each submodels}
-\item{coefficients}{The parameters estimator, one row vector for eac submodel.}
-\item{scale}{An estimation of the error scale, one value for each submodel.}
-\item{residuals}{The residuals from the estimated model, one column vector for each submodel.}
-\item{info}{Not well working yet, if 0 no error occurred.}
+
+\details{Models for \code{mle.aic} are specified symbolically.  A typical model has the form \code{response ~ terms} where \code{response} is the (numeric) response vector and \code{terms} is a series of terms which specifies a linear predictor for \code{response}.  A terms specification of the form \code{first+second} indicates all the terms in \code{first} together with all the terms in \code{second} with duplicates removed. A specification of the form \code{first:second} indicates the the set of terms obtained by taking the interactions of all terms in \code{first} with all terms in \code{second}. The specification \code{first*second} indicates the \emph{cross} of \code{first} and \code{second}.  This is the same as \code{first+second+first:second}.
+}
+
+\value{ \code{mle.aic} returns an object of \code{\link{class}} \code{"mle.aic"}.
+
+  The function \code{summary} is used to obtain and print a summary of the results.
+  The generic accessor functions \code{coefficients} and \code{residuals} extract coefficients and residuals returned by \code{mle.aic}.
+  The object returned by \code{mle.aic} are:
+
+\item{aic}{the AIC for each submodels}
+\item{coefficients}{the parameters estimator, one row vector for each submodel.}
+\item{scale}{an estimation of the error scale, one value for each submodel.}
+\item{residuals}{the residuals from the estimated model, one column vector for each submodel.}
+\item{call}{the match.call().}
+\item{contrasts}{}
+\item{xlevels}{}
+\item{terms}{the model frame.}
+\item{model}{if \code{model=TRUE} a matrix with first column the dependent variable and the remain column the explanatory variables for the full model.}
+\item{x}{if \code{x=TRUE} a matrix with the explanatory variables for the full model.}
+\item{y}{if \code{y=TRUE} a vector with the dependent variable.}
+\item{info}{not well working yet, if 0 no error occurred.}
 }
 
 \author{Claudio Agostinelli}
@@ -33,9 +60,12 @@ data(hald)
 
 cor(hald)
 
-result_mle.aic(y.hald,x.hald)
+result <- mle.aic(y.hald~x.hald)
 
-result$aic[order(result$aic[,6]),][1:10,]
+summary(result,num.max=10)
 }
 
-\keyword{Akaike Information Criterion, AIC}
+\keyword{Akaike Information Criterion}
+\keyword{AIC}
+\keyword{aic}
+\keyword{model selection}

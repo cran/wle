@@ -16,13 +16,13 @@ C             ITALIA
 C
 C     E-mail: claudio@stat.unipd.it
 C
-C     October, 10 1999
+C     December, 17 2000
 C
-C     Version: 0.2
+C     Version: 0.3
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
-C    Copyright (C) 1999 Claudio Agostinelli
+C    Copyright (C) 2000 Claudio Agostinelli
 C
 C    This program is free software; you can redistribute it and/or modify
 C    it under the terms of the GNU General Public License as published by
@@ -188,12 +188,10 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
       dimension ysub(ngrp), xsub(ngrp,nvar+inter) 
       dimension nstart(nsize)
-      dimension storep(nboot,nvar+inter+2)
-      dimension storew(nboot,nsize)
-      dimension storer(nboot,nsize)
       dimension nrand(nboot,ngrp)
 
-      dimension work(nvar+inter),jpvt(nvar+inter),qraux(nvar+inter)
+      dimension work(nvar+inter),jpvt(nvar+inter)
+      dimension qraux(nvar+inter)
       dimension qy(nsize), qty(nsize)
 
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
@@ -214,7 +212,6 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
       dgrp=ngrp
       dsize=nsize
-
 C
 C     Check the presence of the intercept
 C
@@ -234,13 +231,10 @@ C
  15   continue
  10   continue
 
-      do 30 i=1,nboot
+      do 30 i=1, nrep
          nsame(i)=0
-      do 40 j=1,npre+2
-         storep(i,j)=dzero
- 40   continue
  30   continue
-      
+
       do 50 i=1,nsize
          nstart(i)=i
  50   continue
@@ -492,24 +486,24 @@ C
          nsol=nsol+1
          nsame(1)=1 
          do 175 i=1,npre 
-            storep(nsol,i)=dparam(i)
+            rparam(nsol,i)=dparam(i)
  175     continue
-         storep(nsol,npre+1)=rnows
-         storep(nsol,npre+2)=tot
+         varia(nsol)=rnows
+         totpesi(nsol)=tot
          do 180 i=1,nsize
-            storew(nsol,i)=rw(i)
-            storer(nsol,i)=rdata(i)
+            dpesi(nsol,i)=rw(i)
+            resid(nsol,i)=rdata(i)
  180     continue
       else
          do 185 isol=1,nsol
             diffp=dzero
             do 187 i=1,npre
-               diff=abs(dparam(i)-storep(isol,i))
+               diff=abs(dparam(i)-rparam(isol,i))
                if (diff.gt.diffp) then
                   diffp=diff
                endif   
  187        continue
-            diffs=abs(rnows-storep(isol,npre+1))
+            diffs=abs(rnows-varia(isol))
             if(diffp.lt.requal.and.diffs.lt.requal
      &          ) then
                    nsame(isol)=nsame(isol)+1
@@ -519,13 +513,13 @@ C
                    nsol=nsol+1
 		   nsame(nsol)=1
                    do 195 i=1,npre 
-                      storep(nsol,i)=dparam(i)
+                      rparam(nsol,i)=dparam(i)
  195               continue
-                   storep(nsol,npre+1)=rnows
-                   storep(nsol,npre+2)=tot
+                   varia(nsol)=rnows
+                   totpesi(nsol)=tot
                    do 200 i=1,nsize
-                      storew(nsol,i)=rw(i)
-                      storer(nsol,i)=rdata(i)
+                      dpesi(nsol,i)=rw(i)
+                      resid(nsol,i)=rdata(i)
  200               continue
  190               continue
       endif 
@@ -539,63 +533,10 @@ C
 
  900  continue
 
-C write down the results and return
-
  6666 continue
-
-      do 210 isol=1,nsol
-         do 205 i=1,npre
-            rparam(isol,i)=storep(isol,i)
- 205     continue
-         do 207 i=npre+1,ncol
-            rparam(isol,i)=dzero
- 207     continue
-         varia(isol)=storep(isol,npre+1)
-         totpesi(isol)=storep(isol,npre+2)
- 210  continue
-
-      do 220 isol=1,nsol 
-         do 230 i=1,nsize
-            dpesi(isol,i)=storew(isol,i)
-            resid(isol,i)=storer(isol,i)
- 230     continue 
- 220  continue
 
       return
       end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

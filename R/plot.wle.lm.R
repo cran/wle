@@ -3,69 +3,79 @@
 #	PLOT.WLE.LM function                                #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@stat.unipd.it                       #
-#	Date: October, 10, 1999                             #
-#	Version: 0.2                                        #
+#	Date: December, 19, 2000                            #
+#	Version: 0.3                                        #
 #                                                           #
-#	Copyright (C) 1999 Claudio Agostinelli              #
+#	Copyright (C) 2000 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
-plot.wle.lm_function(object,level.weight=0.5,plot.it=TRUE)
-{
-param_as.matrix(object$coefficients)
-res_as.matrix(object$residuals)
-y.fit_as.matrix(object$fitted.values)
-ydata_object$ydata
-xdata_object$xdata
-weight_as.matrix(object$weights)
-tot.weight_object$tot.weights
-tot.sol_object$tot.sol
+plot.wle.lm <- function(object, level.weight=0.5, ask = interactive() && .Device != "postscript") {
 
-if(tot.sol>1){
+old.par <- par(no.readonly=TRUE)
+on.exit(par(old.par))
 
-x11()
+if (!inherits(object, "wle.lm")) stop("Use only with 'wle.lm' objects")
+
+if (ask) par(ask = TRUE)
+ 
+if (!is.null(object$model)) {
+ydata <- object$model[,1]
+xdata <- object$model[,-1]
+} else if (!is.null(object$x) & !is.null(object$y)) {
+ydata <- object$y
+xdata <- object$x
+} else {
+stop("Please, rerun wle.lm with model=TRUE (or x=TRUE and y=TRUE)")
+}
+
+if (level.weight<0 | level.weight >1) {
+cat("plot.wle.lm: level.weight should be between zero and one, set to 0.5 \n")
+level.weight <- 0.5
+}
+
+param <- as.matrix(object$coefficients)
+res <- as.matrix(object$residuals)
+y.fit <- as.matrix(object$fitted.values)
+weight <- as.matrix(object$weights)
+tot.weight <- object$tot.weights
+tot.sol <- object$tot.sol
+
+if (tot.sol>1) {
 par(mfcol=c(tot.sol,tot.sol))
 
-for(isol in 1:tot.sol)
-{
-for(jsol in 1:tot.sol)
-{
-y.fit.i_y.fit[isol,]
-res.i_res[isol,]
-weight.i_weight[isol,]
+for (isol in 1:tot.sol) {
+for (jsol in 1:tot.sol) {
+y.fit.i <- y.fit[isol,]
+res.i <- res[isol,]
+weight.i <- weight[isol,]
 
-y.fit.j_y.fit[jsol,]
-res.j_res[jsol,]
-weight.j_weight[jsol,]
+y.fit.j <- y.fit[jsol,]
+res.j <- res[jsol,]
+weight.j <- weight[jsol,]
 
-level.i_weight.i>=level.weight
-level.j_weight.j>=level.weight
+level.i <- weight.i>=level.weight
+level.j <- weight.j>=level.weight
 
-color_rep(2,length(ydata))
-color[level.i]_1
-color[level.j]_3
+color <- rep(2,length(ydata))
+color[level.i] <- 1
+color[level.j] <- 3
 
-color.res_rep(2,length(ydata))
-color.res[level.i & (res.i>res.j)]_1
-color.res[level.j & (res.i<res.j)]_3
+color.res <- rep(2,length(ydata))
+color.res[level.i & (res.i>res.j)] <- 1
+color.res[level.j & (res.i<res.j)] <- 3
 
-color.w_rep(2,length(ydata))
-color.w[level.i & (weight.i>weight.j)]_1
-color.w[level.j & (weight.i<weight.j)]_3
+color.w <- rep(2,length(ydata))
+color.w[level.i & (weight.i>weight.j)] <- 1
+color.w[level.j & (weight.i<weight.j)] <- 3
 
-if(isol==jsol)
-{
+if (isol==jsol) {
 plot(weight.i,col=color,xlab="Observations",ylab="Weights",main=paste("Weights of the root: ",isol))
-}
-else
-{
-if(isol>jsol)
-{
+} else {
+if (isol>jsol) {
 plot(res.i,res.j,col=color.res,xlab=paste("Residuals of the root: ",isol),ylab=paste("Residuals of the root: ",jsol),main="Residuals")
 abline(0,1)
-}
-else
-{
+} else {
 plot(weight.i,weight.j,col=color.w,xlab=paste("Weights of the root: ",isol),ylab=paste("Weights of the root: ",jsol),main="Weights")
 abline(0,1)
 }
@@ -74,17 +84,15 @@ abline(0,1)
 }
 
 
-for(isol in 1:tot.sol)
-{
-x11()
+for (isol in 1:tot.sol) {
 par(mfcol=c(2,2))
-y.fit.temp_y.fit[isol,]
-res.temp_res[isol,]
-weight.temp_weight[isol,]
+y.fit.temp <- y.fit[isol,]
+res.temp <- res[isol,]
+weight.temp <- weight[isol,]
 
-level_weight.temp>=level.weight
-color_rep(2,length(ydata))
-color[level]_1
+level <- weight.temp>=level.weight
+color <- rep(2,length(ydata))
+color[level] <- 1
 
 plot(y.fit.temp,res.temp,col=color,xlab="Fitted values",ylab="Residuals")
 
@@ -95,30 +103,21 @@ qqline(res.temp)
 
 qqnorm(res.temp*weight.temp,col=color)
 qqline(res.temp*weight.temp)
-
-##plot(weight.temp,col=color)
 }
+} else {
 
-}
-else
-{
-
-x11()
 par(mfcol=c(1,1))
+level.i <- weight>=level.weight
+color <- rep(2,length(ydata))
+color[level.i] <- 3
 
-level.i_weight>=level.weight
+plot(weight,col=color,xlab="Observations",ylab="Weights",main="Weights of the root")
 
-color_rep(2,length(ydata))
-color[level.i]_3
-
-plot(weight,col=color,xlab="Observations",ylab="Weights",main=paste("Weights of the root"))
-
-x11()
 par(mfcol=c(2,2))
 
-level_weight>=level.weight
-color_rep(2,length(ydata))
-color[level]_1
+level <- weight>=level.weight
+color <- rep(2,length(ydata))
+color[level] <- 1
 
 plot(y.fit,res,col=color,xlab="Fitted values",ylab="Residuals")
 
@@ -129,11 +128,7 @@ qqline(res)
 
 qqnorm(res*weight,col=color)
 qqline(res*weight)
-
-##plot(weight.temp,col=color)
-
 }
-
 }
 
 

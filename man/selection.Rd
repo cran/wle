@@ -17,8 +17,7 @@ the last sixth comes from a different model.
 }
 \source{
   Agostinelli, C. (1999) 
-  Robust model selection in regression via weighted likelihood methodology, 
-  submitted to \emph{Statistics & Probability Letters}. 
+  Robust model selection in regression via weighted likelihood methodology, submitted to \emph{Statistics & Probability Letters}, revised december 1999. 
 }
 
 %\seealso{}
