@@ -67,6 +67,6 @@ summary(result)
 plot(result)
 }
 
-\keyword{Mallows Cp}
-\keyword{Cp}
-\keyword{model selection}
+\keyword{regression}
+
+

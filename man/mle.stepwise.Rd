@@ -74,8 +74,8 @@ summary(result)
 
 }
 
-\keyword{stepwise}
-\keyword{forward}
-\keyword{backward}
-\keyword{model selection}
+\keyword{regression}
+
+
+
 

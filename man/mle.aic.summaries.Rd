@@ -34,8 +34,8 @@ print.summary.mle.aic(x, digits = max(3, getOption("digits") - 3), ...)
 
 %\examples{}
 
-\keyword{Akaike Information Criterion}
-\keyword{AIC}
-\keyword{aic}
-\keyword{model selection}
+\keyword{regression}
+
+
+
 

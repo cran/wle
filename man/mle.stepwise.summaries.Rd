@@ -37,8 +37,9 @@ print.summary.mle.stepwise(x, digits = max(3, getOption("digits") - 3), ...)
 
 %\examples{}
 
-\keyword{stepwise}
-\keyword{forward}
-\keyword{backward}
-\keyword{model selection}
+\keyword{regression}
+
+
+
+
 

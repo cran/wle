@@ -303,7 +303,7 @@ C         write(*,*) nmodel
            
       dfit=dzero
       do 100 i=1,nvalid
-         if(abs(wyvsub(i)-xparam(i))>rerr) then
+         if(abs(wyvsub(i)-xparam(i)).gt.rerr) then
             dfit=dfit+(wyvsub(i)-xparam(i))**ddue
          endif
  100  continue

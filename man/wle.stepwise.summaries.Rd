@@ -39,10 +39,7 @@ The generic accessor functions \code{\link{coefficients}}, \code{\link{fitted.va
 
 %\examples{}
 
-\keyword{Weighted Likelihood}
 \keyword{robust}
-\keyword{model selection}
-\keyword{stepwise}
-\keyword{forward}
-\keyword{backward}
+\keyword{regression}
+
 

@@ -145,11 +145,10 @@ result <- wle.stepwise(ydata~xdata,,boot=100,group=6,
 summary(result)
 }
 
-\keyword{Weighted Likelihood}
 \keyword{robust}
-\keyword{model selection}
-\keyword{stepwise}
-\keyword{forward}
-\keyword{backward}
+\keyword{regression}
+
+
+
 
 

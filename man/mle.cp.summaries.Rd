@@ -34,6 +34,7 @@ print.summary.mle.cp(x, digits = max(3, getOption("digits") - 3), ...)
 
 %\examples{}
 
-\keyword{Mallows Cp}
-\keyword{model selection}
+\keyword{regression}
+
+
 

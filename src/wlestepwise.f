@@ -174,7 +174,8 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       dimension xidata(nsize,nvar+inter)
       dimension xisub(nsize,nvar+inter)
 
-      dimension wxidata(nsize,nvar+inter)
+C      dimension wxidata(nsize,nvar+inter)
+
       dimension wparam(nmaxsol,nvar+inter)
       dimension wvaria(nmaxsol)
       dimension avaria(nmaxsol)
@@ -193,11 +194,12 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       dimension dfpesi(nmaxsol,nsize)
       dimension dfresid(nmaxsol,nsize)
       dimension dftot(nmaxsol)
-      dimension dfsame(nmaxsol)
 
-      dimension nstart(nsize)
-      dimension wydata(nsize) 
-      dimension wxdata(nsize,nvar+inter) 
+C      dimension dfsame(nmaxsol)
+C      dimension nstart(nsize)
+C      dimension wydata(nsize) 
+C      dimension wxdata(nsize,nvar+inter) 
+
       dimension dparam(nvar+inter)
       dimension xparam(nsize)
 

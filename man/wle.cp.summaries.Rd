@@ -34,8 +34,6 @@ print.summary.wle.cp(x, digits = max(3, getOption("digits") - 3), ...)
 
 %\examples{}
 
-\keyword{Weighted Likelihood}
-\keyword{Weighted Mallows Cp}
-\keyword{WCp}
-\keyword{model selection}
+\keyword{regression}
+\keyword{robust}
 

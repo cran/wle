@@ -46,6 +46,6 @@ plot(result,num.max=7)
 
 }
 
-\keyword{Mallows Cp}
-\keyword{Cp}
-\keyword{model selection}
+\keyword{regression}
+
+

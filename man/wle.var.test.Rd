@@ -75,7 +75,7 @@ wle.var.test(res.x, res.y, x.root=1)
 if (res.x$tot.sol>1) wle.var.test(res.x, res.y, x.root=2)
 }
 
-\keyword{Weighted Likelihood}
 \keyword{robust}
-\keyword{test}
 \keyword{htest}
+
+

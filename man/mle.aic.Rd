@@ -65,7 +65,4 @@ result <- mle.aic(y.hald~x.hald)
 summary(result,num.max=10)
 }
 
-\keyword{Akaike Information Criterion}
-\keyword{AIC}
-\keyword{aic}
-\keyword{model selection}
+\keyword{regression}

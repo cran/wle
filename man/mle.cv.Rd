@@ -63,6 +63,6 @@ result <- mle.cv(y.hald~x.hald)
 summary(result)
 }
 
-\keyword{Cross Validation}
-\keyworc{CV}
-\keyword{model selection}
+\keyword{regression}
+
+

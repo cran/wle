@@ -18,5 +18,6 @@ print.wle.normal.multi(x, digits = max(3, getOption("digits") - 3), ...)
 
 %\examples{}
 
-\keyword{Weighted Likelihood}
+\keyword{models}
+\keyword{multivariate}
 \keyword{robust}

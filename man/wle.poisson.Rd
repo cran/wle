@@ -68,7 +68,7 @@ wle.poisson(x)
 
 }
 
-\keyword{Weighted Likelihood}
+\keyword{models}
 \keyword{robust}
  
 

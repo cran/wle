@@ -102,6 +102,8 @@ Agostinelli, C., (1998). Verosimiglianza pesata nel modello di regressione linea
 \examples{
 library(wle)
 
+set.seed(1234)
+
 x.data <- c(runif(60,20,80),runif(5,73,78))
 e.data <- rnorm(65,0,0.6)
 y.data <- 8*log(x.data+1)+e.data
@@ -124,10 +126,7 @@ summary(result)
 
 }
 
-\keyword{Weighted Likelihood}
-\keyword{Weighted Cross Validation}
-\keyword{WCV}
-\keyword{model selection}
+\keyword{regression
 \keyword{robust}
 
 

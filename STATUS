@@ -1,6 +1,9 @@
 Library wle
 ===========
 
+Version 0.5, 2001/05/20
+Only minor changes, and minor bug fix
+
 Version 0.4, 2001/03/02
 
 It is added the following functions: wle.binomial, wle.poisson, wle.gamma, wle.t.test and wle.var.test

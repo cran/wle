@@ -83,7 +83,7 @@ barplot(result$weights,col=2,xlab="Observations",
 
 }
 
-\keyword{Weighted Likelihood}
+\keyword{models}
 \keyword{robust}
  
 

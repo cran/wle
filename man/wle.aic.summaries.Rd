@@ -34,8 +34,5 @@ print.summary.wle.aic(x, digits = max(3, getOption("digits") - 3), ...)
 
 %\examples{}
 
-\keyword{Weighted Likelihood}
-\keyword{Weighted Akaike Information Criterion}
-\keyword{WAIC}
-\keyword{model selection}
-
+\keyword{regression}
+\keyword{robust}

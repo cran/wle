@@ -99,8 +99,7 @@ result.wle <- wle.onestep(y.artificial~x.artificial,
 result.wle
 }
 
-\keyword{Weighted Likelihood}
+
 \keyword{robust}
-\keyword{linear model}
 \keyword{regression}
-\keyword{onestep}
+

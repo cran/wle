@@ -41,5 +41,6 @@ result
 plot.wle.lm(result)
 }
 
-\keyword{Weighted Likelihood}
+\keyword{regression}
+\keyword{robust}
 

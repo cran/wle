@@ -70,7 +70,7 @@ wle.binomial(x,size=10)
 
 }
 
-\keyword{Weighted Likelihood}
+\keyword{models}
 \keyword{robust}
  
 

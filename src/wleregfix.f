@@ -180,7 +180,8 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       dimension dpesi(nrep,nsize), nsame(nrep)
       dimension dparam(nvar+inter)
 
-      dimension sing(nsize+nvar+inter)
+C      dimension sing(nsize+nvar+inter)
+
       dimension xparam(nsize),xsubpar(ngrp)
       dimension rwmat(nsize,nsize)
       dimension wxidata(nsize,nvar+inter),wydata(nsize)

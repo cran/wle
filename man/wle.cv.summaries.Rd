@@ -34,8 +34,6 @@ print.summary.wle.cv(x, digits = max(3, getOption("digits") - 3), ...)
 
 %\examples{}
 
-\keyword{Weighted Likelihood}
-\keyword{Weighted Cross Validation}
-\keyword{WCV}
-\keyword{model selection}
+\keyword{regression}
+\keyword{robust}
 

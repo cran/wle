@@ -34,7 +34,7 @@ print.summary.mle.cv(x, digits = max(3, getOption("digits") - 3), ...)
 
 %\examples{}
 
-\keyword{Cross Validation}
-\keyword{CV}
-\keyword{model selection}
+\keyword{regression}
+
+
 

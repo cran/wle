@@ -168,6 +168,5 @@ wle.t.test(x=c(rnorm(40,0,1),rnorm(40,10,1)),
 
 }
 
-\keyword{Weighted Likelihood}
 \keyword{robust}
-\keyword{test}
+\keyword{htest}

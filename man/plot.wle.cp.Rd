@@ -65,8 +65,7 @@ plot(result,num.max=15)
 
 }
 
-\keyword{Weighted Likelihood}
-\keyword{model selection}
-\keyword{Weighted Mallows Cp}
-\keyword{WCp}
+\keyword{regression}
+\keyword{robust}
+
 

@@ -70,6 +70,6 @@ library(wle)
 wle.smooth()
 }
 
-\keyword{Weighted Likelihood}
+\keyword{robust}
 
 

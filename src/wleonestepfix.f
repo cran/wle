@@ -144,7 +144,7 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       dimension dpesi(nsize)
       dimension dparam(nvar+inter)
 
-      dimension sing(nsize+nvar+inter)
+C      dimension sing(nsize+nvar+inter)
       dimension xparam(nsize)
       dimension rwmat(nsize,nsize)
       dimension wxidata(nsize,nvar+inter),wydata(nsize)

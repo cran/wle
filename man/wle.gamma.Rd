@@ -102,7 +102,7 @@ wle.gamma(x, boot=10, group=10, num.sol=2)
 
 }
 
-\keyword{Weighted Likelihood}
+\keyword{models}
 \keyword{robust}
  
 

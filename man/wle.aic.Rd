@@ -122,8 +122,5 @@ summary(result)
 
 }
 
-\keyword{Weighted Likelihood}
-\keyword{Weighted Akaike Information Criterion}
-\keyword{WAIC}
-\keyword{model selection}
+\keyword{regression}
 \keyword{robust}

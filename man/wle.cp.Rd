@@ -132,11 +132,10 @@ summary(result)
 plot(result,num.max=15)
 }
 
-\keyword{Weighted Likelihood}
-\keyword{Weighted Mallows Cp}
-\keyword{WCp}
-\keyword{model selection}
+\keyword{regression}
 \keyword{robust}
+
+
 
 
 

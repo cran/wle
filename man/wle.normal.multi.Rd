@@ -88,7 +88,8 @@ barplot(result$weights,col=2,xlab="Observations",
        names.arg=seq(1:length(result$weights)))
 }
 
-\keyword{Weighted Likelihood}
+\keyword{models}
+\keyword{multivariate}
 \keyword{robust}
  
  

@@ -18,5 +18,5 @@ print.wle.onestep(x, digits = max(3, getOption("digits") - 3), ...)
 
 %\examples{}
 
-\keyword{Weighted Likelihood}
+\keyword{regression}
 \keyword{robust}

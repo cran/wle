@@ -114,9 +114,7 @@ summary(result)
 plot(result)
 }
 
-\keyword{Weighted Likelihood}
 \keyword{robust}
-\keyword{linear model}
 \keyword{regression}
 
 

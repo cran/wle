@@ -80,8 +80,7 @@ summary(result,root=1)
 summary(result,root="ALL")
 }
 
-\keyword{Weighted Likelihood}
+
 \keyword{robust}
-\keyword{linear model}
 \keyword{regression}
 
