@@ -210,15 +210,68 @@ wle.t.test <- function(x, y=NULL, alternative = c("two.sided", "less", "greater"
 #	print.wle.t.test function                           #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@unive.it                            #
-#	Date: Febraury 9, 2001                              #
-#	Version: 0.1                                        #
+#	Date: December 23, 2003                              #
+#	Version: 0.1-1                                        #
 #                                                           #
-#	Copyright (C) 2001 Claudio Agostinelli              #
-#                                                           #
+#	Copyright (C) 2003 Claudio Agostinelli              #
+#
+#   The printhtest is a copy of the print.htest function to avoid error until a better fix is used. 
+#                                        #
 #############################################################
 
 print.wle.t.test <- function(x, x.root="ALL", y.root="ALL", digits = 4, quote = TRUE, prefix = "", ...) {
 
+
+printhtest <-
+function(x, digits = 4, quote = TRUE, prefix = "", ...)
+{
+    cat("\n")
+    writeLines(strwrap(x$method, prefix = "\t"))
+    cat("\n")
+    cat("data: ", x$data.name, "\n")
+    out <- character()
+    if(!is.null(x$statistic))
+        out <- c(out, paste(names(x$statistic), "=",
+                            format(round(x$statistic, 4))))
+    if(!is.null(x$parameter))
+        out <- c(out, paste(names(x$parameter), "=",
+                            format(round(x$parameter, 3))))
+    if(!is.null(x$p.value))
+        out <- c(out, paste("p-value =",
+                            format.pval(x$p.value, digits = digits)))
+    writeLines(strwrap(paste(out, collapse = ", ")))
+    if(!is.null(x$alternative)) {
+        cat("alternative hypothesis: ")
+	if(!is.null(x$null.value)) {
+	    if(length(x$null.value) == 1) {
+                alt.char <-
+                    switch(x$alternative,
+                           two.sided = "not equal to",
+                           less = "less than",
+                           greater = "greater than")
+		cat("true", names(x$null.value), "is", alt.char,
+                    x$null.value, "\n")
+	    }
+	    else {
+		cat(x$alternative, "\nnull values:\n")
+		print(x$null.value, ...)
+	    }
+	}
+	else cat(x$alternative, "\n")
+    }
+    if(!is.null(x$conf.int)) {
+	cat(format(100 * attr(x$conf.int, "conf.level")),
+	    "percent confidence interval:\n",
+            format(c(x$conf.int[1], x$conf.int[2])), "\n")
+    }
+    if(!is.null(x$estimate)) {
+	cat("sample estimates:\n")
+	print(x$estimate, ...)
+    }
+    cat("\n")
+    invisible(x)
+}
+  
 x.tot.sol <- x$x.tot.sol
 y.tot.sol <- x$y.tot.sol
 
@@ -245,9 +298,8 @@ cat("\n\nWeighted t test:\n", sep="")
 for (xx.root in x.root) {
 for (yy.root in y.root) {
     cat("\n'x' Root ",xx.root)
-    if (!is.null(x$y) & x$paired==FALSE) cat (" 'y' Root ",yy.root)
-
-    print.htest(x$test[[xx.root]][[yy.root]], digits=digits, quote=quot, prefix=prefix, ...)
+    if (!is.null(x$y) & x$paired==FALSE) cat (" 'y' Root ",yy.root)    
+    printhtest(x$test[[xx.root]][[yy.root]], digits=digits, quote=quote, prefix=prefix, ...)
 }
 }
  

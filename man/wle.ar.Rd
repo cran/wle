@@ -18,9 +18,9 @@ wle.ar(x, order=c(1, 0), seasonal=list(order = c(0, 0),
        boot.start=10, boot.step=boot.start, num.sol=1, x.init=0, 
        x.seasonal.init=0, max.iter.out=20, max.iter.in=50, 
        max.iter.start=200, max.iter.step=500, verbose=FALSE, 
-       w.level=0.4, min.weights=0.5, popolation.size=10, 
-       popolation.choose=5, elements.random=2, wle.start=FALSE, 
-       init.values=NULL, num.max=NULL, num.sol.step=2)
+       w.level=0.4, min.weights=0.5, population.size=10, 
+       population.choose=5, elements.random=2, wle.start=FALSE, 
+       init.values=NULL, num.max=NULL, num.sol.step=2, approx.w=TRUE)
 }
 
 \arguments{
@@ -56,20 +56,22 @@ default is \code{TRUE} for undifferenced series, \code{FALSE} for differenced on
   \item{max.iter.start}{maximum number of iterations in the starting process.}
   \item{max.iter.step}{maximum number of iterations in a step.}
   \item{w.level}{the threshold used to decide if an observation could be an additive outlier.}
-  \item{popolation.size}{see details.}
-  \item{popolation.choose}{see details.}
+  \item{population.size}{see details.}
+  \item{population.choose}{see details.}
   \item{elements.random}{see details.}
   \item{num.max}{maximum number of observations can be considered as possible additive outliers.}
   \item{wle.start}{if \code{TRUE} a weighted likelihood estimation is used to have a starting value.}
   \item{init.values}{a vector with initial values for the AR and seasonal AR coefficients and the innovations variance.}
   \item{verbose}{if \code{TRUE} warnings are printed.}
   \item{min.weights}{see details.}
+  \item{approx.w}{logical: if \code{TRUE} an approximation is used to
+    evaluate the weights in the outlier identification procedure.}
 }
 
 \details{
 \code{min.weight}: the weighted likelihood equation could have more than one solution. These roots appear for particular situation depending on contamination level and type. We introduce the \code{min.weight} parameter in order to choose only between roots that do not down weight everything. This is not still the optimal solution, and perhaps, in the new release, this part will be change. 
 
-The algorithm used to classify the observations as additive outliers is made by a genetic algorithm. The \code{popolation.size}, \code{popolation.choose} and \code{elements.random} are parameters related to this algorithm.
+The algorithm used to classify the observations as additive outliers is made by a genetic algorithm. The \code{population.size}, \code{population.choose} and \code{elements.random} are parameters related to this algorithm.
 }
 
 

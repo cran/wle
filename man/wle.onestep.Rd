@@ -90,19 +90,19 @@ Agostinelli, C., (1998) Verosimiglianza pesata nel modello di regressione linear
 \seealso{\link{wle.smooth} an algorithm to choose the smoothing parameter for normal distribution and normal kernel, \link{wle.lm} a function for estimating linear models with normal distribution error and normal kernel.}
 
 \examples{
-library(wle)
-library(lqs)
+#library(wle)
+#library(lqs)
 
-data(artificial)
+#data(artificial)
 
-result.lts <- lqs(y.artificial~x.artificial, 
-                 method = "lts")
+#result.lts <- lqs(y.artificial~x.artificial, 
+#                 method = "lts")
 
-result.wle <- wle.onestep(y.artificial~x.artificial,
-               ini.param=result.lts$coefficients,
-               ini.scale=result.lts$scale[1])
+#result.wle <- wle.onestep(y.artificial~x.artificial,
+#               ini.param=result.lts$coefficients,
+#               ini.scale=result.lts$scale[1])
 
-result.wle
+#result.wle
 }
 
 

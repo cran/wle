@@ -1,5 +1,8 @@
 Library wle
 ===========
+Version 0.7-8, 2003/12/23
+Fix problems in weights.wle.lm and print.wle.t.test. Some changes in wle.ar and wle.fracdiff.
+
 Version 0.7-7, 2003/11/18
 Fix a typo in the documentation of wle.normal.mixture function. 
 

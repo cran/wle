@@ -3,21 +3,20 @@
 #       wle.ar.ao function                                  #
 #	Author: Claudio Agostinelli                             #
 #	E-mail: claudio@unive.it                                #
-#	Date: March, 04, 2003                                   #
-#	Version: 0.1-2                                          #
+#	Date: December, 20, 2003                            #
+#	Version: 0.1-3                                          #
 #                                                           #
 #	Copyright (C) 2003 Claudio Agostinelli                  #
 #                                                           #
 #############################################################
 
-wle.ar.ao <- function(x, x.init, x.seasonal.init, coef, ncoef, ncoef.seasonal, period, sigma2, xreg=NULL, raf, smooth, w.level, verbose=FALSE, ao.list, popolation.size=20, popolation.choose=5, elements.random=4, num.max) {
+wle.ar.ao <- function(x, x.init, x.seasonal.init, coef, ncoef, ncoef.seasonal, period, sigma2, xreg=NULL, raf, smooth, w.level, verbose=FALSE, ao.list, population.size=20, population.choose=5, elements.random=4, num.max, approx.w=TRUE) {
 
-nused <- length(x)
-
-xx <- wle.ar.matrix(x=x, x.init=x.init, x.seasonal.init=x.seasonal.init, ncoef=ncoef, ncoef.seasonal=ncoef.seasonal, period=period, xreg=xreg)
+   nused <- length(x)
+   xx <- wle.ar.matrix(x=x, x.init=x.init, x.seasonal.init=x.seasonal.init, ncoef=ncoef, ncoef.seasonal=ncoef.seasonal, period=period, xreg=xreg)
 resid <- x - xx%*%coef
 
-weights <- .Fortran("wlew",
+   ww <- weights <- .Fortran("wlew",
 	as.double(resid), 
 	as.integer(nused),
 	as.double(resid), 
@@ -29,158 +28,141 @@ weights <- .Fortran("wlew",
 	weights=double(nused),
 	PACKAGE="wle")$weights
 
-ao.position <- 0
-pos.temp <- 1:nused
-pos.temp <- pos.temp[order(weights)]
-weights.sort <- sort(weights)
-ao.temp <- weights.sort <= w.level
-pos.temp <- pos.temp[ao.temp]
-ao <- rep(FALSE,nused)
-if (length(pos.temp)) {
-pos.temp <- pos.temp[1:min(length(pos.temp),num.max)]
-ao[pos.temp] <- TRUE
-}
+   ao.position <- 0
+   pos.temp <- 1:nused
+   pos.temp <- pos.temp[order(weights)]
+   weights.sort <- sort(weights)
+   ao.temp <- weights.sort <= w.level
+   pos.temp <- pos.temp[ao.temp]
+   ao <- rep(FALSE, nused)
+   if (length(pos.temp)) {
+       pos.temp <- pos.temp[1:min(length(pos.temp),num.max)]
+       ao[pos.temp] <- TRUE
+   }
+   pos <- (1:nused)[ao]
 
-pos <- (1:nused)[ao]
+   if (verbose) {
+        cat("We have the following observations under the w.level=",w.level,":\n",pos,"\n")
+   }
 
-if(verbose) {
-cat("We have the following observations under the w.level=",w.level,":\n",pos,"\n")
-}
+   if (any(ao)) {
+       model.in <- vector(length=0)
+       for (i in 1:length(ao.list)) {
+            if (all(is.element(ao.list[[i]], pos))) {
+            temp <- vector(length=0)
+            for (j in 1:length(ao.list[[i]])) {
+                 temp <- c(temp,(1:length(pos))[pos==ao.list[[i]][j]])
+            }
+            model.in <- c(model.in, sum(2^(temp-1)))
+       }
+   }
 
-if (any(ao)) {
+   num.model <- max(length(model.in),population.size)
+   num.pos <- (2^sum(ao))-1
+   dim.dim <- floor(log(num.pos,2))+1
+   w.tilde <- rep(0,num.model)
 
-model.in <- vector(length=0)
+   model.in <- c(model.in, sample(x=(1:num.pos), size=(num.model-length(model.in)), replace=TRUE))
 
-for (i in 1:length(ao.list)) {
-if (all(is.element(ao.list[[i]],pos))) {
-temp <- vector(length=0)
-for (j in 1:length(ao.list[[i]])) {
-temp <- c(temp,(1:length(pos))[pos==ao.list[[i]][j]])
-}
-model.in <- c(model.in, sum(2^(temp-1)))
-}
-}
+   for (isearch in 1:num.model) {
+        pos.ao <- sort(pos[binary(model.in[isearch],dim.dim)$dicotomy])
+        num.ao <- length(pos.ao)
+        x.ao <- x
+        xx.ao <- xx
+        for (t in pos.ao) {
+             if (ncoef) {
+                 x.ao[t] <- xx.ao[t,]%*%coef
+                 for (tt in 1:ncoef) {
+                      if ((t+tt)<=nused) {  
+                          xx.ao[t+tt,tt] <- x.ao[t]
+                      }
+                 }
+             }
+             if (ncoef.seasonal) {
+                 for (tt in 1:ncoef.seasonal) {
+                      if ((t+tt*period)<=nused) {  
+                          xx.ao[t+tt*period,tt+ncoef] <- x.ao[t]
+                      }
+                 }
+             }
+        }
+        resid.ao <- x - xx.ao%*%coef
+        resid.ao <- resid.ao[-pos.ao]
 
-num.model <- max(length(model.in),popolation.size)
-num.pos <- (2^sum(ao))-1
-dim.dim <- floor(log(num.pos,2))+1
-w.tilde <- rep(0,num.model)
-
-model.in <- c(model.in, sample(x=(1:num.pos), size=(num.model-length(model.in)), replace=TRUE))
-
-##########wle.riunif((num.model-length(model.in)),1,num.pos))
-
-for(isearch in 1:num.model) {
-
-pos.ao <- sort(pos[binary(model.in[isearch],dim.dim)$dicotomy])
-num.ao <- length(pos.ao)
-x.ao <- x
-xx.ao <- xx
-for (t in pos.ao) {
-     if (ncoef) {
-         x.ao[t] <- xx.ao[t,]%*%coef
-         for (tt in 1:ncoef) {
-              if ((t+tt)<=nused) {  
-                  xx.ao[t+tt,tt] <- x.ao[t]
-              }
-         }
-     }
-     if (ncoef.seasonal) {
-         for (tt in 1:ncoef.seasonal) {
-              if ((t+tt*period)<=nused) {  
-                  xx.ao[t+tt*period,tt+ncoef] <- x.ao[t]
-              }
-         }
-     }
-}
-
-resid.ao <- x - xx.ao%*%coef
-resid.ao <- resid.ao[-pos.ao]
-
-w.temp <- wle.weights(x=resid.ao, smooth=smooth, sigma2=sigma2, raf=raf, location=TRUE)
-
-weights.temp <- w.temp$weights
-w.tilde[isearch] <- sum(weights.temp)/nused
-}
-
-model.in <- model.in[order(w.tilde)]
-w.tilde <- sort(w.tilde)
-
-while((model.in[1]-model.in[num.model])!=0) {
-
-num.model.sel <- popolation.choose
-cum.wtilde <- cumsum(w.tilde)[num.model.sel:num.model]
-
-pos.child <- vector(length=0)
-
-while(length(pos.child)==0) {
-temp <- runif(2,0,cum.wtilde[length(cum.wtilde)])
-pos.aaa <- min((num.model.sel:num.model)[cum.wtilde > temp[1]])
-pos.bbb <- min((num.model.sel:num.model)[cum.wtilde > temp[2]])
-
-pos.aa <- pos[binary(model.in[pos.aaa],dim.dim)$dicotomy]
-pos.bb <- pos[binary(model.in[pos.bbb],dim.dim)$dicotomy]
-
-pos.child <- c(pos.aa,pos.bb,pos[sample(x=(1:length(pos)), size=elements.random, replace=TRUE)])
-###############wle.riunif(elements.random,1,length(pos))])
-pos.child <- pos.child[as.logical(sample(x=c(0,1), size=length(pos.child), replace=TRUE))]
-###############wle.riunif(length(pos.child),0,1))]
-
-pos.child <- sort(unique(pos.child))
-}
-
-temp.child <- vector(length=0)
-for (i in 1:length(pos.child)) {
-temp.child <- c(temp.child,(1:length(pos))[pos==pos.child[i]])
-}
-
-model.child <- sum(2^(temp.child-1))
-
-num.child <- length(pos.child)
-x.ao <- x
-xx.ao <- xx
-for (t in pos.child) {
-     x.ao[t] <- xx.ao[t,]%*%coef
-     if (ncoef) {
-         for (tt in 1:ncoef) {
-              if ((t+tt)<=nused) {  
-                  xx.ao[t+tt,tt] <- x.ao[t]
-              }
-         }
-     }
-     if (ncoef.seasonal) {
-         for (tt in 1:ncoef.seasonal) {
-              if ((t+tt*period)<=nused) {  
-                  xx.ao[t+tt*period,tt+ncoef] <- x.ao[t]
-              }
-         }
-     }
-     
-}
-
-resid.ao <- x - xx.ao%*%coef
-resid.ao <- resid.ao[-pos.child]
-
-w.temp <- wle.weights(x=resid.ao, smooth=smooth, sigma2=sigma2, raf=raf, location=TRUE)
-
-weights.temp <- w.temp$weights
-w.tilde.child <- sum(weights.temp)/nused
-
-w.tilde <- c(w.tilde,w.tilde.child)
-model.in <- c(model.in,model.child)
-
-model.in <- model.in[order(w.tilde)][-1]
-w.tilde <- sort(w.tilde)[-1]
-}
-
-if(max(w.tilde)<(sum(weights)/nused)) {
-ao.position <- NULL
+        if (approx.w) {
+            weights.temp <- approx(x=resid, y=ww, xout=resid.ao)$y 
+            weights.temp[is.na(weights.temp)] <- 0
+            weights.temp[weights.temp > 1] <- 1
+            weights.temp[weights.temp < 0] <- 0            
+        } else {
+            weights.temp <- wle.weights(x=resid.ao, smooth=smooth, sigma2=sigma2, raf=raf, location=TRUE)$weights
+        }
+        w.tilde[isearch] <- sum(weights.temp)/nused
+   }
+   model.in <- model.in[order(w.tilde)]
+   w.tilde <- sort(w.tilde)
+   while ((model.in[1]-model.in[num.model])!=0) {
+          num.model.sel <- population.choose
+          cum.wtilde <- cumsum(w.tilde)[num.model.sel:num.model]
+          pos.child <- vector(length=0)
+          while (length(pos.child)==0) {
+                 temp <- runif(2,0,cum.wtilde[length(cum.wtilde)])
+                 pos.aaa <- min((num.model.sel:num.model)[cum.wtilde > temp[1]])
+                 pos.bbb <- min((num.model.sel:num.model)[cum.wtilde > temp[2]])
+                 pos.aa <- pos[binary(model.in[pos.aaa],dim.dim)$dicotomy]
+                 pos.bb <- pos[binary(model.in[pos.bbb],dim.dim)$dicotomy]
+                 pos.child <- c(pos.aa,pos.bb,pos[sample(x=(1:length(pos)), size=elements.random, replace=TRUE)])
+                 pos.child <- pos.child[as.logical(sample(x=c(0,1), size=length(pos.child), replace=TRUE))]
+                 pos.child <- sort(unique(pos.child))
+          }
+          temp.child <- vector(length=0)
+          for (i in 1:length(pos.child)) {
+               temp.child <- c(temp.child,(1:length(pos))[pos==pos.child[i]])
+          }
+          model.child <- sum(2^(temp.child-1))
+          num.child <- length(pos.child)
+          x.ao <- x
+          xx.ao <- xx
+          for (t in pos.child) {
+               x.ao[t] <- xx.ao[t,]%*%coef
+               if (ncoef) {
+                   for (tt in 1:ncoef) {
+                        if ((t+tt)<=nused) {  
+                            xx.ao[t+tt,tt] <- x.ao[t]
+                        }
+                   }
+               }
+               if (ncoef.seasonal) {
+                   for (tt in 1:ncoef.seasonal) {
+                        if ((t+tt*period)<=nused) {  
+                            xx.ao[t+tt*period,tt+ncoef] <- x.ao[t]
+                        }
+                   }
+               }  
+          }
+          resid.ao <- x - xx.ao%*%coef
+          resid.ao <- resid.ao[-pos.child]
+          if (approx.w) {
+              weights.temp <- approx(x=resid, y=ww, xout=resid.ao)$y 
+              weights.temp[is.na(weights.temp)] <- 0
+              weights.temp[weights.temp > 1] <- 1
+              weights.temp[weights.temp < 0] <- 0
+          } else {
+              weights.temp <- wle.weights(x=resid.ao, smooth=smooth, sigma2=sigma2, raf=raf, location=TRUE)$weights
+          }
+          w.tilde.child <- sum(weights.temp)/nused
+          w.tilde <- c(w.tilde,w.tilde.child)
+          model.in <- c(model.in,model.child)
+          model.in <- model.in[order(w.tilde)][-1]
+          w.tilde <- sort(w.tilde)[-1]
+   }
+   if (max(w.tilde)<(sum(weights)/nused)) {
+       ao.position <- NULL
+   } else {
+       ao.position <- sort(pos[binary(model.in[1],dim.dim)$dicotomy])
+   }
 } else {
-ao.position <- sort(pos[binary(model.in[1],dim.dim)$dicotomy])
-}
-
-} else {
-ao.position <- NULL
+   ao.position <- NULL
 }
 
 x.ao <- x
@@ -208,10 +190,10 @@ w.temp <- wle.weights(x=resid.ao, smooth=smooth, sigma2=sigma2, raf=raf, locatio
 resid.ao <- resid.ao - w.temp$location
 
 if (verbose) {
-cat("Additive outliers: \n", ao.position, "\n")
+    cat("Additive outliers: \n", ao.position, "\n")
 }
 
-return(x.ao=x.ao, resid.ao=resid.ao, ao.position=ao.position)
+return(list(x.ao=x.ao, resid.ao=resid.ao, ao.position=ao.position))
 }
 
 #############################################################
@@ -219,14 +201,14 @@ return(x.ao=x.ao, resid.ao=resid.ao, ao.position=ao.position)
 #	wle.ar function                                     #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@unive.it                            #
-#	Date: December, 3, 2001                             #
-#	Version: 0.1-3                                      #
+#	Date: December, 19, 2003                            #
+#	Version: 0.1-4                                      #
 #                                                           #
-#	Copyright (C) 2001 Claudio Agostinelli              #
+#	Copyright (C) 2003 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
-wle.ar <- function(x, order=c(1,0), seasonal=list(order=c(0,0), period=NA), group, group.start, group.step=group.start, xreg=NULL, include.mean=TRUE, na.action=na.fail, tol=10^(-6), tol.step=tol, equal=10^(-3), equal.step=equal, raf="HD", smooth=0.0031, smooth.ao=smooth,  boot=10, boot.start=10, boot.step=boot.start, num.sol=1, x.init=0, x.seasonal.init=0, max.iter.out=20, max.iter.in=50, max.iter.start=200, max.iter.step=500, verbose=FALSE, w.level=0.4, min.weights=0.5, popolation.size=10, popolation.choose=5, elements.random=2, wle.start=FALSE, init.values=NULL, num.max=NULL, num.sol.step=2) {
+wle.ar <- function(x, order=c(1,0), seasonal=list(order=c(0,0), period=NA), group, group.start, group.step=group.start, xreg=NULL, include.mean=TRUE, na.action=na.fail, tol=10^(-6), tol.step=tol, equal=10^(-3), equal.step=equal, raf="HD", smooth=0.0031, smooth.ao=smooth,  boot=10, boot.start=10, boot.step=boot.start, num.sol=1, x.init=0, x.seasonal.init=0, max.iter.out=20, max.iter.in=50, max.iter.start=200, max.iter.step=500, verbose=FALSE, w.level=0.4, min.weights=0.5, population.size=10, population.choose=5, elements.random=2, wle.start=FALSE, init.values=NULL, num.max=NULL, num.sol.step=2, approx.w=TRUE) {
 
 if (length(order)!=2) stop("order must have two components")
 if (length(seasonal$order)!=2) stop("seasonal$order must have two components")
@@ -316,8 +298,11 @@ not.conv <- 0
 while(iboot<=boot & tot.sol<num.sol) {
    pos.iboot <- round(runif(1,(group+1),nused))
    x.boot <- x[(pos.iboot-group+1):pos.iboot]
-   xreg.boot <- xreg[(pos.iboot-group+1):pos.iboot]
-
+   if (is.matrix(xreg))
+       xreg.boot <- xreg[(pos.iboot-group+1):pos.iboot,]
+   else
+       xreg.boot <- xreg[(pos.iboot-group+1):pos.iboot]
+   
    if (!is.null(init.values)) {
        temp <- list(conv=TRUE)
        temp.n <- length(init.values)
@@ -353,7 +338,7 @@ while(iboot<=boot & tot.sol<num.sol) {
    if (sum(weights)/nused >= min.weights) {
 
       ao.list <- list(0)
-      wres <- wle.ar.ao(x=x, x.init=x.init, x.seasonal.init=x.seasonal.init, coef=coef.init, ncoef=ncoef, ncoef.seasonal=ncoef.seasonal, period=period, sigma2=sigma2.init, xreg=xreg, raf=raf, smooth=smooth.ao, w.level=w.level, verbose=verbose, ao.list=ao.list, popolation.size=popolation.size, popolation.choose=popolation.choose, elements.random=elements.random, num.max=num.max)
+      wres <- wle.ar.ao(x=x, x.init=x.init, x.seasonal.init=x.seasonal.init, coef=coef.init, ncoef=ncoef, ncoef.seasonal=ncoef.seasonal, period=period, sigma2=sigma2.init, xreg=xreg, raf=raf, smooth=smooth.ao, w.level=w.level, verbose=verbose, ao.list=ao.list, population.size=population.size, population.choose=population.choose, elements.random=elements.random, num.max=num.max, approx.w=approx.w)
 
       resid.ao <- wres$resid.ao
       x.ao <- wres$x.ao
@@ -405,7 +390,7 @@ while(iboot<=boot & tot.sol<num.sol) {
 	    	cat("iteration: ",iter," \n parameters: ",coef.init," \n sigma2: ",sigma2.init," \n")
 	    }
 
-      wres <- wle.ar.ao(x=x, x.init=x.init, x.seasonal.init=x.seasonal.init, coef=coef.init, ncoef=ncoef, ncoef.seasonal=ncoef.seasonal, period=period, sigma2=sigma2.init, xreg=xreg, raf=raf, smooth=smooth.ao, w.level=w.level, verbose=verbose, ao.list=ao.list, popolation.size=popolation.size, popolation.choose=popolation.choose, elements.random=elements.random, num.max=num.max)
+      wres <- wle.ar.ao(x=x, x.init=x.init, x.seasonal.init=x.seasonal.init, coef=coef.init, ncoef=ncoef, ncoef.seasonal=ncoef.seasonal, period=period, sigma2=sigma2.init, xreg=xreg, raf=raf, smooth=smooth.ao, w.level=w.level, verbose=verbose, ao.list=ao.list, population.size=population.size, population.choose=population.choose, elements.random=elements.random, num.max=num.max, approx.w=approx.w)
 
       resid.ao <- wres$resid.ao
       x.ao <- wres$x.ao

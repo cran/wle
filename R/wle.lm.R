@@ -442,7 +442,7 @@ print.summary.wle.lm.root <- function (x, digits = max(3, getOption("digits") - 
 
 fitted.wle.lm <- function(object, ...) object$fitted.values
 coef.wle.lm <- function(object, ...) object$coefficients
-weights.wle.lm <- weights.default
+weights.wle.lm  <- function(object, ...) object$weights
 formula.wle.lm <- function(x, ...) formula(x$terms)
 
 model.frame.wle.lm <-

@@ -10,7 +10,7 @@
 #                                                           #
 #############################################################
 
-wle.fracdiff.ao <- function(d, sigma2, x, M=100, x.init=rep(0,M), x.mean=0, use.init=FALSE, raf=1, smooth=0.0031, w.level=0.5, verbose=FALSE, ao.list=list(0), popolation.size=20, popolation.choose=5, elements.random=4, num.max=length(x)) {
+wle.fracdiff.ao <- function(d, sigma2, x, M=100, x.init=rep(0,M), x.mean=0, use.init=FALSE, raf=1, smooth=0.0031, w.level=0.5, verbose=FALSE, ao.list=list(0), population.size=20, population.choose=5, elements.random=4, num.max=length(x)) {
 
     if (use.init) {
         MM <- 0
@@ -65,7 +65,7 @@ wle.fracdiff.ao <- function(d, sigma2, x, M=100, x.init=rep(0,M), x.mean=0, use.
              }
          }
 
-         num.model <- max(length(model.in),popolation.size)
+         num.model <- max(length(model.in),population.size)
          num.pos <- (2^sum(ao))-1
          dim.dim <- floor(log(num.pos,2))+1
          w.tilde <- rep(0,num.model)
@@ -92,7 +92,7 @@ wle.fracdiff.ao <- function(d, sigma2, x, M=100, x.init=rep(0,M), x.mean=0, use.
          w.tilde <- sort(w.tilde)
 
          while ((model.in[1]-model.in[num.model])!=0) {
-                num.model.sel <- popolation.choose
+                num.model.sel <- population.choose
                 cum.wtilde <- cumsum(w.tilde)[num.model.sel:num.model]
                 pos.child <- vector(length=0)
 
@@ -178,7 +178,7 @@ wle.fracdiff.ao <- function(d, sigma2, x, M=100, x.init=rep(0,M), x.mean=0, use.
 #                                                           #
 #############################################################
 
-wle.fracdiff <- function(x, lower, upper, M, group, na.action=na.fail, tol=10^(-6), equal=10^(-3), raf="HD", smooth=0.0031, smooth.ao=smooth, boot=10, num.sol=1, x.init=rep(0,M), use.uniroot=FALSE, use.init=FALSE, max.iter.out=20, max.iter.in=100, max.iter.step=5000, max.iter.start=max.iter.step,  verbose=FALSE, w.level=0.4, min.weights=0.5, popolation.size=10, popolation.choose=5, elements.random=2, init.values=NULL, num.max=length(x), include.mean=FALSE, ao.list=list(0)) {
+wle.fracdiff <- function(x, lower, upper, M, group, na.action=na.fail, tol=10^(-6), equal=10^(-3), raf="HD", smooth=0.0031, smooth.ao=smooth, boot=10, num.sol=1, x.init=rep(0,M), use.uniroot=FALSE, use.init=FALSE, max.iter.out=20, max.iter.in=100, max.iter.step=5000, max.iter.start=max.iter.step,  verbose=FALSE, w.level=0.4, min.weights=0.5, population.size=10, population.choose=5, elements.random=2, init.values=NULL, num.max=length(x), include.mean=FALSE, ao.list=list(0)) {
 
     if (use.init) {
         MM <- 0
@@ -249,7 +249,7 @@ wle.fracdiff <- function(x, lower, upper, M, group, na.action=na.fail, tol=10^(-
 				PACKAGE="wle")$weights
 
                if (sum(weights)/nresid >= min.weights) {
-                   wres <- wle.fracdiff.ao(d=d, sigma2=sigma2, x=x, M=M, x.init=x.init, x.mean=x.mean, use.init=use.init, raf=raf, smooth=smooth.ao, w.level=w.level, verbose=verbose, ao.list=ao.list, popolation.size=popolation.size, popolation.choose=popolation.choose, elements.random=elements.random, num.max=num.max)
+                   wres <- wle.fracdiff.ao(d=d, sigma2=sigma2, x=x, M=M, x.init=x.init, x.mean=x.mean, use.init=use.init, raf=raf, smooth=smooth.ao, w.level=w.level, verbose=verbose, ao.list=ao.list, population.size=population.size, population.choose=population.choose, elements.random=elements.random, num.max=num.max)
 
                    x.ao <- wres$x.ao
                    ao.position <- wres$ao.position
@@ -296,7 +296,7 @@ wle.fracdiff <- function(x, lower, upper, M, group, na.action=na.fail, tol=10^(-
 	    	                  cat("outer loop, iteration: ",iter.out," convergence achieved for the inner loop \n")
 	                      }
 
-                              wres <- wle.fracdiff.ao(d=d, sigma2=sigma2, x=x, M=M, x.init=x.init, x.mean=x.mean, use.init=use.init, raf=raf, smooth=smooth.ao, w.level=w.level, verbose=verbose, ao.list=ao.list, popolation.size=popolation.size, popolation.choose=popolation.choose, elements.random=elements.random, num.max=num.max)
+                              wres <- wle.fracdiff.ao(d=d, sigma2=sigma2, x=x, M=M, x.init=x.init, x.mean=x.mean, use.init=use.init, raf=raf, smooth=smooth.ao, w.level=w.level, verbose=verbose, ao.list=ao.list, population.size=population.size, population.choose=population.choose, elements.random=elements.random, num.max=num.max)
 
                               x.ao <- wres$x.ao
                               ao.position <- wres$ao.position

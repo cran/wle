@@ -2,53 +2,51 @@ artificial              Hawkins, Bradu, Kass's Artificial Data
 binary                  Convert decimal base number to binary base
 cavendish               Cavendish's determinations of the mean density
                         of the earth Data
+coef.wle.lm             Accessing Linear Model Fits for wle.lm
 hald                    Hald Data
 mle.aic                 Akaike Information Criterion
-mle.aic.summaries       Summaries and methods for mle.aic
 mle.cp                  Mallows Cp
-mle.cp.summaries        Summaries and methods for mle.cp
 mle.cv                  Cross Validation Selection Method
-mle.cv.summaries        Summaries and methods for mle.cv
 mle.stepwise            Stepwise, Backward and Forward selection
                         methods
-mle.stepwise.summaries
-                        Accessing summaries for mle.stepwise
 plot.mle.cp             Plot the Mallows Cp
 plot.wle.cp             Plot the Weighted Mallows Cp
 plot.wle.lm             Plots for the Linear Model
+print.wle.normal        Summaries and methods for wle.normal
+print.wle.normal.multi
+                        Summaries and methods for wle.normal.multi
+print.wle.onestep       Summaries and methods for wle.onestep
 selection               Selection's Data
+summary.mle.aic         Summaries and methods for mle.aic
+summary.mle.cp          Summaries and methods for mle.cp
+summary.mle.cv          Summaries and methods for mle.cv
+summary.mle.stepwise    Accessing summaries for mle.stepwise
+summary.wle.aic         Summaries and methods for wle.aic
+summary.wle.cp          Summaries and methods for wle.cp
+summary.wle.cv          Summaries and methods for wle.cv
+summary.wle.stepwise    Accessing summaries for wle.stepwise
 wle.aic                 Weighted Akaike Information Criterion
-wle.aic.summaries       Summaries and methods for wle.aic
 wle.ar                  Fit Autoregressive Models to Time Series -
                         Preliminary Version
 wle.binomial            Robust Estimation in the Binomial Model
 wle.cp                  Weighted Mallows Cp
-wle.cp.summaries        Summaries and methods for wle.cp
 wle.cv                  Model Selection by Weighted Cross-Validation
-wle.cv.summaries        Summaries and methods for wle.cv
 wle.fracdiff            Fit Fractional Models to Time Series -
                         Preliminary Version
 wle.gamma               Robust Estimation in the Gamma model
 wle.lm                  Fitting Linear Models using Weighted
                         Likelihood
-wle.lm.summaries        Accessing Linear Model Fits for wle.lm
+wle.normal              Robust Estimation in the Normal Model
 wle.normal.mixture      Robust Estimation in the Normal Mixture Model
 wle.normal.multi        Robust Estimation in the Normal Multivariate
                         Model
-wle.normal.multi.summaries
-                        Summaries and methods for wle.normal.multi
-wle.normal              Robust Estimation in the Normal Model
-wle.normal.summaries    Summaries and methods for wle.normal
 wle.onestep             A One-Step Weighted Likelihood Estimator for
                         Linear model
-wle.onestep.summaries   Summaries and methods for wle.onestep
 wle.poisson             Robust Estimation in the Poisson Model
 wle.smooth              Bandwidth selection for the normal kernel and
                         normal model.
 wle.stepwise            Weighted Stepwise, Backward and Forward
                         selection methods
-wle.stepwise.summaries
-                        Accessing summaries for wle.stepwise
 wle.t.test              Weighted Likelihood Student's t-Test
 wle.var.test            Weighted F Test to Compare Two Variances
 wle.vonmises            von Mises Weighted Likelihood Estimates
