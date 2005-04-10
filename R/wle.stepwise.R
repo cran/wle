@@ -1,12 +1,12 @@
 #############################################################
 #                                                           #
-#	wle.stepwise function                                   #
-#	Author: Claudio Agostinelli                             #
-#	E-mail: claudio@unive.it                                #
-#	Date: October, 27, 2003                                 #
-#	Version: 0.4-2                                          #
+#	wle.stepwise function                               #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: April, 10, 2005                               #
+#	Version: 0.5                                        #
 #                                                           #
-#	Copyright (C) 2002 Claudio Agostinelli                  #
+#	Copyright (C) 2005 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
@@ -81,7 +81,7 @@ if (f.in<0 | f.out<0) {
 }
 
 if (group<1) {
-    group <- max(round(size/4),nvar)
+    group <- max(round(size/4),nvar+1)
     if (verbose) cat("wle.stepwise: dimension of the subsample set to default value: ",group,"\n")
 }
 

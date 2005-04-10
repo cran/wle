@@ -1,6 +1,12 @@
 Library wle
 ===========
 
+Version 0.8-1, 2005/04/10
+Fixed bugs in wlestepwise.f and mlestepwise.f
+The calls to the packages ts and ctest are removed.
+The function wle.aic.ar (and its summaries) is added.
+Add the dataset rocky
+
 Version 0.8,   2004/10/05
 Fix file wle.lm.summaries.Rd
 

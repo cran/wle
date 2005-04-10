@@ -10,19 +10,19 @@ C     WLE in the normal regression linear model
 C     
 C     Author: Claudio Agostinelli 
 C             Dipartimento di Statistica
-C             Universita' di Padova
-C             35121 Padova
+C             Universita' di Venezia
+C             30121 Venezia
 C             ITALIA
 C
-C     E-mail: claudio@stat.unipd.it
+C     E-mail: claudio@unive.it
 C
-C     July, 6, 2000
+C     April, 10, 2005
 C
-C     Version: 0.3
+C     Version: 0.5
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
-C    Copyright (C) 1999 Claudio Agostinelli
+C    Copyright (C) 2005 Claudio Agostinelli
 C
 C    This program is free software; you can redistribute it and/or modify
 C    it under the terms of the GNU General Public License as published by
@@ -265,7 +265,7 @@ C
       imodel=0
       iconv=0
 
-       call wleregfix(ydata,xidata,0,nsize,npre,
+      call wleregfix(ydata,xidata,0,nsize,npre,
      &  npre,nboot,ngrp,nmaxsol,iraf,rk,rprec,requal,imax,
      &  dfparam,dfvar,dfresid,dftot,dfpesi,
      &  dfden,dfmod,dfdelta,nfsame,nfsol,iconv)
@@ -279,6 +279,7 @@ C       write(*,*) 'rprec: ',rprec
 C       write(*,*) 'requal: ',requal
 C       write(*,*) 'imax: ',imax
 C       write(*,*) 'dfpesi: ',dfpesi
+C       write(*,*) 'dfparam',dfparam
 
 
 C       write(*,*) 'iconv: ', iconv , ' nboot: ', nboot
@@ -318,15 +319,15 @@ C          write(*,*) 'dpesi: ',dpesi
  1050        continue
              nmodel(npre)=1
 
-             mediay=0.0d00
+             dmediay=0.0d00
              do 3200 i=1,nsize
-                mediay=mediay+dpesi(i)*ydata(i)
+                dmediay=dmediay+dpesi(i)*ydata(i)
  3200        continue
-             mediay=mediay/dtotpesi
+             dmediay=dmediay/dtotpesi
 
              dvarmod=0.0d00
              do 3100 i=1,nsize
-                dvarmod=dvarmod+dpesi(i)*(ydata(i)-mediay)**ddue
+                dvarmod=dvarmod+dpesi(i)*(ydata(i)-dmediay)**ddue
  3100        continue
 
           elseif(ntype.eq.2) then
@@ -443,17 +444,18 @@ C         write(*,*) xparam
                avaria(isol)=avaria(isol)
      &              +dpesi(i)*wresid(isol,i)**ddue
  1090       continue
-
+ 
 C         write(*,*) 'avaria ',avaria
 C         write(*,*) 'dvar ',dvar
 C         write(*,*) 'dvarmod ',dvarmod
 
+         djpos=jpos
          if (ntype.eq.1) then
             ftest(ipos,isol) = (dvarmod - avaria(isol))
-     &           / (avaria(isol)/((dtotpesi*dsize)-jpos-1))
+     &           / (avaria(isol)/((dtotpesi*dsize)-djpos))
          elseif(ntype.eq.2) then
             ftest(ipos,isol) = (avaria(isol) - dvarmod)
-     &           / (dvarmod/((dtotpesi*dsize)-jpos))            
+     &           / (dvarmod/((dtotpesi*dsize)-djpos-duno))            
          endif   
 
 

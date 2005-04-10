@@ -243,13 +243,13 @@ if (!(length(x.seasonal.init)==1 | length(x.seasonal.init)==ncoef.seasonal*perio
 d <- order[2]
 d.s <- seasonal$order[2]
 
-if (d | d.s) {
-    if (any(.packages(all.available=TRUE)=="ts")) {
-        library(ts)
-    } else {
-        stop("For Integrated model you need function diff in package ts")
-    }
-}
+#if (d | d.s) {
+#    if (any(.packages(all.available=TRUE)=="ts")) {
+#        library(ts)
+#    } else {
+#        stop("For Integrated model you need function diff in package ts")
+#    }
+#}
 
 if(d) x <- diff(x, 1, d)
 if(d.s) x <- diff(x, seasonal$period, d.s)

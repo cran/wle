@@ -95,7 +95,9 @@ as good as the one based on \code{method="full"}.
 
 Agostinelli, C., (1999) Robust model selection in regression via weighted likelihood methodology, \emph{Working Paper n. 1999.4}, Department of Statistics, Universiy of Padova.
 
-Agostinelli, C., (1999) Robust model selection in regression via weighted likelihood methodology, submitted to \emph{Statistics \& Probability Letters}, revised december 1999.
+Agostinelli, C., (2002) Robust model selection in regression via
+weighted likelihood methodology, \emph{Statistics \& Probability
+  Letters}, 56, 289-300.
 
 Agostinelli, C., (1998) Inferenza statistica robusta basata sulla funzione di verosimiglianza pesata: alcuni sviluppi, \emph{Ph.D Thesis}, Department of Statistics, University of Padova.
 

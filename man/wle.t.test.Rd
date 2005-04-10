@@ -119,7 +119,10 @@ wle.t.test(x, y = NULL, alternative = c("two.sided", "less", "greater"),
 
 Agostinelli, C., (1998) Inferenza statistica robusta basata sulla funzione di verosimiglianza pesata: alcuni sviluppi, \emph{ Ph.D Thesis}, Department of Statistics, University of Padova (in italian).
 
-Agostinelli, C., (2001) Un approccio robusto alla verifica d'ipotesi basato sulla funzione di verosimiglianza pesata - Robust Testing Hypotheses via Weighted Likelihood function, in press \emph{Statistica}, (in italian).
+Agostinelli, C., (2002) Un approccio alla verifica d'ipotesi robusta
+basato sulla funzione di verosimiglianza pesata - Robust Testing
+Hypotheses via Weighted Likelihood function, \emph{Statistica}, Anno
+LXII, 1, 87-110.
 
 Agostinelli, C., and Markatou, M., (2001) Test of hypotheses based on the Weighted Likelihood Methodology, \emph{Statistica Sinica},  vol. 11, n. 2, 499-514.
 }
@@ -128,7 +131,6 @@ Agostinelli, C., and Markatou, M., (2001) Test of hypotheses based on the Weight
 
 \examples{
 library(wle)
-library(ctest)
 
 set.seed(1234)
 

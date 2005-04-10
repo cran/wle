@@ -6,19 +6,19 @@ C     Weighted Least Square
 C     
 C     Author: Claudio Agostinelli 
 C             Dipartimento di Statistica
-C             Universita' di Padova
-C             35121 Padova
+C             Universita' di Venezia
+C             30121 Venezia
 C             ITALIA
 C
-C     E-mail: claudio@stat.unipd.it
+C     E-mail: claudio@unive.it
 C
-C     October, 10 1999
+C     April, 10 2005
 C
-C     Version: 0.2
+C     Version: 0.3
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
-C    Copyright (C) 1999 Claudio Agostinelli
+C    Copyright (C) 2005 Claudio Agostinelli
 C
 C    This program is free software; you can redistribute it and/or modify
 C    it under the terms of the GNU General Public License as published by
@@ -86,6 +86,7 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       implicit integer (n,i,j)
 
       parameter(dzero=0.0d00)
+      parameter(duno=1.0d00)
 
       dimension ydata(nsize)
       dimension wydata(nsize)
@@ -124,7 +125,7 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
  620     continue
  630  continue
 
-      if(ntype.eq.1) then
+      if(ntype.eq.1) then   
 
       do 750 i=1,nsize
          do 751 j=1,nsize

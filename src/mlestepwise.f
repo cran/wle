@@ -9,19 +9,19 @@ C      in the normal regression linear model
 C     
 C     Author: Claudio Agostinelli 
 C             Dipartimento di Statistica
-C             Universita' di Padova
-C             35121 Padova
+C             Universita' di Venezia
+C             30121 Venezia
 C             ITALIA
 C
-C     E-mail: claudio@stat.unipd.it
+C     E-mail: claudio@unive.it
 C
-C     September, 6, 2001
+C     April, 10, 2005
 C
-C     Version: 0.3
+C     Version: 0.5
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
-C    Copyright (C) 2001 Claudio Agostinelli
+C    Copyright (C) 2005 Claudio Agostinelli
 C
 C    This program is free software; you can redistribute it and/or modify
 C    it under the terms of the GNU General Public License as published by
@@ -221,16 +221,19 @@ C
  1050        continue
              nmodel(npre)=1
 
-            mediay=0.0d00
+             dmediay=dzero
              do 3200 i=1,nsize
-                mediay=mediay+ydata(i)
+                dmediay=dmediay+ydata(i)
  3200        continue
-             mediay=mediay/dsize
-
-             dvarmod=0.0d00
+             dmediay=dmediay/dsize
+C         write(*,*) dmediay
+             dvarmod=dzero
              do 3100 i=1,nsize
-                dvarmod=dvarmod+(ydata(i)-mediay)**ddue
+                dvarmod=dvarmod+(ydata(i)-dmediay)**ddue
  3100        continue
+
+
+C          write(*,*) dvarmod
 
           elseif(ntype.eq.2) then
 
@@ -241,27 +244,30 @@ C
  1055        continue
 
 
-        call wls (ydata,xidata,dpesi,nsize,npre,npre,1,
+         call wls (ydata,xidata,dpesi,nsize,npre,npre,1,
      &        dparam,info)
       
-C         write(*,*) dparam
+C           write(*,*) dparam
+C           write(*,*) info
 
          call dgemv('N',nsize,npre,duno,xidata,nsize,dparam,1,
      &        dzero,xparam,1)
 
-C         write(*,*) xparam
+C          write(*,*) xparam
 
          do 111 ij=1,nsize
             wresid(ij)=ydata(ij)-xparam(ij)
- 111        continue
+ 111     continue
 
-            dvarmod=dzero
-            do 112 i=1,nsize
-               dvarmod=dvarmod
-     &              +wresid(i)**ddue
- 112        continue
+         dvarmod=dzero
+         do 112 i=1,nsize
+            dvarmod=dvarmod+wresid(i)**ddue
+ 112     continue
+
+
+C          write(*,*) dvarmod
                 
-          endif  
+        endif  
 
 9999  continue
 C      write(*,*) ''
@@ -350,15 +356,17 @@ C         write(*,*) xparam
      &              +wresid(i)**ddue
  1090       continue
 
-C         write(*,*) 'avaria ',avaria
-C         write(*,*) 'dvarmod ',dvarmod
+C         write(*,*) 'avaria ', avaria
+C         write(*,*) 'dvarmod ', dvarmod
 
+         djpos=jpos
+C         write(*,*) 'djpos', djpos     
          if (ntype.eq.1) then
             ftest(ipos) = (dvarmod - avaria)
-     &           / (avaria/(dsize-jpos-1))
+     &           / (avaria/(dsize-djpos))
          elseif(ntype.eq.2) then
             ftest(ipos) = (avaria - dvarmod)
-     &           / (dvarmod/(dsize-jpos))            
+     &           / (dvarmod/(dsize-djpos-duno))            
          endif   
 
 

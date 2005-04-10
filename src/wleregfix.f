@@ -16,13 +16,13 @@ C             ITALIA
 C
 C     E-mail: claudio@unive.it
 C
-C     December, 3, 2001
+C     April, 10, 2005
 C
-C     Version: 0.5
+C     Version: 0.5-1
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
-C    Copyright (C) 2001 Claudio Agostinelli
+C    Copyright (C) 2005 Claudio Agostinelli
 C
 C    This program is free software; you can redistribute it and/or modify
 C    it under the terms of the GNU General Public License as published by
@@ -162,7 +162,6 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       parameter(dzero=0.0d00)
       parameter(duno=1.0d00)
       parameter(ddue=2.0d00)
-      parameter(dqu=2.0d00)
 
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C     rerr: The smallest double precision number can be treated
@@ -212,6 +211,21 @@ C      the slatec: dqrdc subroutine give the QR decomposition nedeed by the dqrs
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
+
+C      write(*,*) YDATA
+C      write(*,*) XDATA
+C      write(*,*) INTER
+C      write(*,*) NSIZE
+C      write(*,*) NCOL
+C      write(*,*) NVAR
+C      write(*,*) NBOOT
+C      write(*,*) NGRP
+C      write(*,*) NREP
+C      write(*,*) IRAF
+C      write(*,*) RK
+C      write(*,*) RPREC
+C      write(*,*) REQUAL
+C      write(*,*) IMAX
 
       dgrp=ngrp
       dsize=nsize
@@ -319,7 +333,7 @@ C
          rdata(i)=ydata(i)-xparam(i)
          dmedia=dmedia+rdata(i)
  115  continue
- 
+
       dmedia=dmedia/dsize
 
       rnows=var
@@ -344,14 +358,14 @@ C     Iteration Steps until convergence achieved
          rm(i)=dzero
 
          do 120 ik=1,nsize
-              ds(ik)=dexp(-((rdata(i)-rdata(ik))**dqu)/
-     &               (dqu*rnowh))/dsqrt(rnowh)
+              ds(ik)=dexp(-((rdata(i)-rdata(ik))**ddue)/
+     &               (ddue*rnowh))/dsqrt(rnowh)
               d(i)=d(i)+ds(ik)
  120     continue
 
          d(i)=d(i)/dsize      
-	 rm(i)=dexp(-((rdata(i)-dmedia)**dqu)/
-     &         (dqu*rnowhs))/dsqrt(rnowhs)
+	 rm(i)=dexp(-((rdata(i)-dmedia)**ddue)/
+     &         (ddue*rnowhs))/dsqrt(rnowhs)
 
  130  continue
 
@@ -365,10 +379,10 @@ C IRAF = 2 Negative Exponential disparity
 C IRAF = 3 Chi Squared disparity
 
           if(iraf.eq.1) then   
-             adelta(i)=dqu*(dsqrt(delta(i)+duno)-duno)
+             adelta(i)=ddue*(dsqrt(delta(i)+duno)-duno)
           endif
           if(iraf.eq.2) then
-             adelta(i)=dqu - (dqu+delta(i))*dexp(-delta(i))
+             adelta(i)=ddue - (ddue+delta(i))*dexp(-delta(i))
           endif   
           if(iraf.ne.3) then
              rw(i)=(adelta(i)+duno)/(delta(i)+duno)
@@ -414,6 +428,12 @@ C
       call dqrsl (wxidata,nsize,nsize,npre,qraux,wydata,qy,qty,     
      & dparam,rdata,xparam,00111,info)
 
+C      write(*,*) info
+
+C      do 160 i=1,npre
+C         write(*,*) dparam(i)
+C 160  continue
+
       call dgemv('N',nsize,npre,duno,xidata,nsize,dparam,1,
      & dzero,xparam,1)
 
@@ -422,11 +442,6 @@ C
          go to 8888
       endif   
 
-C         write(*,*) info
-
-C      do 160 i=1,npre
-C         write(*,*) dparam(i)
-C 160  continue
 
 C
 C     Residuals in the whole dataset

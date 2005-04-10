@@ -98,14 +98,16 @@ The algorithm used to classify the observations as additive outliers is made by 
 \references{
 Agostinelli C., (2001) Robust time series estimation via weighted likelihood: some preliminary results, \emph{Working Paper n. 2001.3} Department of Statistics, University of Padova.
 
-Agostinelli C., (2002) Robust time series estimation via weighted likelihood: some preliminary results, presented at ICORS2001, poster session, (July 23-27 2001), Vorau, Austria, in press.
+Agostinelli C., (2003) Robust time series estimation via weighted
+likelihood, in: Development in Robust Statistics. International
+Conference on Robust Statistics 2001, Eds. Dutter, R. and Filzmoser,
+P. and Rousseeuw, P. and Gather, U., Physica Verlag.
+
 }
 
 \author{Claudio Agostinelli}
 
 \examples{
-library(wle)
-library(ts)
 data(lh)
 wle.ar(x=lh, order=c(3,0), group=30) 
 }

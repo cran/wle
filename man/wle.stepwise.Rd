@@ -118,7 +118,8 @@ Models for \code{wle.stepwise} are specified symbolically.  A typical model has 
 
 Agostinelli, C., (2000) Robust stepwise regression, Working Paper n. 2000.10 del Dipartimento di Scienze Statistiche, Universit\`a di Padova, Padova.
 
-Agostinelli, C., (2001) Robust stepwise regression, \emph{Journal of Applied Statistics} in press.
+Agostinelli, C., (2002) Robust stepwise regression, \emph{Journal of
+  Applied Statistics} 29, 6, 825-840.
 
 Agostinelli, C., (1998) Inferenza statistica robusta basata sulla funzione di verosimiglianza pesata: alcuni sviluppi, \emph{Ph.D Thesis}, Department of Statistics, University of Padova.
 
@@ -135,9 +136,9 @@ Agostinelli, C., (1998) Verosimiglianza pesata nel modello di regressione linear
 library(wle)
 
 # You can find this dataset in:
-# Agostinelli, C., (1999). Robust model selection in regression 
-# via weighted likelihood methodology, submitted to Statistics & 
-# Probability Letters.
+# Agostinelli, C., (2002). Robust model selection in regression 
+# via weighted likelihood methodology, Statistics & 
+# Probability Letters, 56, 289-300.
 
 data(selection)
 
