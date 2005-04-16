@@ -1,3 +1,9 @@
+      BLOCK DATA added
+      COMMON/XYINIT/qinit
+      LOGICAL qinit
+      DATA qinit/.FALSE./
+      END
+
       LOGICAL FUNCTION qrgnin()
 C**********************************************************************
 C
@@ -9,26 +15,15 @@ C     number generator has been initialized.  Returns .TRUE. if
 C     it has, else .FALSE.
 C
 C**********************************************************************
-C     .. Scalar Arguments ..
-      LOGICAL qvalue
-C     ..
 C     .. Local Scalars ..
       LOGICAL qinit
+      COMMON/XYINIT/qinit
 C     ..
-C     .. Entry Points ..
-      LOGICAL qrgnsn
-C     ..
-C     .. Save statement ..
-      SAVE qinit
-C     ..
-C     .. Data statements ..
-      DATA qinit/.FALSE./
-C     ..
-C     .. Executable Statements ..
       qrgnin = qinit
       RETURN
+      END
 
-      ENTRY qrgnsn(qvalue)
+      LOGICAL FUNCTION qrgnsn(qvalue)
 C**********************************************************************
 C
 C     LOGICAL FUNCTION QRGNSN( QVALUE )
@@ -36,11 +31,13 @@ C               Q Random GeNerators Set whether iNitialized
 C
 C     Sets state of whether random number generator is initialized
 C     to QVALUE.
-C
-C     This routine is actually an entry in QRGNIN, hence it is a
-C     logical function.  It returns the (meaningless) value .TRUE.
+C     It returns the (meaningless) value .TRUE.
 C
 C**********************************************************************
+      LOGICAL qvalue
+      LOGICAL qinit
+      COMMON/XYINIT/qinit
+
       qinit = qvalue
       qrgnsn = .TRUE.
       RETURN
