@@ -3,10 +3,10 @@
 #   wle.wrappednormal function                              #
 #   Author: Claudio Agostinelli                             #
 #   Email: claudio@unive.it                                 #
-#   Date: October, 15, 2003                                 #
-#   Copyright (C) 2003 Claudio Agostinelli                  #
+#   Date: November, 17, 2005                                #
+#   Copyright (C) 2005 Claudio Agostinelli                  #
 #                                                           #
-#   Version 0.1-2                                           #
+#   Version 0.1-3                                           #
 #############################################################
 
 wle.wrappednormal <- function(x, mu, rho, sd, K, boot=30, group, num.sol=1, raf="HD", smooth=0.0031, tol=10^(-6), equal=10^(-3), min.sd=1e-3, min.k=10, max.iter=100, use.smooth=TRUE,  p=2, verbose=FALSE) {
@@ -26,7 +26,7 @@ if (require(circular)) {
 
     est.mu <- FALSE 
     if (missing(mu)) {  
-        mu.temp <- atan(sinr, cosr)
+        mu.temp <- atan2(sinr, cosr)
         est.mu <- TRUE
     } else mu.temp <- mu
     

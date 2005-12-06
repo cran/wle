@@ -1,190 +1,25 @@
-#############################################################
-#                                                           #
-#	wle.fracdiff.ao function                                #
-#	Author: Claudio Agostinelli                             #
-#	E-mail: claudio@unive.it                                #
-#	Date: April, 08, 2002                                   #
-#	Version: 0.2-2                                          #
-#                                                           #
-#     Copyright (C) 2002 Claudio Agostinelli                #
-#                                                           #
-#############################################################
+#########################################################
+#                                                       #
+#	wle.fracdiff function                           #
+#	Author: Claudio Agostinelli                     #
+#	E-mail: claudio@unive.it                        #
+#	Date: December, 6, 2005                         #
+#	Version: 0.2                                    #
+#                                                       #
+#	Copyright (C) 2002 Claudio Agostinelli          #
+#                                                       #
+#       Plus all the functions needed to                #
+#       run a genetic algorithms                        #
+#                                                       #
+#########################################################
 
-wle.fracdiff.ao <- function(d, sigma2, x, M=100, x.init=rep(0,M), x.mean=0, use.init=FALSE, raf=1, smooth=0.0031, w.level=0.5, verbose=FALSE, ao.list=list(0), population.size=20, population.choose=5, elements.random=4, num.max=length(x)) {
+wle.fracdiff <- function(x, lower, upper, M, group, na.action=na.fail, tol=10^(-6), equal=10^(-3), raf="HD", smooth=0.0031, smooth.ao=smooth, boot=10, num.sol=1, x.init=rep(0,M), use.uniroot=FALSE, max.iter.out=20, max.iter.in=100, max.iter.step=5000, max.iter.start=max.iter.step,  verbose=FALSE, w.level=0.4, min.weights=0.5, init.values=NULL, num.max=length(x), include.mean=FALSE, ao.list=NULL, elitist=5, size.generation=5, size.population=10, type.selection="roulette", prob.crossover=0.8, prob.mutation=0.02, type.scale="none", scale.c=2) {
 
-    if (use.init) {
-        MM <- 0
-    } else {
-        MM <- M
-    }
-
-    nused <- length(x)
-    resid <- wle.fracdiff.residuals(d=d, M=M, x=x, x.ao=x, x.init=x.init, x.mean=x.mean, use.init=use.init)  
-    nresid <- length(resid)
-
-    weights <- .Fortran("wlew",
-	as.double(resid), 
-	as.integer(nresid),
-	as.double(resid), 
-	as.integer(nresid), 
-	as.integer(raf),
-	as.double(smooth),
-	as.double(sigma2),
-	totweight=double(1),
-	weights=double(nresid),
-	PACKAGE="wle")$weights
-
-    ao.position <- 0
-    pos.temp <- 1:nresid
-    pos.temp <- pos.temp[order(weights)]
-    weights.sort <- sort(weights)
-    ao.temp <- weights.sort <= w.level
-    pos.temp <- pos.temp[ao.temp]+MM
-    ao <- rep(FALSE,nused)
-    if (length(pos.temp)) {
-        pos.temp <- pos.temp[1:min(length(pos.temp),num.max)]
-        ao[pos.temp] <- TRUE
-    }
-
-    pos <- (1:nused)[ao]
-
-    if (verbose) {
-        cat("We have the following observations under the w.level=",w.level,":\n",pos,"\n")
-    }
-
-    if (any(ao)) {
-        model.in <- vector(length=0)
-
-        for (i in 1:length(ao.list)) {
-             if (all(is.element(ao.list[[i]],pos))) {
-                 temp <- vector(length=0)
-                 for (j in 1:length(ao.list[[i]])) {
-                      temp <- c(temp,(1:length(pos))[pos==ao.list[[i]][j]])
-                 }
-                 model.in <- c(model.in,sum(2^(temp-1)))
-             }
-         }
-
-         num.model <- max(length(model.in),population.size)
-         num.pos <- (2^sum(ao))-1
-         dim.dim <- floor(log(num.pos,2))+1
-         w.tilde <- rep(0,num.model)
-
-         model.in <- c(model.in, sample(x=(1:num.pos), size=(num.model-length(model.in)), replace=TRUE))
-#################wle.riunif((num.model-length(model.in)),1,num.pos))
-
-         for (isearch in 1:num.model) {
-              pos.ao <- sort(pos[binary(model.in[isearch],dim.dim)$dicotomy])
-              num.ao <- length(pos.ao)
-              x.ao <- x
-              for (t in pos.ao) {
-                   x.ao[t] <- wle.fracdiff.fitted(t=t, d=d, M=M, x=x.ao, x.init=x.init, x.mean=x.mean, use.init=use.init)
-              }
-              resid.ao <- wle.fracdiff.residuals(d=d, M=M, x=x, x.ao=x.ao, x.init=x.init, x.mean=x.mean, use.init=use.init) 
-              resid.ao <- resid.ao[-pos.ao]
-              w.temp <- wle.weights(x=resid.ao, smooth=smooth, sigma2=sigma2, raf=raf, location=TRUE)
-
-              weights.temp <- w.temp$weights
-              w.tilde[isearch] <- sum(weights.temp)/nresid
-         }
-
-         model.in <- model.in[order(w.tilde)]
-         w.tilde <- sort(w.tilde)
-
-         while ((model.in[1]-model.in[num.model])!=0) {
-                num.model.sel <- population.choose
-                cum.wtilde <- cumsum(w.tilde)[num.model.sel:num.model]
-                pos.child <- vector(length=0)
-
-                while (length(pos.child)==0) {
-                       temp <- runif(2,0,cum.wtilde[length(cum.wtilde)])
-                       pos.aaa <- min((num.model.sel:num.model)[cum.wtilde > temp[1]])
-                       pos.bbb <- min((num.model.sel:num.model)[cum.wtilde > temp[2]])
-
-                       pos.aa <- pos[binary(model.in[pos.aaa],dim.dim)$dicotomy]
-                       pos.bb <- pos[binary(model.in[pos.bbb],dim.dim)$dicotomy]
-
-                       pos.child <- c(pos.aa,pos.bb,pos[sample(x=(1:length(pos)), size=elements.random, replace=TRUE)])
-#####################wle.riunif(elements.random,1,length(pos))])
-                       
-                       pos.child <- pos.child[as.logical(sample(x=c(0,1), size=length(pos.child), replace=TRUE))]
-######################wle.riunif(length(pos.child),0,1))]
-                       pos.child <- sort(unique(pos.child))
-                }
-
-                temp.child <- vector(length=0)
-                for (i in 1:length(pos.child)) {
-                     temp.child <- c(temp.child,(1:length(pos))[pos==pos.child[i]])
-                }
-
-                model.child <- sum(2^(temp.child-1))
-
-                num.child <- length(pos.child)
-                x.ao <- x
-                for (t in pos.child) {
-                     x.ao[t] <- wle.fracdiff.fitted(t=t, d=d, M=M, x=x.ao, x.init=x.init, x.mean=x.mean, use.init=use.init)
-                }
-
-                resid.ao <- wle.fracdiff.residuals(d=d, M=M, x=x, x.ao=x.ao, x.init=x.init, x.mean=x.mean, use.init=use.init)
-                resid.ao <- resid.ao[-pos.child]
-
-                w.temp <- wle.weights(x=resid.ao, smooth=smooth, sigma2=sigma2, raf=raf, location=TRUE)
-
-                weights.temp <- w.temp$weights
-                w.tilde.child <- sum(weights.temp)/nresid
-
-                w.tilde <- c(w.tilde,w.tilde.child)
-                model.in <- c(model.in,model.child)
-
-                model.in <- model.in[order(w.tilde)][-1]
-                w.tilde <- sort(w.tilde)[-1]
-         }
-
-         if (max(w.tilde)<(sum(weights)/nresid)) {
-             ao.position <- NULL
-         } else {
-             ao.position <- sort(pos[binary(model.in[1],dim.dim)$dicotomy])
-         }
-
-    } else {
-        ao.position <- NULL
-    }
-
-    x.ao <- x
-    for (t in ao.position) {
-         x.ao[t] <- wle.fracdiff.fitted(t=t, d=d, M=M, x=x.ao, x.init=x.init, x.mean=x.mean, use.init=use.init)
-    }
-
-    resid.ao <- wle.fracdiff.residuals(d=d, M=M, x=x, x.ao=x.ao, x.init=x.init, x.mean=x.mean, use.init=use.init)
-    w.temp <- wle.weights(x=resid.ao, smooth=smooth, sigma2=sigma2, raf=raf, location=TRUE)
-    resid.ao <- resid.ao - w.temp$location
-
-    if (verbose) {
-        cat("Additive outliers: \n", ao.position, "\n")
-    }
-
-    return(x.ao=x.ao, resid.ao=resid.ao, ao.position=ao.position)
-}
-
-#############################################################
-#                                                           #
-#	wle.fracdiff function                              	    #
-#	Author: Claudio Agostinelli                             #
-#	E-mail: claudio@unive.it                                #
-#	Date: April, 02, 2002                                   #
-#	Version: 0.1-2                                          #
-#                                                           #
-#	Copyright (C) 2002 Claudio Agostinelli                  #
-#                                                           #
-#############################################################
-
-wle.fracdiff <- function(x, lower, upper, M, group, na.action=na.fail, tol=10^(-6), equal=10^(-3), raf="HD", smooth=0.0031, smooth.ao=smooth, boot=10, num.sol=1, x.init=rep(0,M), use.uniroot=FALSE, use.init=FALSE, max.iter.out=20, max.iter.in=100, max.iter.step=5000, max.iter.start=max.iter.step,  verbose=FALSE, w.level=0.4, min.weights=0.5, population.size=10, population.choose=5, elements.random=2, init.values=NULL, num.max=length(x), include.mean=FALSE, ao.list=list(0)) {
-
-    if (use.init) {
-        MM <- 0
-    } else {
-        MM <- M
-    }
+#    if (use.init) {
+#        MM <- 0
+#    } else {
+#        MM <- M
+#    }
 
     raf <- switch(raf,
 	HD = 1,
@@ -218,10 +53,10 @@ wle.fracdiff <- function(x, lower, upper, M, group, na.action=na.fail, tol=10^(-
                temp$d <- init.values[1]
                temp$sigma2 <- init.values[2]
                temp$x.mean <- init.values[3]
-               temp$resid <- wle.fracdiff.residuals(d=temp$d, M=M, x=x, x.ao=x, x.init=x.init, x.mean=temp$x.mean, use.init=use.init)
+               temp$resid <- wle.fracdiff.residuals(d=temp$d, M=M, x=x, x.ao=x, x.init=x.init, x.mean=temp$x.mean)
            } else {
-               temp <- wle.fracdiff.solve(x=x.boot, x.init=x.init, max.iter=max.iter.start, verbose=verbose, M=M,  lower, upper, tol=tol, use.uniroot=use.uniroot, use.init=use.init, include.mean=include.mean)
-               temp$resid <- wle.fracdiff.residuals(temp$d, M=M, x=x, x.ao=x, x.init=x.init, x.mean=temp$x.mean, use.init=use.init)
+               temp <- wle.fracdiff.solve(x=x.boot, x.init=x.init, max.iter=max.iter.start, verbose=verbose, M=M,  lower, upper, tol=tol, use.uniroot=use.uniroot, include.mean=include.mean)
+               temp$resid <- wle.fracdiff.residuals(temp$d, M=M, x=x, x.ao=x, x.init=x.init, x.mean=temp$x.mean)
                temp$sigma2 <- wle.fracdiff.sigma2(resid=temp$resid)
            }
     
@@ -249,12 +84,12 @@ wle.fracdiff <- function(x, lower, upper, M, group, na.action=na.fail, tol=10^(-
 				PACKAGE="wle")$weights
 
                if (sum(weights)/nresid >= min.weights) {
-                   wres <- wle.fracdiff.ao(d=d, sigma2=sigma2, x=x, M=M, x.init=x.init, x.mean=x.mean, use.init=use.init, raf=raf, smooth=smooth.ao, w.level=w.level, verbose=verbose, ao.list=ao.list, population.size=population.size, population.choose=population.choose, elements.random=elements.random, num.max=num.max)
+                   wres <- wle.fracdiff.ao(d=d, sigma2=sigma2, x=x, M=M, x.init=x.init, x.mean=x.mean, raf=raf, smooth=smooth.ao, w.level=w.level, verbose=verbose, ao.list=ao.list, num.max=num.max, elitist=elitist, size.generation=size.generation, size.population=size.population, type.selection=type.selection, prob.crossover=prob.crossover, prob.mutation=prob.mutation, type.scale=type.scale, scale.c=scale.c)                  
 
                    x.ao <- wres$x.ao
                    ao.position <- wres$ao.position
-                   resid <- wle.fracdiff.residuals(d, M=M, x=x, x.ao=x.ao, x.init=x.init, x.mean=x.mean, use.init=use.init)
-                   weights <- wle.weights(x=resid, smooth=smooth, sigma2=sigma2, raf=raf, location=TRUE)$weights
+                   resid <- wle.fracdiff.residuals(d, M=M, x=x, x.ao=x.ao, x.init=x.init, x.mean=x.mean)
+                    weights <- wle.weights(x=resid, smooth=smooth, sigma2=sigma2, raf=raf, location=TRUE)$weights
 
                    if (!is.null(ao.position)) {
                        ao.list <- c(ao.list,list(ao.position))
@@ -273,10 +108,10 @@ wle.fracdiff <- function(x, lower, upper, M, group, na.action=na.fail, tol=10^(-
                                  d.old <- d
                                  sigma2.old <- sigma2
                                  x.mean.old <- x.mean
-	                         res <- wle.fracdiff.solve(x=x.ao, M=M, x.init=x.init, lower=lower, upper=upper, w=weights, tol=tol, max.iter=max.iter.step, verbose=verbose, use.uniroot=use.uniroot, use.init=use.init, include.mean=include.mean)
+	                         res <- wle.fracdiff.solve(x=x.ao, M=M, x.init=x.init, lower=lower, upper=upper, w=weights, tol=tol, max.iter=max.iter.step, verbose=verbose, use.uniroot=use.uniroot, include.mean=include.mean)
 	                         d <- res$d
                                  x.mean <- res$x.mean
-                                 resid <- wle.fracdiff.residuals(d=d, M=M, x=x, x.ao=x.ao, x.init=x.init, x.mean=x.mean, use.init=use.init)
+                                 resid <- wle.fracdiff.residuals(d=d, M=M, x=x, x.ao=x.ao, x.init=x.init, x.mean=x.mean)
 	                         sigma2 <- wle.fracdiff.sigma2(resid=resid, w=weights)
                                  weights <- wle.weights(x=resid, smooth=smooth, sigma2=sigma2, raf=raf, location=TRUE)$weights
                                  conv <- res$conv            
@@ -292,17 +127,18 @@ wle.fracdiff <- function(x, lower, upper, M, group, na.action=na.fail, tol=10^(-
                           }
 
                           if (conv) {      
-	                      if (verbose) {
-	    	                  cat("outer loop, iteration: ",iter.out," convergence achieved for the inner loop \n")
-	                      }
+	                          if (verbose) {
+	    	                      cat("outer loop, iteration: ",iter.out," convergence achieved for the inner loop \n")
+	                          }
 
-                              wres <- wle.fracdiff.ao(d=d, sigma2=sigma2, x=x, M=M, x.init=x.init, x.mean=x.mean, use.init=use.init, raf=raf, smooth=smooth.ao, w.level=w.level, verbose=verbose, ao.list=ao.list, population.size=population.size, population.choose=population.choose, elements.random=elements.random, num.max=num.max)
+                              wres <- wle.fracdiff.ao(d=d, sigma2=sigma2, x=x, M=M, x.init=x.init, x.mean=x.mean, raf=raf, smooth=smooth.ao, w.level=w.level, verbose=verbose, ao.list=ao.list, num.max=num.max, elitist=elitist, size.generation=size.generation, size.population=size.population, type.selection=type.selection, prob.crossover=prob.crossover, prob.mutation=prob.mutation, type.scale=type.scale, scale.c=scale.c)         
+
 
                               x.ao <- wres$x.ao
                               ao.position <- wres$ao.position
-                              resid <- wle.fracdiff.residuals(d, M=M, x=x, x.ao=x.ao, x.init=x.init, x.mean=x.mean, use.init=use.init)
+                              resid <- wle.fracdiff.residuals(d, M=M, x=x, x.ao=x.ao, x.init=x.init, x.mean=x.mean)
                               sigma2 <- wle.fracdiff.sigma2(resid=resid, w=weights)
-                              weights <- wle.weights(x=resid, smooth=smooth, sigma2=sigma2, raf=raf, location=TRUE)$weights
+                               weights <- wle.weights(x=resid, smooth=smooth, sigma2=sigma2, raf=raf, location=TRUE)$weights
 
                               if (!is.null(ao.position)) {
                                   ao.list <- c(ao.list,list(ao.position))
@@ -327,19 +163,17 @@ wle.fracdiff <- function(x, lower, upper, M, group, na.action=na.fail, tol=10^(-
 # end while (!setequal(ao.position,ao.position.old) & conv)
 
                    if (conv) {
-                       resid.with.ao <- wle.fracdiff.residuals(d, M=M, x=x, x.ao=x, x.init=x.init, x.mean=x.mean, use.init=use.init) 
-                       resid.with.ao <- ts(resid.with.ao, start=(start(x)+MM), end=end(x), frequency=frequency(x))
+                       resid.with.ao <- wle.fracdiff.residuals(d, M=M, x=x, x.ao=x, x.init=x.init, x.mean=x.mean) 
+                       resid.with.ao <- ts(resid.with.ao, start=(start(x)), end=end(x), frequency=frequency(x))
                        class(resid.with.ao) <- "ts"
-
                        weights.with.ao <- wle.weights(x=resid.with.ao, smooth=smooth, sigma2=sigma2, raf=raf, tol=tol, location=TRUE)$weights
 
-                       resid <- ts(resid, start=(start(x)+MM), end=end(x), frequency=frequency(x))        
+                       resid <- ts(resid, start=(start(x)), end=end(x), frequency=frequency(x))        
                        class(resid) <- "ts" 
 
-                       resid.without.ao <- wle.fracdiff.residuals(d, M=M, x=x.ao, x.ao=x.ao, x.init=x.init, x.mean=x.mean, use.init=use.init) 
-                       resid.without.ao <- ts(resid.without.ao, start=(start(x)+MM), end=end(x), frequency=frequency(x))
+                       resid.without.ao <- wle.fracdiff.residuals(d, M=M, x=x.ao, x.ao=x.ao, x.init=x.init, x.mean=x.mean) 
+                       resid.without.ao <- ts(resid.without.ao, start=(start(x)), end=end(x), frequency=frequency(x))
                        class(resid.without.ao) <- "ts"
- 
                        weights.without.ao <- wle.weights(x=resid.without.ao, smooth=smooth, sigma2=sigma2, raf=raf, tol=tol, location=TRUE)$weights
  
                        x.ao <- ts(x.ao, start=start(x), end=end(x), frequency=frequency(x))
@@ -428,7 +262,6 @@ if(tot.sol==0) {
 return(result)
 }
 
-
 #############################################################
 #                                                           #
 #	wle.fracdiff.solve function                         #
@@ -441,10 +274,9 @@ return(result)
 #                                                           #
 #############################################################
 
-wle.fracdiff.solve <- function(x, M=100, x.init=rep(0,M), lower, upper, w=rep(1,length(x)), tol=.Machine$double.eps^0.25, max.iter=1000, verbose=FALSE, use.uniroot=FALSE, use.init=FALSE, include.mean=FALSE) {
+wle.fracdiff.solve <- function(x, M=100, x.init=rep(0,M), lower, upper, w=rep(1,length(x)), tol=.Machine$double.eps^0.25, max.iter=1000, verbose=FALSE, use.uniroot=FALSE, include.mean=FALSE) {
 
     result <- list()
-
     if (include.mean) {
         x.mean <- w%*%x/sum(w)
         x <- x - x.mean
@@ -456,7 +288,7 @@ wle.fracdiff.solve <- function(x, M=100, x.init=rep(0,M), lower, upper, w=rep(1,
     result$call <- match.call()
 
     if (use.uniroot) {
-        temp <- uniroot(wle.fracdiff.equation, x=x, M=M, w=w, x.init=x.init, lower=lower, upper=upper, use.uniroot=use.uniroot, tol=tol, maxiter=max.iter, verbose=verbose, use.init=use.init)
+        temp <- uniroot(wle.fracdiff.equation, x=x, M=M, w=w, x.init=x.init, lower=lower, upper=upper, use.uniroot=use.uniroot, tol=tol, maxiter=max.iter, verbose=verbose)
         if (temp$iter < max.iter) {
             result$d <- temp$root
             result$conv <- TRUE
@@ -465,7 +297,7 @@ wle.fracdiff.solve <- function(x, M=100, x.init=rep(0,M), lower, upper, w=rep(1,
             result$conv <- FALSE
         }
     } else {
-        temp <- optimize(wle.fracdiff.equation, x=x, M=M, w=w, x.init=x.init, lower=lower, upper=upper, use.uniroot=use.uniroot, tol=tol, verbose=verbose, use.init=use.init)
+        temp <- optimize(wle.fracdiff.equation, x=x, M=M, w=w, x.init=x.init, lower=lower, upper=upper, use.uniroot=use.uniroot, tol=tol, verbose=verbose)
         result$d <- temp$minimum
         result$conv <- TRUE
     }
@@ -477,21 +309,16 @@ wle.fracdiff.solve <- function(x, M=100, x.init=rep(0,M), lower, upper, w=rep(1,
 #	wle.fracdiff.equation function                      #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@unive.it                            #
-#	Date: November, 30, 2001                            #
-#	Version: 0.1                                        #
+#	Date: December, 5, 2005                             #
+#	Version: 0.2                                        #
 #                                                           #
-#	Copyright (C) 2001 Claudio Agostinelli              #
+#	Copyright (C) 2005 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
 
-wle.fracdiff.equation <- function(d, M, x, x.init=rep(0,M), w=rep(1,length(x)), use.uniroot=FALSE, use.init=FALSE, verbose=FALSE) {
+wle.fracdiff.equation <- function(d, M, x, x.init=rep(0,M), w=rep(1,length(x)), use.uniroot=FALSE, verbose=FALSE) {
  
-    if (use.init) {
-        MM <- 0
-    } else {
-        MM <- M
-    }
     nused <- length(x)
     pi.coef <- wle.fracdiff.pi.coef(d,M)
     if (use.uniroot) {
@@ -501,12 +328,12 @@ wle.fracdiff.equation <- function(d, M, x, x.init=rep(0,M), w=rep(1,length(x)), 
 
     somma <- 0
     if (use.uniroot) {
-        for (t in (1+MM):nused) {
-             somma <- somma + w[t]*(x[t]+pi.coef%*%y[(t-1+M):t])*(xi.coef%*%y[(t-1+M):t])
+        for (k in 1:nused) {
+             somma <- somma + w[k]*(x[k]+pi.coef%*%y[(k-1+M):k])*(xi.coef%*%y[(k-1+M):k])
         }
     } else {
-        for (t in (1+MM):nused) {
-             somma <- somma + w[t]*(x[t]+pi.coef%*%y[(t-1+M):t])^2
+        for (k in 1:nused) {
+             somma <- somma + w[k]*(x[k]+pi.coef%*%y[(k-1+M):k])^2
         }
     }
 
@@ -574,25 +401,20 @@ return(xi.coef)
 #                                                           #
 #############################################################
 
-wle.fracdiff.residuals <- function(d, M, x, x.ao, x.init=rep(0,M), x.mean=0, use.init=FALSE) {
+wle.fracdiff.residuals <- function(d, M, x, x.ao, x.init=rep(0,M), x.mean=0) {
 
     x <- x - x.mean
     x.ao <- x.ao - x.mean
 
-    if (use.init) {
-        MM <- 0
-    } else {
-        MM <- M
-    }
     nused <- length(x) 
     pi.coef <- wle.fracdiff.pi.coef(d,M)
     y <- c(x.init,x.ao)
     resid <- rep(0,nused)
 
-    for (t in (1+MM):nused) {
+    for (t in 1:nused) {
          resid[t] <- x[t]+pi.coef%*%y[(t-1+M):t]
     }
-    resid <- resid[(MM+1):nused]
+    resid <- resid[1:nused]
 
     return(resid)
 }
@@ -626,24 +448,376 @@ wle.fracdiff.sigma2 <- function(resid, w=rep(1,length(resid))) {
 #                                                           #
 #############################################################
 
-wle.fracdiff.fitted <- function(t, d, M, x, x.init=rep(0,M), x.mean=0, use.init=FALSE) {
+wle.fracdiff.fitted <- function(t, d, M, x, x.init=rep(0,M), x.mean=0) {
  
     x <- x - x.mean
-
-    if (use.init) {
-        MM <- 0
-    } else {
-        MM <- M
-    }
     nused <- length(x)
     pi.coef <- wle.fracdiff.pi.coef(d,M)
     y <- c(x.init,x)
     return((-pi.coef%*%y[(t-1+M):t]+x.mean))
 }
 
+#############################################################
+#                                                           #
+#	wle.crossover.ao function                           #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: December, 5, 2005                             #
+#	Version: 0.1                                        #
+#                                                           #
+#	Copyright (C) 2005 Claudio Agostinelli              #
+#                                                           #
+#############################################################
+
+wle.crossover.ao <- function(x, y, prob.crossover) {
+    size <- length(x)
+    if (rbinom(n=1, size=1, p=prob.crossover)) {
+		split <- sample(x=1:(size-1), size=1, replace=FALSE)
+		x.temp <- c(x[1:split],y[(split+1):size])
+        y.temp <- c(y[1:split],x[(split+1):size])
+    } else {
+        x.temp <- x
+        y.temp <- y
+    }
+
+    result <- list(x=x.temp, y=y.temp)
+    return(result)
+}
+
+#############################################################
+#                                                           #
+#	wle.mutation.ao function                            #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: December, 5, 2005                             #
+#	Version: 0.1                                        #
+#                                                           #
+#	Copyright (C) 2005 Claudio Agostinelli              #
+#                                                           #
+#############################################################
+
+wle.mutation.ao <- function(x, prob.mutation) {
+   mutation <- as.logical(rbinom(n=length(x), size=1, p=prob.mutation))
+   replace <- sample(x=c(0, 1), size=sum(mutation), replace=TRUE)   
+   x[mutation] <- replace
+   return(x)
+}
 
 
+#############################################################
+#                                                           #
+#	wle.selection.ao function                           #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: December, 5, 2005                             #
+#	Version: 0.1                                        #
+#                                                           #
+#	Copyright (C) 2005 Claudio Agostinelli              #
+#                                                           #
+#############################################################
+
+wle.selection.ao <- function(population, type.selection, fitness) {
+   n <- nrow(population)
+   if (missing(fitness)) fitness <- rep(1,n)
+   if (type.selection=="uniform") { 
+       pos <- sample(x=1:n, size=2, replace=TRUE)   
+   } else {
+       pos <- sample(x=(1:n), size=2, replace=TRUE, prob=(fitness/sum(fitness)))
+   }
+   x <- population[pos[1],] 
+   y <- population[pos[2],]
+   result <- list(x=x, y=y)
+   return(result)
+}
 
 
+#############################################################
+#                                                           #
+#	wle.fitness.population.ao function                  #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: December, 5, 2005                             #
+#	Version: 0.1                                        #
+#                                                           #
+#	Copyright (C) 2005 Claudio Agostinelli              #
+#                                                           #
+#############################################################
 
+wle.fitness.population.ao <- function(population, x, ao, d, M, x.init, x.mean, nresid, smooth, sigma2, raf) {
+   size.population <- nrow(population)
+   fitness.value <- rep(0, size.population)
+   for (i in 1:size.population)  {
+        decode <- wle.decode.ao(x=population[i,], ao=ao)
+        fitness.value[i] <- wle.fitness.ao(x=decode, serie=x, d=d, M=M, x.init=x.init, x.mean=x.mean, nresid=nresid, smooth=smooth, sigma2=sigma2, raf=raf) 
+   }
+   return(fitness.value)
+}
+
+#############################################################
+#                                                           #
+#	wle.generate.population.ao function                 #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: December, 5, 2005                             #
+#	Version: 0.1                                        #
+#                                                           #
+#	Copyright (C) 2005 Claudio Agostinelli              #
+#                                                           #
+#############################################################
+
+wle.generate.population.ao <- function(length.string, size.population) {
+   population <- matrix(sample(x=c(0, 1), size=(length.string*size.population), replace=TRUE), ncol=length.string)
+   return(population)
+}
+
+#############################################################
+#                                                           #
+#	wle.ga.ao function                                  #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: December, 5, 2005                             #
+#	Version: 0.1                                        #
+#                                                           #
+#	Copyright (C) 2005 Claudio Agostinelli              #
+#                                                           #
+#############################################################
+
+wle.ga.ao <- function(x, ao, d, elitist=5, size.generation=100, size.population=50, type.selection="roulette", prob.crossover=0.8, prob.mutation=0.02, type.scale="none", scale.c=2, M, x.init, x.mean, nresid, smooth, sigma2, raf, ao.list=NULL) {
+   population <- wle.generate.population.ao(length.string=length(ao), size.population=size.population)
+   if (!is.null(ao.list)) {
+       population <- rbind(ao.list, population)
+       size.population <- nrow(population)
+   }
+   fit.of.best <- 0
+   
+   if (elitist > 0) {    
+       if (elitist>=1) {
+            elitist <- min(floor(elitist), size.population)
+       } else {
+            elitist <- floor(elitist*size.population)
+       }
+   } else {
+       elitist <- 0
+   }
+
+   for (j in 1:(size.generation+1)) {
+        new.population <- vector(length=0)
+        fit <- wle.fitness.population.ao(population=population, x=x, ao=ao, d=d, M=M, x.init=x.init, x.mean=x.mean, nresid=nresid, smooth=smooth, sigma2=sigma2, raf=raf)
+        if (min(fit) < 0) stop("fitness function can not be negative")
+
+        if (elitist) {
+            telitist <- rev(order(fit))[1:elitist]
+            new.population <- population[telitist,]
+        }
+        
+        mfit <- max(fit)
+        best.pos <- which(fit==mfit)[1]
+
+        if (mfit > fit.of.best) {
+            best.of.best <- population[best.pos,]
+            fit.of.best <- mfit
+        }
+
+        fit.scale <- fit
+        if (type.scale!="none") fit.scale <- wle.fitness.scale.ao(x=fit, type=type.scale, scale.c=scale.c) 
+        i <- elitist
+        while (i < size.population) {
+             sel <- wle.selection.ao(population, type.selection=type.selection, fitness=fit.scale)
+             if (length(ao) > 1) {
+                 cross <- wle.crossover.ao(x=sel$x, y=sel$y, prob.crossover=prob.crossover)
+             } else {
+                 cross <- list(x=sel$x, y=sel$y) 
+             }    
+             mut.x <- wle.mutation.ao(cross$x, prob.mutation=prob.mutation)
+	     mut.y <- wle.mutation.ao(cross$y, prob.mutation=prob.mutation)
+             mut.x <- as.vector(mut.x)
+             mut.y <- as.vector(mut.y)
+             new.population <- rbind(new.population, mut.x, mut.y)
+             i <- nrow(new.population)
+        }
+        population <- new.population[1:size.population,]
+        if (length(ao)==1) population <- matrix(population, ncol=1)
+   }
+
+   return(list(ao=wle.decode.ao(x=best.of.best, ao=ao), fit=fit.of.best))
+}
+
+#############################################################
+#                                                           #
+#	wle.fitness.scale.ao function                       #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: December, 5, 2005                             #
+#	Version: 0.1                                        #
+#                                                           #
+#	Copyright (C) 2005 Claudio Agostinelli              #
+#                                                           #
+#############################################################
+
+wle.fitness.scale.ao <- function(x, type="linear", scale.c=2, tol=0.001) {
+   if (type=="linear") {	
+       media <- mean(x)
+       if ((media-min(x)<tol) | ((max(x)-media < tol))) return(x) 
+       scale.min <- media/(media-min(x))
+       scale <- (scale.c-1)*media/(max(x)-media)
+       if (scale > scale.min) scale <- scale.min
+       x <- scale*x+media*(1-scale)
+   } else {
+       if (type=="sigma.truncation") {
+           x <- x - (mean(x) - scale.c*sqrt(var(x)))
+
+       }
+   }
+   x[x <0] <- 0
+   return(x)
+}
+
+#############################################################
+#                                                           #
+#	wle.encode.ao function                              #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: December, 5, 2005                             #
+#	Version: 0.1                                        #
+#                                                           #
+#	Copyright (C) 2005 Claudio Agostinelli              #
+#                                                           #
+#############################################################
+
+wle.encode.ao <- function(x, ao) {
+   y <- rep(0, length(ao))
+   for (i in 1:length(x)) {
+        y[ao==x[i]] <- 1
+   }
+   return(y)
+}
+
+#############################################################
+#                                                           #
+#	wle.decode.ao function                              #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: December, 5, 2005                             #
+#	Version: 0.1                                        #
+#                                                           #
+#	Copyright (C) 2005 Claudio Agostinelli              #
+#                                                           #
+#############################################################
+
+wle.decode.ao <- function(x, ao) {
+   return(ao[x==1])
+}
+
+#############################################################
+#                                                           #
+#	wle.fitness.ao function                             #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: December, 5, 2005                             #
+#	Version: 0.1                                        #
+#                                                           #
+#	Copyright (C) 2005 Claudio Agostinelli              #
+#                                                           #
+#############################################################
+
+wle.fitness.ao <- function(x, serie, d, M, x.init, x.mean, nresid, smooth, sigma2, raf) {
+              x.ao <- serie
+              x <- sort(x)              
+              for (t in x) {
+                   x.ao[t] <- wle.fracdiff.fitted(t=t, d=d, M=M, x=x.ao, x.init=x.init, x.mean=x.mean)
+              }
+              
+              resid.ao <- wle.fracdiff.residuals(d=d, M=M, x=serie, x.ao=x.ao, x.init=x.init, x.mean=x.mean)
+              if (length(x)) {
+                  resid.ao <- resid.ao[-x]
+              }
+              ww <- wle.weights(x=resid.ao, smooth=smooth, sigma2=sigma2, raf=raf, location=TRUE)$weights
+              return(sum(ww)/nresid)
+}
+
+#############################################################
+#                                                           #
+#	wle.fracdiff.ao function                            #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: December, 5, 2005                             #
+#	Version: 0.1                                        #
+#                                                           #
+#	Copyright (C) 2005 Claudio Agostinelli              #
+#                                                           #
+#############################################################
+
+wle.fracdiff.ao <- function(d, sigma2, x, M=100, x.init=rep(0,M), x.mean=0, raf=1, smooth=0.0031, w.level=0.5, verbose=FALSE, ao.list=NULL, num.max=length(x), elitist=5, size.generation=100, size.population=50, type.selection="roulette", prob.crossover=0.8, prob.mutation=0.02, type.scale="none", scale.c=2) {
+
+    nused <- length(x)
+    resid <- wle.fracdiff.residuals(d=d, M=M, x=x, x.ao=x, x.init=x.init, x.mean=x.mean)  
+    nresid <- length(resid)
+
+    weights <- .Fortran("wlew",
+	as.double(resid), 
+	as.integer(nresid),
+	as.double(resid), 
+	as.integer(nresid), 
+	as.integer(raf),
+	as.double(smooth),
+	as.double(sigma2),
+	totweight=double(1),
+	weights=double(nresid),
+	PACKAGE="wle")$weights
+
+    ao.position <- NULL
+    pos.temp <- 1:nresid
+    pos.temp <- pos.temp[rev(order(weights))]
+    weights.sort <- rev(sort(weights))
+    ao.temp <- weights.sort <= w.level
+    pos.temp <- pos.temp[ao.temp]
+
+    ao <- rep(FALSE,nused)
+    if (length(pos.temp)) {
+        pos.temp <- pos.temp[1:min(length(pos.temp),num.max)]
+        ao[pos.temp] <- TRUE
+    }
+
+    pos <- which(ao)
+
+    if (verbose) {
+        cat("We have the following observations under the w.level=",w.level,":\n",pos,"\n")
+    }
+
+    if (length(pos)) {
+
+      if (!is.null(ao.list)) {
+          temp <- matrix(0, ncol=length(pos), nrow=length(ao.list))
+          for (ilist in 1:length(ao.list)) {
+               temp[ilist,] <- wle.encode.ao(intersect(ao.list[[ilist]], pos), pos)
+          }
+          ao.list <- temp
+      }
+      
+      ga.result <- wle.ga.ao(x=x, ao=pos, d=d, elitist=5, size.generation=size.generation, size.population=size.population, type.selection=type.selection, prob.crossover=prob.crossover, prob.mutation=prob.mutation, type.scale=type.scale, scale.c=scale.c, M=M, x.init=x.init, x.mean=x.mean, nresid=nresid, smooth=smooth, sigma2=sigma2, raf=raf, ao.list=ao.list)        
+         if (ga.result$fit<(sum(weights)/nresid)) {
+             ao.position <- NULL
+         } else {
+             ao.position <- ga.result$ao 
+         }
+
+    } else {
+        ao.position <- NULL
+    }
+
+    x.ao <- x
+    for (t in ao.position) {
+         x.ao[t] <- wle.fracdiff.fitted(t=t, d=d, M=M, x=x.ao, x.init=x.init, x.mean=x.mean)
+    }
+
+    resid.ao <- wle.fracdiff.residuals(d=d, M=M, x=x, x.ao=x.ao, x.init=x.init, x.mean=x.mean)
+    w.temp <- wle.weights(x=resid.ao, smooth=smooth, sigma2=sigma2, raf=raf, location=TRUE)
+    resid.ao <- resid.ao - w.temp$location
+
+    if (verbose) {
+        cat("Additive outliers: \n", ao.position, "\n")
+    }
+
+    return(list(x.ao=x.ao, resid.ao=resid.ao, ao.position=ao.position))
+}
 

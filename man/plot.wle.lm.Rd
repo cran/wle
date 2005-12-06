@@ -48,21 +48,21 @@ result <- wle.lm(y~x1+x2+x3, data=artificial, boot=40, group=6, num.sol=2)
 
 result
 
-plot.wle.lm(result) # all plots, default behavior 
+plot(result) # all plots, default behavior 
 
-plot.wle.lm(result, roots=1) # only first root, one plot for window 
+plot(result, roots=1) # only first root, one plot for window 
 
 par(mfcol=c(2,2))
-plot.wle.lm(result, roots=1) # only first root, as usual
+plot(result, roots=1) # only first root, as usual
 
-plot.wle.lm(result, roots=2, which=1, which.main=0)
+plot(result, roots=2, which=1, which.main=0)
 # only second root, only residual vs fitted values plot
 
-plot.wle.lm(result, which=1)
+plot(result, which=1)
 # main plot + residual vs fitted values plot for each root
 
 par(mfcol=c(3,2))
-plot.wle.lm(result, which=1)
+plot(result, which=1)
 # main plot + residual vs fitted values plot for each root all in the same window
 
 

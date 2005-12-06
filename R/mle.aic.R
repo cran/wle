@@ -3,14 +3,16 @@
 #	mle.aic function                                    #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@unive.it                            #
-#	Date: August, 2, 2001                               #
-#	Version: 0.4                                        #
+#	Date: November, 17, 2005                            #
+#	Version: 0.4-1                                      #
 #                                                           #
-#	Copyright (C) 2001 Claudio Agostinelli              #
+#	Copyright (C) 2005 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
-mle.aic <- function(formula, data=list(), model=TRUE, x=FALSE, y=FALSE, var.full=0, alpha=2, contrasts = NULL, verbose=FALSE) {
+mle.aic <- function(formula, data=list(), model=TRUE, x=FALSE,
+                    y=FALSE, var.full=0, alpha=2, contrasts = NULL,
+                    se=FALSE, verbose=FALSE) {
 
     ret.x <- x
     ret.y <- y
@@ -19,7 +21,7 @@ mle.aic <- function(formula, data=list(), model=TRUE, x=FALSE, y=FALSE, var.full
     mf <- cl <- match.call()
     mf$var.full <- mf$alpha <- mf$contrasts <- NULL
     mf$model <- mf$x <- mf$y <- NULL
-    mf$verbose <- NULL
+    mf$se <- mf$verbose <- NULL
     mf$drop.unused.levels <- TRUE
     mf[[1]] <- as.name("model.frame")
     mf <- eval(mf, sys.frame(sys.parent()))
@@ -84,6 +86,22 @@ if (ret.y)
 dn <- colnames(xdata)
 dimnames(result$coefficients) <- list(NULL,dn)
 dimnames(result$aic) <- list(NULL,c(dn,"aic"))
+
+nrc <- dim(result$coefficients)
+
+if (se){
+    semat <- matrix(0, nrow=nrc[1], ncol=nrc[2])
+  
+    for (i in 1:nrow(result$aic)) {
+         pos <- as.logical(result$aic[i,-ncol(result$aic)])
+         xtemp <- xdata[,pos]
+         setemp <- result$scale[i]*sqrt(diag(solve(t(xtemp)%*%xtemp)))
+         semat[i, pos] <- setemp 
+    }
+    result$se <- semat
+    dimnames(result$se) <- list(NULL,dn)
+}
+    
 
 class(result) <- "mle.aic"
 

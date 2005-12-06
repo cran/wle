@@ -14,7 +14,7 @@ wle.ar.ao <- function(x, x.init, x.seasonal.init, coef, ncoef, ncoef.seasonal, p
 
    nused <- length(x)
    xx <- wle.ar.matrix(x=x, x.init=x.init, x.seasonal.init=x.seasonal.init, ncoef=ncoef, ncoef.seasonal=ncoef.seasonal, period=period, xreg=xreg)
-resid <- x - xx%*%coef
+resid <- x - c(xx%*%coef)
 
    ww <- weights <- .Fortran("wlew",
 	as.double(resid), 
@@ -86,7 +86,7 @@ resid <- x - xx%*%coef
                  }
              }
         }
-        resid.ao <- x - xx.ao%*%coef
+        resid.ao <- x - c(xx.ao%*%coef)
         resid.ao <- resid.ao[-pos.ao]
 
         if (approx.w) {
@@ -140,7 +140,7 @@ resid <- x - xx%*%coef
                    }
                }  
           }
-          resid.ao <- x - xx.ao%*%coef
+          resid.ao <- x - c(xx.ao%*%coef)
           resid.ao <- resid.ao[-pos.child]
           if (approx.w) {
               weights.temp <- approx(x=resid, y=ww, xout=resid.ao)$y 
@@ -185,7 +185,7 @@ for (t in ao.position) {
      }    
 }
 
-resid.ao <- x - xx.ao%*%coef
+resid.ao <- x - c(xx.ao%*%coef)
 w.temp <- wle.weights(x=resid.ao, smooth=smooth, sigma2=sigma2, raf=raf, location=TRUE)
 resid.ao <- resid.ao - w.temp$location
 
@@ -317,7 +317,7 @@ while(iboot<=boot & tot.sol<num.sol) {
        sigma2.init <- temp$sigma2
 
        xx <- wle.ar.matrix(x=x, x.init=x.init, x.seasonal.init=x.seasonal.init, ncoef=ncoef, ncoef.seasonal=ncoef.seasonal, period=period, xreg=xreg)
-       resid.init <- x - xx%*%coef.init
+       resid.init <- x - c(xx%*%coef.init)
 
       if (verbose) {
 	  cat("Initial values from the subsample ",iboot,": \n parameters: ", coef.init,"\n sigma2: ",sigma2.init," \n") 
@@ -420,7 +420,7 @@ while(iboot<=boot & tot.sol<num.sol) {
     if (conv) {
 
     xx <- wle.ar.matrix(x=x, x.init=x.init, x.seasonal.init=x.seasonal.init, ncoef=ncoef, ncoef.seasonal=ncoef.seasonal, period=period, xreg=xreg)
-    resid.init <- c(x - xx%*%coef.init)  
+    resid.init <- c(x - c(xx%*%coef.init))  
     resid.init <- ts(resid.init, start=start(x), end=end(x), frequency=frequency(x))
     class(resid.init) <- "ts"
 
@@ -430,7 +430,7 @@ while(iboot<=boot & tot.sol<num.sol) {
     class(resid) <- "ts" 
 
     xx.ao <- wle.ar.matrix(x=x.ao, x.init=x.init, x.seasonal.init=x.seasonal.init, ncoef=ncoef, ncoef.seasonal=ncoef.seasonal, period=period, xreg=xreg)
-    resid.ao <- c(x - xx.ao%*%coef.init)  
+    resid.ao <- c(x - c(xx.ao%*%coef.init))  
     resid.ao <- ts(resid.ao, start=start(x), end=end(x), frequency=frequency(x))
 
     weights.without.ao <- wle.weights(x=resid.ao, smooth=smooth, sigma2=res$sigma2, raf=raf, tol=tol, location=TRUE)$weights
@@ -536,6 +536,7 @@ if(tot.sol==0) {
     result$resid <- resid.final
     result$resid.without.ao <- resid.ao.final
     result$resid.with.ao <- resid.init.final
+    result$x <- x
     result$x.ao <- x.ao.final
     result$call <- match.call()
     result$series <- series
@@ -545,6 +546,7 @@ if(tot.sol==0) {
     result$tot.sol <- tot.sol
     result$not.conv <- not.conv
     result$ao.position <- ao.position.final
+    result$w.level <- w.level
     }
 
     class(result) <- "wle.arima"

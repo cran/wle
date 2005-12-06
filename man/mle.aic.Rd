@@ -3,7 +3,7 @@
 \usage{
 mle.aic(formula, data=list(), model=TRUE, x=FALSE, 
         y=FALSE, var.full=0, alpha=2, contrasts = NULL, 
-        verbose=FALSE)
+        se=FALSE, verbose=FALSE)
 }
 \alias{mle.aic}
 \arguments{
@@ -24,6 +24,9 @@ mle.aic(formula, data=list(), model=TRUE, x=FALSE,
  \item{contrasts}{an optional list. See the \code{contrasts.arg}
     of \code{model.matrix.default}.}
 
+ \item{se}{logical. if \code{TRUE} the returning object contains
+   standard errors for the parameters of every model.}
+  
  \item{verbose}{if \code{TRUE} warnings are printed.}
 
 }
@@ -51,6 +54,8 @@ mle.aic(formula, data=list(), model=TRUE, x=FALSE,
 \item{x}{if \code{x=TRUE} a matrix with the explanatory variables for the full model.}
 \item{y}{if \code{y=TRUE} a vector with the dependent variable.}
 \item{info}{not well working yet, if 0 no error occurred.}
+\item{se}{standard errors of the parameters, one row vector for each
+  submodel. Available only if \code{se} is \code{TRUE}.}
 }
 
 \author{Claudio Agostinelli}

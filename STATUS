@@ -1,11 +1,14 @@
 Library wle
 ===========
 
+Version 0.9-1, 2005/12/6
+Set up a NAMESPACE file.
+Functions wle.wrappednormal and wle.vonmises use atan2 call instead of atan. mle.aic has a new argument 'se' so that standard errors are reported for the parameters of each submodel. wle.fracdiff and related functions are partialy rewritten.
+
 Version 0.9, 2005/04/16
-This version should be works under gcc-4.0 too. 
+This version should works under gcc-4.0 too. 
 Many fortran sources are removed since already included in R (blas functions)
-Function qrgnin.f is modified by Prof. B. Ripley so that it does not use 
-entry point.
+Function qrgnin.f is modified by Prof. B. Ripley so that it does not use entry point.
 
 Version 0.8-1, 2005/04/10
 Fixed bugs in wlestepwise.f and mlestepwise.f

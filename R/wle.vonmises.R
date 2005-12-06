@@ -1,12 +1,12 @@
 #############################################################
 #                                                           #
-#	wle.vonmises function                                   #
-#	Author: Claudio Agostinelli                             #
-#	E-mail: claudio@unive.it                                #
-#	Date: October, 15, 2003                                 #
-#	Version: 0.1-8                                          #
+#	wle.vonmises function                               #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: November, 17, 2005                            #
+#	Version: 0.1-9                                      #
 #                                                           #
-#	Copyright (C) 2003 Claudio Agostinelli                  #
+#	Copyright (C) 2005 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
@@ -137,7 +137,7 @@ while (tot.sol < num.sol & iboot < boot) {
            sww <- sum(ww)
            wsinr <- ww%*%sin(x)
            wcosr <- ww%*%cos(x)
-           mu <- atan(wsinr, wcosr)
+           mu <- atan2(wsinr, wcosr)
            kappa <- A1inv(ww%*%cos(x - mu)/sww)
 
            if (bias == TRUE & !is.na(kappa)) {
