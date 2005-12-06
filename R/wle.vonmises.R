@@ -3,10 +3,10 @@
 #	wle.vonmises function                               #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@unive.it                            #
-#	Date: November, 17, 2005                            #
-#	Version: 0.1-9                                      #
+#	Date: Febraury, 3, 2006                             #
+#	Version: 0.2                                        #
 #                                                           #
-#	Copyright (C) 2005 Claudio Agostinelli              #
+#	Copyright (C) 2006 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
@@ -106,13 +106,15 @@ while (tot.sol < num.sol & iboot < boot) {
        iter <- iter + 1
        mu.old <- mu
        kappa.old <- kappa
-
-       ff <- density.circular(x, z=x, bw=smooth*kappa, adjust=1)$y
+### modifica   
+       sm <- min(smooth, 1300/kappa)
+###       cat("sm ", sm, "\n")
+       ff <- density.circular(x, z=x, bw=sm*kappa, adjust=1)$y
 
        if (use.smooth) {
-           mm <- dvm.convolution(theta=x, mu1=0, mu2=mu, kappa1=smooth, kappa2=kappa)
+           mm <- dvm.convolution(theta=x, mu1=0, mu2=mu, kappa1=sm, kappa2=kappa)
        } else {
-           mm <- dvm(theta=x, mu=mu, kappa=kappa)
+           mm <- dvonmises(x=x, mu=mu, kappa=kappa)
        }
        if (any(is.nan(mm)) | any(mm==0)) {
            iter = max.iter
@@ -171,7 +173,7 @@ while (tot.sol < num.sol & iboot < boot) {
       d.store <- dd
       tot.sol <- 1
    } else {
-      if (min(abs(mu.store - mu)) > equal | min(abs(kappa.store - kappa)) > equal) {
+      if (min(abs(mu.store%%(2*pi) - mu%%(2*pi))) > equal | min(abs(kappa.store - kappa)) > equal) {
           mu.store <- c(mu.store, mu)
           kappa.store <- c(kappa.store, kappa)
           w.store <- rbind(w.store, ww)

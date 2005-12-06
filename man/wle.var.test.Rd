@@ -46,7 +46,7 @@ Agostinelli, C., (2001) Un approccio robusto alla verifica d'ipotesi basato sull
 Agostinelli, C., and Markatou, M., (2001) Test of hypotheses based on the Weighted Likelihood Methodology, \emph{Statistica Sinica},  vol. 11, n. 2, 499-514.
 }
 
-\authors{Claudio Agostinelli}
+\author{Claudio Agostinelli}
 
 
 \examples{

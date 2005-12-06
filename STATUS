@@ -1,6 +1,9 @@
 Library wle
 ===========
 
+Version 0.9-2, 2006/02/13
+Fix minor typo in wle.fracdiff.Rd and in wle.var.test.Rd. Rewrite some part of wle.vonmises.R and wle.wrappednormal.R since there were a problem on looking for mutiple roots.
+
 Version 0.9-1, 2005/12/6
 Set up a NAMESPACE file.
 Functions wle.wrappednormal and wle.vonmises use atan2 call instead of atan. mle.aic has a new argument 'se' so that standard errors are reported for the parameters of each submodel. wle.fracdiff and related functions are partialy rewritten.

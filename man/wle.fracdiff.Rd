@@ -98,7 +98,7 @@ Goldberg, David E., (1989) Genetic Algorithms in Search, Optimization and Machin
 
 \author{Claudio Agostinelli}
 
-\example{
+\examples{
 require(stats)
 if (require(fracdiff)) {
     res <- fracdiff(Nile)
