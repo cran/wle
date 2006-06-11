@@ -3,14 +3,14 @@
 #	wle.vonmises function                               #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@unive.it                            #
-#	Date: Febraury, 3, 2006                             #
-#	Version: 0.2                                        #
+#	Date: August, 10, 2006                              #
+#	Version: 0.3-2                                      #
 #                                                           #
 #	Copyright (C) 2006 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
-wle.vonmises <- function(x, boot=30, group, num.sol=1, raf="HD", smooth, tol=10^(-6), equal=10^(-3), max.iter=500, bias=FALSE, mle.bias=FALSE, max.kappa=500, min.kappa=0.01, use.smooth=TRUE,  p=2, verbose=FALSE) {
+wle.vonmises <- function(x, boot=30, group, num.sol=1, raf="HD", smooth, tol=10^(-6), equal=10^(-3), max.iter=500, bias=FALSE, mle.bias=FALSE, max.kappa=500, min.kappa=0.01, use.smooth=TRUE,  alpha=NULL, p=2, verbose=FALSE, control.circular=list()) {
 
 ##############################################################
 ## convoluzione di due vonmises
@@ -32,13 +32,38 @@ if (require(circular)) {
     if (missing(group)) {
         group <- 0
     }
+    if (!is.null(alpha)) 
+        p <- (alpha + 1)^(-1)
 
-    x <- as.vector(x)
+    # Handling missing values
+    x <- na.omit(x)
     size <- length(x)
-
-    if (size<2) {
-        stop("Number of observation must be at least equal to 2")
+    if (size==0) {
+        warning("No observations (at least after removing missing values)")
+        return(NULL)
     }
+    if (is.circular(x)) {
+       datacircularp <- circularp(x)     
+    } else {
+       datacircularp <- list(type="angles", units="radians", template="none", modulo="asis", zero=0, rotation="counter")
+    }
+
+    dc <- control.circular
+    if (is.null(dc$type))
+       dc$type <- datacircularp$type
+    if (is.null(dc$units))
+       dc$units <- datacircularp$units
+    if (is.null(dc$template))
+       dc$template <- datacircularp$template
+    if (is.null(dc$modulo))
+       dc$modulo <- datacircularp$modulo
+    if (is.null(dc$zero))
+       dc$zero <- datacircularp$zero
+    if (is.null(dc$rotation))
+       dc$rotation <- datacircularp$rotation
+    
+    x <- conversion.circular(x, units="radians", zero=0, rotation="counter", modulo="2pi")
+    attr(x, "class") <- attr(x, "circularp") <- NULL
 
     if (group<2) {
         group <- max(round(size/4),1)
@@ -68,9 +93,8 @@ if (require(circular)) {
         if (verbose) cat("wle.vonmises: the equal parameter must be greater than tol, using default value: tol+10^(-3)\n")
         equal <- tol+10^(-3)
     }
-
     if (p< -1) {
-        if (verbose) cat("wle.vonmises: the p parameter must be greater than or equal to -1, using default value: 2 \n")
+        if (verbose) cat("wle.vonmises: the 'p' ('alpha') parameter must be greater than or equal to -1 (0), using default value: p=2 (alpha=-1/2) \n")
         p <- 2
     }
 
@@ -88,9 +112,9 @@ while (tot.sol < num.sol & iboot < boot) {
    start.iter <- 0
    while (continue & start.iter <= max.iter) {
           x.boot <- sample(x, size=group, replace = FALSE)
-          temp <- mle.vonmises(x.boot, bias=mle.bias)
-          mu <- temp$mu
-          kappa <- temp$kappa
+          temp <- circular:::MlevonmisesRad(x, bias=mle.bias)
+          mu <- temp[1]
+          kappa <- temp[4]
           continue <- !is.finite(mu) | is.na(mu) | !is.finite(kappa) | is.na(kappa) | kappa > max.kappa | kappa <= 0
           start.iter <- start.iter + 1 
    }
@@ -109,12 +133,12 @@ while (tot.sol < num.sol & iboot < boot) {
 ### modifica   
        sm <- min(smooth, 1300/kappa)
 ###       cat("sm ", sm, "\n")
-       ff <- density.circular(x, z=x, bw=sm*kappa, adjust=1)$y
-
+       ff <- circular:::DensityCircularRad(x, z=x, bw=sm*kappa, kernel='vonmises')
+       
        if (use.smooth) {
            mm <- dvm.convolution(theta=x, mu1=0, mu2=mu, kappa1=sm, kappa2=kappa)
        } else {
-           mm <- dvonmises(x=x, mu=mu, kappa=kappa)
+           mm <- circular:::DvonmisesRad(x=x, mu=mu, kappa=kappa)
        }
        if (any(is.nan(mm)) | any(mm==0)) {
            iter = max.iter
@@ -191,7 +215,7 @@ while (tot.sol < num.sol & iboot < boot) {
 ##### end of while (tot.sol < num.sol & iboot < boot)
 
 if (tot.sol) {
-    result$mu <- c(mu.store)
+    result$mu <- conversion.circular(circular(mu.store), dc$units, dc$type, dc$template, dc$modulo, dc$zero, dc$rotation)
     result$kappa <- c(kappa.store)   
     result$tot.weights <- tot.store
     result$weights <- w.store
@@ -202,7 +226,7 @@ if (tot.sol) {
     result$not.conv <- not.conv
 } else {
     if (verbose) cat("wle.vonmises: No solutions are fuond, checks the parameters\n")
-    result$mu <- NA
+    result$mu <- conversion.circular(circular(NA), dc$units, dc$type, dc$template, dc$modulo, dc$zero, dc$rotation)
     result$kappa <- NA    
     result$tot.weights <- NA
     result$weights <- rep(NA,size)
@@ -218,20 +242,20 @@ class(result) <- "wle.vonmises"
 return(result)
 
 } else {
-  stop("You need package 'circular' for this function")
+  stop("You need package 'circular ver. >= 0.3-5' for this function")
 }
 
 }
 
 #############################################################
 #                                                           #
-#	print.wle.vonmises function                             #
-#	Author: Claudio Agostinelli                             #
-#	E-mail: claudio@unive.it                                #
-#	Date: December, 23, 2002                                #
-#	Version: 0.1                                            #
+#	print.wle.vonmises function                         #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: December, 23, 2002                            #
+#	Version: 0.1                                        #
 #                                                           #
-#	Copyright (C) 2002 Claudio Agostinelli                  #
+#	Copyright (C) 2002 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
@@ -249,3 +273,4 @@ print.wle.vonmises <- function(x, digits = max(3, getOption("digits") - 3), ...)
     cat("\n")
     invisible(x)
 }
+

@@ -1,8 +1,8 @@
 useDynLib(wle)
 
 #Import declaration
-#importFrom(circular, circular, as.circular, is.circular, plot, density)
-#import(circular)
+importFrom(stats, weights)
+
 
 #Export declaration
 
@@ -10,6 +10,10 @@ useDynLib(wle)
 export(
 # file binary.R
  binary,
+# mde.vonmises.R
+ mde.vonmises,
+# mde.wrappednormal.R
+ mde.wrappednormal,
 # file mle.aic.R       
  mle.aic,
 # file mle.cp.R
@@ -59,7 +63,9 @@ export(
 # file wle.weights.R
  wle.weights, 
 # file wle.wrappednormal.R
- wle.wrappednormal       
+ wle.wrappednormal
+# file
+# weights.wle.lm
 )
 
 # unexported functions
@@ -112,7 +118,9 @@ export(
 # print.wle.gamma,
 # file wle.lm.R
 # print.wle.lm, summary.wle.lm, print.summary.wle.lm,
-# summary.wle.lm.root, print.summary.wle.lm.root, fitted.wle.lm, coef.wle.lm, weights.wle.lm, formula.wle.lm, model.frame.wle.lm,
+# summary.wle.lm.root, print.summary.wle.lm.root, fitted.wle.lm,
+# coef.wle.lm,
+# formula.wle.lm, model.frame.wle.lm,
 # file wle.normal.mixture.R
 # print.wle.normal.mixture,
 # file wle.normal.multi.R
@@ -186,6 +194,8 @@ S3method(print, wle.smooth)
 S3method(print, wle.t.test)
 S3method(print, wle.vonmises)
 S3method(print, wle.wrappednormal)
+S3method(print, mde.vonmises)
+S3method(print, mde.wrappednormal)
 
 #summary
 S3method(summary, mle.aic)

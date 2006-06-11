@@ -13,7 +13,8 @@ parameter (and the scale parameter).
 \usage{
 wle.wrappednormal(x, mu, rho, sd, K, boot = 30, group, num.sol = 1, raf = "HD",
     smooth = 0.0031, tol = 10^(-6), equal = 10^(-3), min.sd = 0.001,
-    min.k = 10, max.iter = 100, use.smooth = TRUE, p = 2, verbose = FALSE)
+    min.k = 10, max.iter = 100, use.smooth = TRUE, alpha=NULL, p = 2,
+verbose = FALSE, control.circular=list())
 
 \method{print}{wle.wrappednormal}(x, digits = max(3, getOption("digits") - 3), ...)
 }
@@ -46,12 +47,18 @@ wle.wrappednormal(x, mu, rho, sd, K, boot = 30, group, num.sol = 1, raf = "HD",
   \item{min.k}{minimum number of elements used to approximate the density of the
 	wrapped normal.}
   \item{max.iter}{maximum number of iterations.}
-  \item{use.smooth}{logical, if \code{TRUE} a smoothed model is used, default is \code{TRUE}.}
+  \item{use.smooth}{logical, if \code{TRUE} a smoothed model is used,
+    default is \code{TRUE}.}
+  \item{alpha}{see the next argument \code{p}. This is a different
+    parameterization, \code{alpha=-1/2} provides Hellinger Distance RAF,
+    \code{alpha=-1} provides Kullback-Leibler RAF and \code{alpha=-2}
+    provides Neyman's Chi-Square RAF.}
   \item{p}{this parameter works only when \code{raf="HD"}. \code{p=2}
 	provide Hellinger Distance RAF, \code{p=-1}
 	provide Kullback-Leibler RAF and \code{p=Inf} provide Neyman's
 	Chi-Square RAF.}
   \item{verbose}{logical, if \code{TRUE} warnings are printed.}
+  \item{control.circular}{the attribute of the resulting objects (\code{mu})}    
   \item{digits}{integer indicating the precision to be used.}
   \item{...}{further parameters in \code{print.wle.vonmises}.}
 }
@@ -93,7 +100,7 @@ wle.wrappednormal(x, mu, rho, sd, K, boot = 30, group, num.sol = 1, raf = "HD",
 \examples{
 
 if (require(circular)) {
-    x <- c(rwrappednormal(n=50, mu=0, sd=1), rwrappednormal(n=5, mu=pi/2, sd=0.5))
+    x <- c(rwrappednormal(n=50, mu=circular(0), sd=1), rwrappednormal(n=5, mu=circular(pi/2), sd=0.5))
     wle.wrappednormal(x, smooth=1/20, group=5)
 } else {
    cat("Please, install the package 'circular' in order to use this function.\n")

@@ -3,36 +3,59 @@
 #   wle.wrappednormal function                              #
 #   Author: Claudio Agostinelli                             #
 #   Email: claudio@unive.it                                 #
-#   Date: Febraury, 3, 2006                                 #
+#   Date: August, 10, 2006                                  #
 #   Copyright (C) 2006 Claudio Agostinelli                  #
 #                                                           #
-#   Version 0.1-4                                           #
+#   Version 0.2-2                                           #
 #############################################################
 
-wle.wrappednormal <- function(x, mu, rho, sd, K, boot=30, group, num.sol=1, raf="HD", smooth=0.0031, tol=10^(-6), equal=10^(-3), min.sd=1e-3, min.k=10, max.iter=100, use.smooth=TRUE,  p=2, verbose=FALSE) {
+wle.wrappednormal <- function(x, mu=NULL, rho=NULL, sd=NULL, K=NULL, boot=30, group, num.sol=1, raf="HD", smooth=0.0031, tol=10^(-6), equal=10^(-3), min.sd=1e-3, min.k=10, max.iter=100, use.smooth=TRUE,  alpha=NULL, p=2, verbose=FALSE, control.circular=list()) {
   
 if (require(circular)) {
-
-    x <- as.circular(x)
-    xcircularp <- circularp(x)
-    units <- xcircularp$units
-    x <- conversion.circular(x, units="radians")
-    x <- as.vector(x)
+    # Handling missing values
+    x <- na.omit(x)
     size <- n <- length(x)
+    if (size==0) {
+        warning("No observations (at least after removing missing values)")
+        return(NULL)
+    }
+    if (is.circular(x)) {
+       datacircularp <- circularp(x)     
+    } else {
+       datacircularp <- list(type="angles", units="radians", template="none", modulo="asis", zero=0, rotation="counter")
+    }
+
+    dc <- control.circular
+    if (is.null(dc$type))
+       dc$type <- datacircularp$type
+    if (is.null(dc$units))
+       dc$units <- datacircularp$units
+    if (is.null(dc$template))
+       dc$template <- datacircularp$template
+    if (is.null(dc$modulo))
+       dc$modulo <- datacircularp$modulo
+    if (is.null(dc$zero))
+       dc$zero <- datacircularp$zero
+    if (is.null(dc$rotation))
+       dc$rotation <- datacircularp$rotation
+    
+    x <- conversion.circular(x, units="radians", zero=0, rotation="counter", modulo="2pi")
+    attr(x, "class") <- attr(x, "circularp") <- NULL
+
     result <- list()
 
     sinr <- sum(sin(x))
     cosr <- sum(cos(x))
 
     est.mu <- FALSE 
-    if (missing(mu)) {  
+    if (is.null(mu)) {  
         mu.temp <- atan2(sinr, cosr)
         est.mu <- TRUE
     } else mu.temp <- mu
     
     est.rho <- FALSE
-    if (missing(rho)) {
-        if (missing(sd)) {
+    if (is.null(rho)) {
+        if (is.null(sd)) {
             sd.temp <- sqrt(-2*log(sqrt(sinr^2 + cosr^2)/n))
             if (is.na(sd.temp) || sd.temp < min.sd) sd.temp <- min.sd
             est.rho <- TRUE
@@ -41,7 +64,7 @@ if (require(circular)) {
          sd.temp <- sqrt(-2*log(rho))
     }
         
-    if (missing(K)) {
+    if (is.null(K)) {
         range <- max(mu.temp, x) - min(mu.temp, x)
         K <- (range+6*sd.temp)%/%(2*pi)+1
         K <- max(min.k, K)
@@ -73,8 +96,8 @@ if (require(circular)) {
     }
 
     if (max.iter<1) {
-        if (verbose) cat("wle.wrappednormal: max number of iteration set to 500 \n")
-        max.iter <- 500
+        if (verbose) cat("wle.wrappednormal: max number of iteration set to 100 \n")
+        max.iter <- 100
     }
 
     if (tol<=0) {
@@ -104,15 +127,17 @@ if (require(circular)) {
       iboot <- iboot + 1
       continue <- TRUE
       start.iter <- 0
-      cat("Bootstrap replication: ", iboot, "\n")
+      if (verbose)
+         cat("Bootstrap replication: ", iboot, "\n")
          while (continue & start.iter <= max.iter) {
            x.boot <- sample(x, size=group, replace = TRUE)
 #           cat(x.boot, "\n") 
-           temp <- mle.wrappednormal(x=x.boot, K=K, tol=tol)
-           mu <- temp$mu
-           rho <- temp$rho
-           sdw <- temp$sd
-           continue <- !is.finite(mu) | is.na(mu) | !is.finite(sdw) | is.na(sdw) | sdw <= 0 | !temp$convergence
+           temp <- circular:::MlewrappednormalRad(x=x.boot, mu=NULL, rho=NULL, sd=NULL, min.sd=min.sd, K=K, min.k=min.k, tol=tol, max.iter=100, verbose=verbose)
+           mu <- temp[1]
+           rho <- temp[2]
+           sdw <- temp[3]
+           convergence <- temp[6] <= max.iter
+           continue <- !is.finite(mu) | is.na(mu) | !is.finite(sdw) | is.na(sdw) | sdw <= 0 | !convergence
            start.iter <- start.iter + 1
 #           if (verbose) {
 #              cat("mu: ", mu, "\n")
@@ -131,14 +156,12 @@ if (require(circular)) {
          iter <- iter + 1 
          mu.old <- mu
          sd.old <- sdw
-       
-         ff <- density.circular(x=x, z=x, bw=sqrt(smooth)*sdw, adjust=1, kernel="wrappednormal", K=K)$y
-  
-         if (use.smooth) {
-           mm <- dwrappednormal(x, mu=mu, sd=sqrt((1+smooth))*sdw, K=K)
-         } else {
-           mm <- dwrappednormal(x, mu=mu, sd=sdw, K=K)
-         }
+         ff <- circular:::DensityCircularRad(x=x, z=x, bw=sqrt(smooth)*sdw, kernel='wrappednormal', K=K)  
+         if (use.smooth)
+            rho <- exp(-(1+smooth)*sdw^2/2)
+         else
+            rho <- exp(-sdw^2/2)
+         mm <- circular:::DwrappednormalRad(x, mu=mu, rho=rho, K=K)
          if (any(is.nan(mm)) | any(mm==0)) {
             iter <- max.iter
          } else { 
@@ -167,7 +190,6 @@ if (require(circular)) {
               iteriter <- iteriter + 1
               mu.olditer <- mu
               sd.olditer <- sdw
-
               z <- .Fortran("mlewrpno",
                 as.double(x),
                 as.double(mu),
@@ -251,7 +273,7 @@ if (require(circular)) {
 ##### end of while (tot.sol < num.sol & iboot < boot)
     
  if (tot.sol) {
-   result$mu <- c(mu.store)
+   result$mu <- conversion.circular(circular(mu.store), dc$units, dc$type, dc$template, dc$modulo, dc$zero, dc$rotation)
    result$rho <- c(exp(-sd.store^2/2))
    result$sd <- c(sd.store)
    result$tot.weights <- tot.store
@@ -263,7 +285,7 @@ if (require(circular)) {
    result$not.conv <- not.conv
  } else {
    if (verbose) cat("wle.wrappednormal: No solutions are fuond, checks the parameters\n")
-   result$mu <- NA
+   result$mu <- conversion.circular(circular(NA), dc$units, dc$type, dc$template, dc$modulo, dc$zero, dc$rotation)
    result$rho <- NA
    result$sd <- NA
    result$tot.weights <- NA
@@ -279,7 +301,7 @@ if (require(circular)) {
  class(result) <- "wle.wrappednormal"
  return(result)
 } else {
-  stop("You need package 'circular' for this function")
+  stop("You need package 'circular ver. >= 0.3-5' for this function")
 }
 }
 
