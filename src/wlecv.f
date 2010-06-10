@@ -4,6 +4,7 @@
      & cv,wparam,wvaria,wresid,wtotpesi,wpesi,nwsame,indice,
      & info)
 
+
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C     Weighted Cross-Validation based on 
 C     WLE in the normal regression linear model
@@ -172,7 +173,7 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       dimension rwmat(nsize,nsize)
       dimension wxidata(nsize,nvar+inter),wydata(nsize)
       dimension wparam(nmaxsol,nvar+inter)
-      dimension wvaria(nmaxsol) 
+      dimension wvaria(nmaxsol)
       dimension wresid(nmaxsol,nsize) 
       dimension wtotpesi(nmaxsol)
       dimension wpesi(nmaxsol,nsize)
@@ -213,8 +214,13 @@ C     the slatec: dqrsl subroutine give least square parameters
 C      the slatec: dqrdc subroutine give the QR decomposition nedeed by the dqrsl
       external dqrdc
 C
+C
+      external setall
+C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
+      iseed=1234
+      call setall(iseed,iseed)
       dsize=nsize
       info=0
       iinfo=0
@@ -270,6 +276,8 @@ C      write(*,*) imodel
      &  wparam,wvaria,wresid,wtotpesi,wpesi,
      &  dden,dmod,ddelta,nwsame,nsol,iconv)
 
+C      write(*,*) 'sono arrivato qui 1'
+
        if(iconv.eq.nboot) then
           info=1
           return
@@ -297,6 +305,8 @@ C      write(*,*) imodel
          rwmat(i,i)=dsqrt(dpesi(i))
  150  continue
 
+C      write(*,*) 'sono arrivato qui 2'
+
 C
 C     The weighted observations
 C
@@ -310,6 +320,8 @@ C
 C
 C     Begin of the Monte Carlo replications  
 C
+
+C      write(*,*) 'sono arrivato qui 3'
 
       do 9999 imc=1,nmccv
 
@@ -336,6 +348,8 @@ C
          endif
  90   continue
 
+C      write(*,*) 'sono arrivato qui 4'
+
       do 110 i=1,nsplit
          wycsub(i)=wydata(nstart(i))
       do 120 j=1,npre   
@@ -344,14 +358,18 @@ C
          nrand(imc,i)=nstart(i)
  110  continue
 
+C      write(*,*) 'sono arrivato qui 5'
+
       dtotval=dzero
       do 130 i=nsplit+1,nsize
-         wyvsub(i-nsplit)=wydata(nstart(i))
-         dtotval=dtotval+dpesi(nstart(i))
-      do 140 j=1,npre   
-         wxvsub(i-nsplit,j)=wxidata(nstart(i),j)
- 140     continue
+        wyvsub(i-nsplit)=wydata(nstart(i))
+        dtotval=dtotval+dpesi(nstart(i))
+        do 140 j=1,npre   
+          wxvsub(i-nsplit,j)=wxidata(nstart(i),j)
+ 140    continue
  130  continue
+
+C      write(*,*) 'sono arrivato qui 6'
 
 C
 C From the biggest model to the smallest one.
@@ -373,7 +391,11 @@ C         write(*,*) nmodel
             endif
  30      continue
 
+C      write(*,*) 'sono arrivato qui 7'
+
       call wls(wycsub,wxdata,ddd,nsplit,npre,ncol,0,tparam,iinfo)
+
+C      write(*,*) 'sono arrivato qui 8'
 
       if (iinfo.ne.0) then
          dconv(imc)=dconv(imc)+duno
@@ -388,6 +410,8 @@ C         write(*,*) nmodel
            dparam(i)=dzero 
          endif
  200  continue
+
+C      write(*,*) 'sono arrivato qui 9'
 
       call dgemv('N',nvalid,npre,duno,wxvsub,nvalid,dparam,1,
      & dzero,xparam,1)
@@ -406,13 +430,28 @@ C         write(*,*) nmodel
 
  900  continue
 
+C      write(*,*) 'sono arrivato qui 10'
+
 C     End of the Monte Carlo replications 
  9999 continue
 
+C      write(*,*) 'sono arrivato qui 11'
+
       do 210 i=1,nrep
 C         write(*,*) dconv(i)
-         cv(i,npre+1)=cv(i,npre+1)/(dmccv-dconv(i))  
+         cv(i,npre+1)=cv(i,npre+1)/(dmccv-dconv(i))
  210  continue
+
+C      write(*,*) 'sono arrivato qui 12'
+C      write(*,*) cv
+C      write(*,*) wparam
+C      write(*,*) wvaria
+C      write(*,*) wresid
+C      write(*,*) wtotpesi
+C      write(*,*) wpesi
+C      write(*,*) nwsame
+C      write(*,*) indice
+C      write(*,*) info
 
       return
       end

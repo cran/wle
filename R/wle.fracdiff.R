@@ -369,23 +369,23 @@ return(pi.coef)
 #	wle.fracdiff.xi.coef function                       #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@unive.it                            #
-#	Date: November, 30, 2001                            #
-#	Version: 0.1                                        #
+#	Date: March, 4, 2009                                #
+#	Version: 0.2                                        #
 #                                                           #
-#	Copyright (C) 2001 Claudio Agostinelli              #
+#	Copyright (C) 2009 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
 wle.fracdiff.xi.coef <- function(d,M) {
      xi.coef <- rep(0,M)
-     secondo.termine <- (1+d*digamma(1-d))/gamma(1-d)    
      for (j in 1:M) {
           primo.termine <- gamma(j-d)/gamma(j+1)
           if (is.nan(primo.termine)) {
               primo.termine <- j^(-(1+d))*exp(d)
           }
-          xi.coef[j] <- - primo.termine*(secondo.termine+digamma(j-d)/gamma(-d))
+          xi.coef[j] <- primo.termine*(digamma(j-d) - digamma(-d))
      }
+     xi.coef <- xi.coef*d/gamma(1-d)
 return(xi.coef)
 }
 
@@ -424,15 +424,15 @@ wle.fracdiff.residuals <- function(d, M, x, x.ao, x.init=rep(0,M), x.mean=0) {
 #	wle.fracdiff.sigma2 function                        #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@unive.it                            #
-#	Date: December, 1, 2001                             #
-#	Version: 0.1                                        #
+#	Date: February, 23, 2009                            #
+#	Version: 0.2                                        #
 #                                                           #
 #	Copyright (C) 2001 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
 wle.fracdiff.sigma2 <- function(resid, w=rep(1,length(resid))) {
-    sigma2 <- sum(w*resid^2)/(sum(w) - 1)
+    sigma2 <- sum(w*resid^2)/(sum(w) - 2)
     return(sigma2)
 }
 

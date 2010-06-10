@@ -32,8 +32,12 @@ if (require(circular)) {
     if (missing(group)) {
         group <- 0
     }
-    if (!is.null(alpha)) 
-        p <- (alpha + 1)^(-1)
+
+    if (!is.null(alpha))
+        if (alpha==-1)
+           p <- Inf
+        else 
+           p <- (alpha + 1)^(-1)
 
     # Handling missing values
     x <- na.omit(x)

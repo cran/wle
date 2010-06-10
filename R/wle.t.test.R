@@ -280,7 +280,7 @@ if (x.root!="ALL" & !is.numeric(x.root)) {
 } else if (x.root=="ALL") {
     x.root <- 1:x.tot.sol
 } else if (x.tot.sol<x.root) {
-    stop(paste("'x' Root ",root," not found"))
+    stop(paste("'x' Root ",x.root," not found"))
 }
 
 if (y.root!="ALL" & !is.numeric(y.root)) {
@@ -288,7 +288,7 @@ if (y.root!="ALL" & !is.numeric(y.root)) {
 } else if (y.root=="ALL") {
     y.root <- 1:y.tot.sol
 } else if (y.tot.sol<y.root) {
-    stop(paste("'y' Root ",root," not found"))
+    stop(paste("'y' Root ",y.root," not found"))
 }
 
 cat("\nCall:\n")

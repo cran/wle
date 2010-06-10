@@ -1,16 +1,16 @@
 #############################################################
 #                                                           #
-#	wle.binomial function                               #
+#	wle.negativebinomial function                       #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@unive.it                            #
-#	Date: February, 22, 2010                            #
-#	Version: 0.2-1                                      #
+#	Date: June, 01, 2010                                #
+#	Version: 0.1                                        #
 #                                                           #
 #	Copyright (C) 2010 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
-wle.binomial <- function(x, size, boot=30, group, num.sol=1, raf="HD", tol=10^(-6), equal=10^(-3), max.iter=500, verbose=FALSE) {
+wle.negativebinomial <- function(x, size, boot=30, group, num.sol=1, raf="HD", tol=10^(-6), equal=10^(-3), max.iter=500, verbose=FALSE) {
 
 result <- list()
 
@@ -30,7 +30,7 @@ stop("Number of observation must be at least equal to 1")
 
 if (group<1) {
     group <- max(round(nsize/4),1)
-    if (verbose) cat("wle.binomial: dimension of the subsample set to default value: ",group,"\n")
+    if (verbose) cat("wle.negativebinomial: dimension of the subsample set to default value: ",group,"\n")
 }
 
 maxboot <- sum(log(1:nsize))-(sum(log(1:group))+sum(log(1:(nsize-group))))
@@ -40,22 +40,22 @@ if (boot<1 | log(boot) > maxboot) {
 }
 
 if (!(num.sol>=1)) {
-    if (verbose) cat("wle.binomial: number of solution to report set to 1 \n")
+    if (verbose) cat("wle.negativebinomial: number of solution to report set to 1 \n")
     num.sol <- 1
 }
 
 if (max.iter<1) {
-    if (verbose) cat("wle.binomial: max number of iteration set to 500 \n")
+    if (verbose) cat("wle.negativebinomial: max number of iteration set to 500 \n")
     max.iter <- 500
 }
 
 if (tol<=0) {
-    if (verbose) cat("wle.binomial: the accuracy must be positive, using default value: 10^(-6) \n")
+    if (verbose) cat("wle.negativebinomial: the accuracy must be positive, using default value: 10^(-6) \n")
     tol <- 10^(-6)
 }
 
 if (equal<=tol) {
-    if (verbose) cat("wle.binomial: the equal parameter must be greater than tol, using default value: tol+10^(-3) \n")
+    if (verbose) cat("wle.negativebinomial: the equal parameter must be greater than tol, using default value: tol+10^(-3) \n")
     equal <- tol+10^(-3)
 }
 
@@ -66,7 +66,7 @@ iboot <- 0
 while (tot.sol < num.sol & iboot < boot) {
    iboot <- iboot + 1
    x.boot <- x[round(runif(group,0.501,nsize+0.499))]
-   p <- sum(x.boot)/(size*group)
+   p <- c(size*group/(sum(x.boot)+size*group))
 
    ff <- rep(0,nsize)
    x.diff <- tol + 1
@@ -79,7 +79,7 @@ while (tot.sol < num.sol & iboot < boot) {
        for (i in 1:nsize) {
            ff[i] <- tff[nff==x[i]] 
        }
-       mm <- dbinom(x,size=size,prob=p)
+       mm <- dnbinom(x,size=size,prob=p)
        dd <- ff/mm - 1
        
        ww <- switch(raf,
@@ -94,7 +94,7 @@ while (tot.sol < num.sol & iboot < boot) {
        ww[ww > 1] <- 1
        ww[ww < 0] <- 0
 
-       p <- ww%*%x/(sum(ww)*size)
+       p <- c(sum(ww)*size/(sum(ww)*size+ww%*%x))
 
        x.diff <- abs(p - p.old)
    }
@@ -137,7 +137,7 @@ if (tot.sol) {
     result$not.conv <- not.conv
     result$call <- match.call()
 } else {
-    if (verbose) cat("wle.binomial: No solutions are fuond, checks the parameters\n")
+    if (verbose) cat("wle.negativebinomial: No solutions are fuond, checks the parameters\n")
     result$p <- NA
     result$tot.weights <- NA
     result$weights <- rep(NA,nsize)
@@ -149,24 +149,24 @@ if (tot.sol) {
     result$call <- match.call()
 }
 
-class(result) <- "wle.binomial"
+class(result) <- "wle.negativebinomial"
 
 return(result)
 }
 
 #############################################################
 #                                                           #
-#	print.wle.binomial function                         #
+#	print.wle.negativebinomial function                 #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@unive.it                            #
-#	Date: August, 2, 2001                               #
-#	Version: 0.2                                        #
+#	Date: June, 1, 2010                                 #
+#	Version: 0.1                                        #
 #                                                           #
-#	Copyright (C) 2001 Claudio Agostinelli              #
+#	Copyright (C) 2010 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
-print.wle.binomial <- function(x, digits = max(3, getOption("digits") - 3), ...) {
+print.wle.negativebinomial <- function(x, digits = max(3, getOption("digits") - 3), ...) {
     cat("\nCall:\n",deparse(x$call),"\n\n",sep="")
     cat("p:\n")
     print.default(format(x$p, digits=digits),

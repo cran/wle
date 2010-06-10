@@ -66,7 +66,7 @@ wle.binomial(x, size, boot=30, group, num.sol=1, raf="HD",
 \references{
 Markatou, M., Basu, A., and Lindsay, B.G., (1997) Weighted likelihood estimating equations: The discrete case with applications to logistic regression, \emph{Journal of Statistical Planning and Inference}, 57, 215-232.
 
-Agostinelli, C., (1998) Inferenza statistica robusta basata sulla funzione di verosimiglianza pesata: alcuni sviluppi, \emph{Ph.D Thesis}, Department of Statistics, University of Padova.}
+Agostinelli, C., (1998) Inferenza statistica robusta basata sulla funzione di verosimiglianza pesata: alcuni sviluppi, \emph{Ph.D Thesis}, Department of Statistics, University of Padova.
 }
 
 \examples{

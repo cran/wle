@@ -16,13 +16,13 @@ C             ITALIA
 C
 C     E-mail: claudio@unive.it
 C
-C     April, 10, 2005
+C     February, 10, 2010
 C
-C     Version: 0.5
+C     Version: 0.6
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
-C    Copyright (C) 2005 Claudio Agostinelli
+C    Copyright (C) 2010 Claudio Agostinelli
 C
 C    This program is free software; you can redistribute it and/or modify
 C    it under the terms of the GNU General Public License as published by
@@ -254,11 +254,11 @@ C
       dpre=npre
 
       do 10 i=1, nsize
-      do 20 j=1, nvar   
+      do 20 j=1+inter, npre   
          xidata(i,j)=xdata(i,j)
  20   continue
       if (inter.eq.1) then
-         xidata(i,npre)=duno
+         xidata(i,1)=duno
       endif
  10   continue
 
@@ -309,6 +309,7 @@ C       write(*,*) 'iconv: ', iconv , ' nboot: ', nboot
  55       continue
 
 C          write(*,*) 'dpesi: ',dpesi
+C          write(*,*) 'dtotpesi: ',dtotpesi
 
           if(ntype.eq.1) then
 
@@ -317,13 +318,13 @@ C          write(*,*) 'dpesi: ',dpesi
              do 1050 i=1,nvar
                 nmodel(i)=0
  1050        continue
-             nmodel(npre)=1
+             nmodel(1)=1
 
              dmediay=0.0d00
              do 3200 i=1,nsize
                 dmediay=dmediay+dpesi(i)*ydata(i)
  3200        continue
-             dmediay=dmediay/dtotpesi
+             dmediay=dmediay/(dtotpesi*dsize)
 
              dvarmod=0.0d00
              do 3100 i=1,nsize
@@ -564,9 +565,9 @@ C             write(*,*) 'imodel ',imodel
 
 C             write(*,*) 'ntot ',ntot
 
-             if(ntot.eq.0) then
+             if(ntot.eq.1) then
                 goto 8888
-             endif   
+             endif
 
              goto 9999
           endif

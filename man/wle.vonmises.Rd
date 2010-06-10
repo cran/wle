@@ -42,7 +42,7 @@ NULL, p = 2, verbose = FALSE, control.circular = list())
   \item{min.kappa}{minimum value for the concentration parameter.}
   \item{use.smooth}{logical, if \code{TRUE} a smoothed model is used,
     default is \code{TRUE}.}
-  \item{alpha}{see the next argument \code{p}. This is a different
+  \item{alpha}{if not \code{NULL} overrides the value of \code{p}. See the next argument \code{p}. This is a different
     parameterization, \code{alpha=-1/2} provides Hellinger Distance RAF,
     \code{alpha=-1} provides Kullback-Leibler RAF and \code{alpha=-2}
     provides Neyman's Chi-Square RAF.}

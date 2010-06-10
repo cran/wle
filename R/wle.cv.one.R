@@ -203,7 +203,7 @@ for (imodel in nmodel) {
 	wcv=double(nvar+1),
 	info=integer(1),
 	PACKAGE="wle")
-   info <- c(info, z$info)
+   info <- c(info, zcv$info)
    if (missing(file)) {
        if (NROW(wcv)<num.max) {
            wcv <- rbind(wcv, zcv$wcv)
@@ -229,7 +229,7 @@ if (missing(file)) {
     result$tot.weights <- z$totweight[!delnull]
     result$freq <- z$same[!delnull]
     result$call <- cl
-    result$info <- z$info
+    result$info <- info
     result$index <- z$index
     result$contrasts <- attr(xdata, "contrasts")
     result$xlevels <- xlev

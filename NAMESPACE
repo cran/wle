@@ -2,7 +2,11 @@ useDynLib(wle)
 
 #Import declaration
 importFrom(stats, weights)
-
+importFrom(stats, effects)
+importFrom(stats, family)
+##importFrom(boot, boot)
+##importFrom(boot, basic.ci)
+##importFrom(boot, perc.ci)
 
 #Export declaration
 
@@ -30,6 +34,8 @@ export(
  wle.ar,
 # wle.binomial.R
  wle.binomial,
+# wle.negativebinomial.R
+ wle.negativebinomial,
 # file wle.cp.R
  wle.cp,
 # file wle.cv.R
@@ -66,6 +72,12 @@ export(
  wle.wrappednormal
 # file
 # weights.wle.lm
+# file wmme.gamma.R
+#### wmme.gamma,
+# file mme.gamma.R
+#### mme.gamma,
+# file wle.cv.one.R
+### wle.cv.one
 )
 
 # unexported functions
@@ -76,10 +88,6 @@ export(
 # wle.ar.wls,
 # file wle.ar.R
 # wle.ar.ao, wle.ar.step, wle.ar.matrix, wle.ar.start,
-# file wle.cv.one.R
-# wle.cv.one,
-# file wle.cv.robust.bootstrap.R
-# wle.cv.robust.bootstrap,  
 # file wle.fracdiff.R
 # wle.crossover.ao, wle.mutation.ao, wle.selection.ao,
 #       wle.fitness.population.ao, wle.generate.population.ao,
@@ -156,7 +164,7 @@ S3method(formula, wle.lm)
 
 #model.frame
 S3method(model.frame, wle.lm)
-       
+
 #plot 
 S3method(plot, mle.cp)
 S3method(plot, wle.cp)
@@ -174,7 +182,6 @@ S3method(print, wle.aic.ar)
 S3method(print, summary.wle.aic.ar)
 S3method(print, wle.aic)      
 S3method(print, summary.wle.aic)
-S3method(print, wle.binomial)      
 S3method(print, wle.cp)      
 S3method(print, summary.wle.cp)
 S3method(print, wle.cv)      
@@ -190,12 +197,16 @@ S3method(print, wle.normal.multi)
 S3method(print, wle.normal)
 S3method(print, wle.onestep)
 S3method(print, wle.poisson)
+S3method(print, wle.binomial)      
+S3method(print, wle.negativebinomial)      
 S3method(print, wle.smooth)
 S3method(print, wle.t.test)
 S3method(print, wle.vonmises)
 S3method(print, wle.wrappednormal)
 S3method(print, mde.vonmises)
 S3method(print, mde.wrappednormal)
+S3method(print, wmme.gamma)
+S3method(print, mme.gamma)
 
 #summary
 S3method(summary, mle.aic)
@@ -212,4 +223,3 @@ S3method(summary, wle.lm.root)
 
 # weights
 S3method(weights, wle.lm) 
-

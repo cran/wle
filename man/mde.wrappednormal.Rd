@@ -18,7 +18,7 @@ mde.wrappednormal(x, bw, mu = NULL, rho = NULL, sd = NULL, alpha = NULL, p = 2, 
   \item{mu}{initial value for the mean direction. Default: maximum likelihood estimate.}
   \item{rho}{initial value for the concentration parameter. Default: maximum likelihood estimate.}
   \item{sd}{initial value for the standard deviation parameter. This value is used only if \code{rho} is \code{NULL}. Default: maximum likelihood estimate.}
-   \item{alpha}{see the next argument \code{p}. This is a different
+   \item{alpha}{if not \code{NULL} overrides the value of \code{p}. See the next argument \code{p}. This is a different
     parameterization, \code{alpha=-1/2} provides Hellinger distance,
     \code{alpha=-1} provides Kullback-Leibler distance and \code{alpha=-2}
     provides Neyman's Chi-Square distance.}

@@ -111,7 +111,7 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
 C     EXTERNAL SUBROUTINE
 C     wleregfix: subroutine for evaluating a wle estimators
-C                for the normal location model 
+C                for the normal regression model 
       external wleregfix
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC

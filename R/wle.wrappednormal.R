@@ -3,10 +3,10 @@
 #   wle.wrappednormal function                              #
 #   Author: Claudio Agostinelli                             #
 #   Email: claudio@unive.it                                 #
-#   Date: August, 10, 2006                                  #
-#   Copyright (C) 2006 Claudio Agostinelli                  #
+#   Date: June, 27, 2008                                    #
+#   Copyright (C) 2008 Claudio Agostinelli                  #
 #                                                           #
-#   Version 0.2-2                                           #
+#   Version 0.2-3                                           #
 #############################################################
 
 wle.wrappednormal <- function(x, mu=NULL, rho=NULL, sd=NULL, K=NULL, boot=30, group, num.sol=1, raf="HD", smooth=0.0031, tol=10^(-6), equal=10^(-3), min.sd=1e-3, min.k=10, max.iter=100, use.smooth=TRUE,  alpha=NULL, p=2, verbose=FALSE, control.circular=list()) {
@@ -109,6 +109,12 @@ if (require(circular)) {
         if (verbose) cat("wle.wrappednormal: the equal parameter must be greater than tol, using default value: tol+10^(-3)\n")
         equal <- tol+10^(-3)
     }
+
+    if (!is.null(alpha))
+        if (alpha==-1)
+           p <- Inf
+        else 
+           p <- (alpha + 1)^(-1)
 
     if (p< -1) {
         if (verbose) cat("wle.wrappednormal: the p parameter must be greater than or equal to -1, using default value: 2 \n")

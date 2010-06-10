@@ -1,5 +1,5 @@
-      SUBROUTINE WLEGAMMA(DATI,NSIZE,IRAF,RK,IUSE,DSUP,
-     & RPREC,RPRECINT,RLAMBDA,ROMEGA, rw,d,rm)
+      SUBROUTINE WLEGAMMA(DATI,DY,NXSIZE,NYSIZE,IRAF,DTAU,
+     & RK,IUSE,DSUP,RPREC,RPRECINT,RLAMBDA,ROMEGA,rw,d,rm)
 
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
@@ -8,19 +8,19 @@ C     gamma model
 C     
 C     Author: Claudio Agostinelli 
 C             Dipartimento di Statistica
-C             Universita' di Padova
-C             35121 Padova
+C             Universita' Ca' Foscari
+C             30121 VENEZIA
 C             ITALIA
 C
-C     E-mail: claudio@stat.unipd.it
+C     E-mail: claudio@unive.it
 C
-C     February, 19,   2001
+C     March, 11, 2010
 C
-C     Version: 0.1
+C     Version: 0.5
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
-C    Copyright (C) 2001 Claudio Agostinelli
+C    Copyright (C) 2010 Claudio Agostinelli
 C
 C    This program is free software; you can redistribute it and/or modify
 C    it under the terms of the GNU General Public License as published by
@@ -40,14 +40,27 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
 C     PARAMETER:
 C     NAME:     I/O:    TYPE:  DIMENSIONS:   DESCRIPTIONS:
-C     DATI      input    D      NSIZE        vector of the data
-C     NSIZE     input    I      1            length of the data 
+C     DATI      input    D      NXSIZE       vector of the data
+C     DY        input    D      NYSIZE       vector where to evaluate weights 
+C     NXSIZE    input    I      1            length of DATI
+C     NYSIZE    input    I      1            lenght of DY 
 C     IRAF      input    I      1            type of RAF
 C                                            1: Hellinger distance 
 C                                            2: Negative Exponential disparity 
 C                                            3: Chi squared disparity
+C                                            4: PDM
+C                                            5: GKL
+C     DTAU      input    D      1            parameter used in PDM and GKL
 C     RK        input    D      1            smoothing parameter
-C     rw        output   D      NSIZE        the weights
+C     IUSE      input    I      1            use the smoothing model or not    
+C     DSUP      input    D      1 
+C     RPREC     input    D      1
+C     RPRECINT  input    D      1
+C     RLAMBDA   input    D      1            lambda parameter of the gamma dist
+C     ROMEGA    input    D      1            omega parameter of the gamma dist
+C     rw        output   D      NXSIZE        the weights
+C     d         output   D      NXSIZE        
+C     rm        output   D      NXSIZE        
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
@@ -73,9 +86,9 @@ C     this value should work in any machines
 C
       parameter(rerr=1.0d-65)
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-      dimension d(nsize),rm(nsize),delta(nsize),adelta(nsize)
-      dimension ds(nsize),rw(nsize)
-      dimension dati(nsize)
+      dimension d(nysize),rm(nysize),delta(nysize),adelta(nysize)
+      dimension ds(nysize),rw(nysize)
+      dimension dati(nxsize),dy(nysize)
 
       dimension iwork(nlimit+1)
       dimension work(nlenw)
@@ -89,25 +102,26 @@ C
 C
 C      external dqagi
       external dqagp
+      external dpoisraw
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-
-      do 130 i=1,nsize
+      dxsize=nxsize
+      do 130 i=1,nysize
          d(i)=0.0d00
          rm(i)=0.0d00
 
-         do 120 ik=1,nsize
-            ds(ik)=dexp(-((dati(i)-dati(ik))**ddue)/(ddue*rk)) 
-     &             + exp(-((dati(i)+dati(ik))**ddue)/(ddue*rk))
+         do 120 ik=1,nxsize
+            ds(ik)=dexp(-((dy(i)-dati(ik))**ddue)/(ddue*rk)) 
+     &             + exp(-((dy(i)+dati(ik))**ddue)/(ddue*rk))
             d(i)=d(i)+ds(ik)
  120      continue
+         d(i)=d(i)/dxsize
 
-         d(i)=d(i)/nsize      
-
-         dx=dati(i)
+         dx=dy(i)
          dl=rlambda
          doo=romega
          dh=rk
-         dgam=dgamma(romega)
+CCCC Not used anymore since we use dpois_raw C function 10 Nov. 2009
+C         dgam=dgamma(romega)
 
 
          if (iuse.eq.1) then      
@@ -124,8 +138,16 @@ C         call dqagi(dmod,0.0d00,1,0.00d00,rprecint,dtemp,
 C     &     abserr,neval,ier,nlimit,nlenw,nlast,iwork,work)
 
          else
-              dtemp=(dl**doo) * (dx**(doo-duno)) * 
-     &      (dexp(-dl*dx)) /dgam
+C              dtemp=(dl**doo) * (dx**(doo-duno)) * 
+C     &      (dexp(-dl*dx)) /dgam
+CCCC
+C Now the function use dpois_raw C function 10 Nov. 2009
+              dtemp=dpoisraw(doo, dl*dx, 0)
+              if(dx.gt.dzero) then
+                dtemp=dtemp/dx
+              else
+                dtemp=dzero
+              endif
               dtemp=dtemp*dsqrt(ddue*dpi*dh)
          endif
 
@@ -134,7 +156,7 @@ C     &     abserr,neval,ier,nlimit,nlenw,nlast,iwork,work)
 
  130  continue
 
-      do 140 i=1,nsize
+      do 140 i=1,nysize
          if(rm(i).gt.rerr) then
              delta(i)=d(i)/rm(i)-duno
 
@@ -148,6 +170,12 @@ C IRAF = 3 Chi Squared disparity
           endif
           if(iraf.eq.2) then
              adelta(i)=ddue - (ddue+delta(i))*dexp(-delta(i))
+          endif
+          if(iraf.eq.4) then 
+             adelta(i)=dtau*((delta(i) + duno)**(duno/dtau) - duno)
+          endif
+          if(iraf.eq.5) then 
+             adelta(i)=dlog(dtau*delta(i)+duno)/dtau
           endif   
           if(iraf.ne.3) then
              rw(i)=(adelta(i)+duno)/(delta(i)+duno)
@@ -177,41 +205,23 @@ C IRAF = 3 Chi Squared disparity
       parameter(duno=1.0d00)
       parameter(ddue=2.0d00)
 
-      dmod=(dexp(-((dx-t)**ddue)/(ddue*dh))+
+C      dmod=(dexp(-((dx-t)**ddue)/(ddue*dh))+
+C     &      dexp(-((dx+t)**ddue)/(ddue*dh)))
+C     &      * (dl**doo) * (t**(doo-duno)) * 
+C     &      (dexp(-dl*t)) /dgam
+CCCC
+C Now the function use dpois_raw C function 10 Nov. 2009
+      dmod=dpoisraw(doo, dl*t, 0)
+      if(t.gt.dzero) then
+        dmod=dmod/t
+      else
+        dmod=dzero
+      endif
+      dmod=dmod*(dexp(-((dx-t)**ddue)/(ddue*dh))+
      &      dexp(-((dx+t)**ddue)/(ddue*dh)))
-     &      * (dl**doo) * (t**(doo-duno)) * 
-     &      (dexp(-dl*t)) /dgam
 
       return
       end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

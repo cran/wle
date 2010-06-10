@@ -1,16 +1,20 @@
-\name{wle.poisson}
-\title{Robust Estimation in the Poisson Model}
+\name{wle.negativebinomial}
+\alias{wle.negativebinomial}
+\alias{print.wle.negativebinomial}
+
+\title{Robust Estimation in the Negative Binomial Model}
 \usage{
-wle.poisson(x, boot=30, group, num.sol=1,
-   raf=c("HD", "NED", "GKL", "PWD", "SCHI2"),
-   tau=NULL, tol=10^(-6), equal=10^(-3), 
-   max.iter=500, verbose=FALSE)
+wle.negativebinomial(x, size, boot=30, group, num.sol=1,
+             raf="HD", tol=10^(-6), equal=10^(-3),
+             max.iter=500, verbose=FALSE)
 }
-\alias{wle.poisson}
-\alias{print.wle.poisson}
 
 \arguments{
-  \item{x}{a vector contain the number of success.}
+  \item{x}{a vector contain the number of failures which occur in a sequence
+     of Bernoulli trials before a target number of successes \code{size}
+     is reached.}
+
+  \item{size}{target number of successes.}
 
   \item{boot}{the number of starting points based on boostrap subsamples to use in the search of the roots.}
 
@@ -24,16 +28,7 @@ wle.poisson(x, boot=30, group, num.sol=1,
 
 \code{raf="NED"}: Negative Exponential Disparity RAF,
 
-\code{raf="GKL"}: Generalized Kullback-Leibler RAF family
-  with parameter \code{tau}.
-
-\code{raf="PWD"}: Power Divergence Measure RAF family
-  with parameter \code{tau}.
-
 \code{raf="SCHI2"}: Symmetric Chi-Squared Disparity RAF.}
-
-\item{tau}{this is to set the member inside the GKL and PWD family. It
-  must be in [0,1] for GKL and in [-1, Inf] for PWD.}
 
   \item{tol}{the absolute accuracy to be used to achieve convergence of the algorithm.}
 
@@ -44,18 +39,18 @@ wle.poisson(x, boot=30, group, num.sol=1,
   \item{verbose}{if \code{TRUE} warnings are printed.}
 }
 \description{
-\code{wle.poisson} is used to robust estimate the lambda parameters in the poisson model via Weighted Likelihood.
+\code{wle.negativebinomial} is used to robust estimate the proportion parameters via Weighted Likelihood.
 }
 
 \value{
 
-\code{wle.poisson} returns an object of \code{\link{class}} \code{"wle.poisson"}.
+\code{wle.negativebinomial} returns an object of \code{\link{class}} \code{"wle.negativebinomial"}.
 
   Only print method is implemented for this class.
 
-  The object returned by \code{wle.poisson} are:
+  The object returned by \code{wle.negativebinomial} are:
 
-\item{lambda}{the estimator of the lambda parameter, one value for each root found.}
+\item{p}{the estimator of the proportion parameter, one value for each root found.}
 \item{tot.weights}{the sum of the weights divide by the number of observations, one value for each root found.}
 \item{weights}{the weights associated to each observation, one column vector for each root found.}
 \item{f.density}{the non-parametric density estimation.}
@@ -69,25 +64,26 @@ wle.poisson(x, boot=30, group, num.sol=1,
 
 \author{Claudio Agostinelli}
 
+%\seealso{}
+
 \references{
 Markatou, M., Basu, A., and Lindsay, B.G., (1997) Weighted likelihood estimating equations: The discrete case with applications to logistic regression, \emph{Journal of Statistical Planning and Inference}, 57, 215-232.
 
-Agostinelli, C., (1998) Inferenza statistica robusta basata sulla funzione di verosimiglianza pesata: alcuni sviluppi, \emph{ Ph.D Thesis}, Department of Statistics, University of Padova.
+Agostinelli, C., (1998) Inferenza statistica robusta basata sulla funzione di verosimiglianza pesata: alcuni sviluppi, \emph{Ph.D Thesis}, Department of Statistics, University of Padova.
 }
-
-%\seealso{}
 
 \examples{
 library(wle)
 
 set.seed(1234)
 
-x <- rpois(40,5)
-wle.poisson(x)
+x <- rnbinom(20, size=10, prob=0.2)
+wle.negativebinomial(x, size=10)
 
-x <- c(rpois(40,5),rpois(10,20))
-wle.poisson(x)
-
+x <- c(rnbinom(20, size=10, prob=0.2),rnbinom(10, size=10, p=0.9))
+result <- wle.negativebinomial(x, size=10)
+print(result)
+plot(result$weights)
 }
 
 \keyword{models}

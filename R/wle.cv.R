@@ -1,12 +1,12 @@
 #############################################################
 #                                                           #
-#	wle.cv function                                         #
-#	Author: Claudio Agostinelli                             #
-#	E-mail: claudio@unive.it                                #
-#	Date: April, 02, 2002                                   #
-#	Version: 0.4-1                                          #
+#	wle.cv function                                     #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: April, 02, 2002                               #
+#	Version: 0.4-1                                      #
 #                                                           #
-#	Copyright (C) 2002 Claudio Agostinelli                  #
+#	Copyright (C) 2002 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
@@ -120,7 +120,7 @@ if (min.weight<0) {
   z <- .Fortran("wlecv",
 	as.double(ydata),
 	as.matrix(xdata),
-	as.integer(0), 
+	as.integer(0),
 	as.integer(size),
 	as.integer(nvar),
 	as.integer(boot),

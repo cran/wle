@@ -42,7 +42,7 @@ mde.vonmises <- function(x, bw, mu=NULL, kappa=NULL, n = 512, from=circular(0), 
          stop("argument 'n' must be integer and positive")         
     if (!is.numeric(x)) 
         stop("argument 'x' must be numeric")
-          if (!is.null(alpha))
+    if (!is.null(alpha))
         if (alpha==-1)
            p <- Inf
         else 

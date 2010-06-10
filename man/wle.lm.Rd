@@ -26,7 +26,7 @@ wle.lm(formula, data=list(), model=TRUE, x=FALSE,
 
   \item{num.sol}{maximum number of roots to be searched.}
 
-  \item{raf}{type of Residual adjustment function to be use:
+  \item{raf}{type of Residual adjustment function to be used:
 
 \code{raf="HD"}: Hellinger Distance RAF,
 
@@ -77,7 +77,7 @@ Models for \code{wle.lm} are specified symbolically.  A typical model has the fo
 \item{delta}{the Pearson residuals.}
 \item{freq}{the number of starting points converging to the roots.}
 \item{tot.sol}{the number of solutions found.}
-\item{not.conv}{the number of starting points that does not converge after the \code{max.iter} iteration are reached.}
+\item{not.conv}{the number of starting points that does not converge after the \code{max.iter} iterations are reached.}
 \item{call}{the match.call().}
 \item{contrasts}{}
 \item{xlevels}{}
@@ -89,7 +89,7 @@ Models for \code{wle.lm} are specified symbolically.  A typical model has the fo
 }
 
 \references{
-Agostinelli, C., (1998) Inferenza statistica robusta basata sulla funzione di verosimiglianza pesata: alcuni sviluppi, \emph{ Ph.D Thesis}, Department of Statistics, University of Padova.
+Agostinelli, C., (1998) Inferenza statistica robusta basata sulla funzione di verosimiglianza pesata: alcuni sviluppi, \emph{Ph.D Thesis}, Department of Statistics, University of Padova.
 
 Agostinelli, C., Markatou, M., (1998) A one-step robust estimator for regression based on the weighted likelihood reweighting scheme, \emph{ Statistics \& Probability Letters}, Vol. 37, n. 4, 341-350.
 

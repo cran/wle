@@ -1,12 +1,12 @@
 #############################################################
 #                                                           #
-#	wle.gamma function                                      #
-#	Author: Claudio Agostinelli                             #
-#	E-mail: claudio@unive.it                                #
-#	Date: February, 28, 2003                                #
-#	Version: 0.3                                            #
+#	wle.gamma function                                  #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: March, 4, 2010                                #
+#	Version: 0.4-2                                      #
 #                                                           #
-#	Copyright (C) 2003 Claudio Agostinelli                  #
+#	Copyright (C) 2010 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
@@ -18,6 +18,8 @@ wsolve <- function (o, media, medialog) {
    medialog + log(o/media) - digamma(o)
 }
 
+
+## the wlegamma fortran function implements others type of RAF too.
 raf <- switch(raf,
 	HD = 1,
 	NED = 2,
@@ -59,9 +61,9 @@ if (max.iter<1) {
     max.iter <- 500
 }
 
-if (max.iter<1) {
+if (maxiter<1) {
     if (verbose) cat("wle.gamma: max number of iterations for the uniroot function set to 1000 \n")
-    max.iter <- 1000
+    maxiter <- 1000
 }
 
 if (smooth<10^(-5)) {
@@ -143,20 +145,25 @@ while (tot.sol < num.sol & iboot <= boot) {
        while (xdiff > tol & iter < max.iter) {
 
        iter <- iter + 1
+       ### shape
        shape <- o
+       ### rate
        lambda <- 1/l
        temp <- shape/lambda^2
        dsup <- max(x)+ 3*smooth*temp
 
        z <- .Fortran("wlegamma",
-	    as.double(x), 
+	    as.double(x),
+            as.double(x),
 	    as.integer(size),
+	    as.integer(size),                     
 	    as.integer(raf),
+            as.double(1),
 	    as.double(smooth*temp),
-        as.integer(1*use.smooth),
-        as.double(dsup),
+            as.integer(1*use.smooth),
+            as.double(dsup),
 	    as.double(tol),
-        as.double(tol.int),
+            as.double(tol.int),
 	    as.double(lambda),
 	    as.double(shape),
 	    weights=double(size),
@@ -191,18 +198,20 @@ while (tot.sol < num.sol & iboot <= boot) {
       o.store <- o
       l.store <- l
       w.store <- ww
-      f.store <- z$density
-      m.store <- z$model
+      f.store <- z$density/sqrt(2*pi*smooth*temp)
+      m.store <- z$model/sqrt(2*pi*smooth*temp)
       d.store <- f.store/m.store - 1
+      bw.store <- c(smooth*shape/lambda^2)
       tot.sol <- 1
    } else {
       if (min(abs(o.store-o))>equal & min(abs(l.store-l))>equal) {
           o.store <- c(o.store,o)
           l.store <- c(l.store,l)
           w.store <- rbind(w.store,ww)
-          f.store <- rbind(f.store,z$density)
-          m.store <- rbind(m.store,z$model)
+          f.store <- rbind(f.store,z$density/sqrt(2*pi*smooth*temp))
+          m.store <- rbind(m.store,z$model/sqrt(2*pi*smooth*temp))
           d.store <- rbind(d.store,z$density/z$model - 1)
+          bw.store <- c(bw.store, smooth*shape/lambda^2)
           tot.sol <- tot.sol + 1
       }
    }
@@ -227,6 +236,7 @@ if (tot.sol) {
    result$delta <- d.store
    result$f.density <- f.store
    result$m.density <- m.store
+   result$bw <- c(bw.store)
    result$tot.sol <- tot.sol
    result$not.conv <- not.conv
    result$call <- match.call()

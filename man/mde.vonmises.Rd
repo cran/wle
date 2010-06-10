@@ -25,7 +25,7 @@ mde.vonmises(x, bw, mu = NULL, kappa = NULL, n = 512, from = circular(0), to = c
   \item{method}{passed to \code{optim}.}
   \item{lower.kappa}{if \code{lower} is \code{NULL} this parameter is used to constrained optimization for the concentration parameter.}
   \item{upper.kappa}{if \code{upper} is \code{NULL} this parameter is used to constrained optimization for the concentration parameter.}
-  \item{alpha}{see the next argument \code{p}. This is a different
+  \item{alpha}{if not \code{NULL} overrides the value of \code{p}. See the next argument \code{p}. This is a different
     parameterization, \code{alpha=-1/2} provides Hellinger distance,
     \code{alpha=-1} provides Kullback-Leibler distance and \code{alpha=-2}
     provides Neyman's Chi-Square distance.}

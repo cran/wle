@@ -1,5 +1,13 @@
 Library wle
 ===========
+Version 0.9-4, 2010/06/10
+Fix a bug in wle.wrappednormal, the argument 'alpha' was not used.
+Fix a small bugs in print.wle.t.test and in wmme.gamma function
+Fix a bug in wle.fracdiff function.
+Fix bugs in mle.stepwise and wle.stepwise.
+Fix a problem in wle.poisson and wle.binomial related to delta=Inf.
+Function wle.gamma report the smoothing parameter bw.
+Function wle.negativebinomial for the estimation in the negative binomial model.
 
 Version 0.9-3, 2006/08/10
 Rewrite functions wle.vonmises, wle.wrappednormal so that they can work with new version (0-3.5) of circular package. Added functions mde.vonmises and mde.wrappednormal. 

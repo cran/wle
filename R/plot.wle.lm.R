@@ -9,6 +9,7 @@
 #	Copyright (C) 2003 Claudio Agostinelli                  #
 #                                                           #
 #############################################################
+#### fix a problem with iid when id.n=0!!!
 
 plot.wle.lm <- function(x, roots, which=1:4, which.main, level.weight=0.5, ask=dev.interactive(), col=c(2, 1, 3), id.n=3, labels.id, cex.id = 0.75, verbose=FALSE, ...) {
 

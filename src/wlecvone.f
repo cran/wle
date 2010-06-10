@@ -14,13 +14,13 @@ C             ITALIA
 C
 C     E-mail: claudio@unive.it
 C
-C     December, 05 2003
+C     May, 24 2010
 C
-C     Version: 0.2-1
+C     Version: 0.3
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
-C    Copyright (C) 1999 Claudio Agostinelli
+C    Copyright (C) 2010 Claudio Agostinelli
 C
 C    This program is free software; you can redistribute it and/or modify
 C    it under the terms of the GNU General Public License as published by
@@ -49,7 +49,8 @@ C     NVAR      input    I      1            number of explanatory variables
 C     NMCCV     input    I      1            number of MonteCarlo replication for the Cross-Validation
 C     NSPLIT    input    I      1            dimension of the split for the costruction-validation sample size
 C     IMODEL    input    I      1
-C     cv        output   D      (NVAR+INTER+1) 
+C     cv        output   D      (NVAR+INTER+1)
+C     zparam    output   D      (NVAR+INTER) not reported 
 C     info      output   I      1
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
@@ -152,6 +153,7 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
       dimension dparam(nvar+inter)
       dimension tparam(nvar+inter)
+CCC      dimension zparam(nmccv, nvar+inter)
 
       dimension nstart(nsize)
       dimension wycsub(nsplit), wxcsub(nsplit,nvar+inter)
@@ -218,6 +220,11 @@ C
          rwmat(i,i)=dsqrt(dpesi(i))
  150  continue
 
+C      do 154 j=1,nmccv
+C      do 155 i=1,npre
+C         zparam(j,i)=dzero
+C 155  continue
+C 154   continue
 C
 C     The weighted observations
 C
@@ -279,8 +286,9 @@ C         write(*,*) nmodel
          if (nmodel(i).eq.1) then
            ipos=ipos+1
            dparam(i)=tparam(ipos)
+CCC           zparam(imc, i)=tparam(ipos)
          else
-           dparam(i)=dzero 
+           dparam(i)=dzero
          endif
  200  continue
 
