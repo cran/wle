@@ -1,13 +1,12 @@
 #############################################################
 #                                                           #
-#	wle.glm function                                    #
-#	Author: Claudio Agostinelli and Fatemah Alqallaf    #
+#	wle.gamma.shape.glm function                        #
+#	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@unive.it                            #
 #	Date: December, 15, 2009                            #
 #	Version: 0.1                                        #
 #                                                           #
 #	Copyright (C) 2009 Claudio Agostinelli              #
-#                      and Fatemah Alqallaf                 #
 #                                                           #
 #############################################################
 

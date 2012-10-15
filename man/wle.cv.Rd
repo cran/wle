@@ -5,7 +5,8 @@ wle.cv(formula, data=list(), model=TRUE, x=FALSE,
        y=FALSE, monte.carlo=500, split, boot=30, 
        group, num.sol=1, raf="HD", smooth=0.031, 
        tol=10^(-6), equal=10^(-3), max.iter=500, 
-       min.weight=0.5, contrasts=NULL, verbose=FALSE)}
+       min.weight=0.5, contrasts=NULL,
+       type=c('fast', 'slow'), verbose=FALSE)}
 \alias{wle.cv}
 
 \arguments{
@@ -51,6 +52,10 @@ wle.cv(formula, data=list(), model=TRUE, x=FALSE,
   \item{contrasts}{an optional list. See the \code{contrasts.arg}
     of \code{model.matrix.default}.}
 
+  \item{type}{when 'fast' a weighted least squares is used to evaluate
+  the parameters in the submodels, while if 'slow' a weighted likelihood
+  is used.}
+  
   \item{verbose}{if \code{TRUE} warnings are printed.}
 }
 

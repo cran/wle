@@ -1,13 +1,27 @@
 Library wle
 ===========
-Version 0.9-4, 2010/06/10
+Version 0.9-7, 2012/10/15 
+Removed several unnecessary code in src folder.
+
+Version 0.9-6, 2012/10/15
+Fixed a bug in mle.cv and wle.cv
+Removed several unnecessary code in src folder.
+Functions now use R number generators, so set.seed should works with them.
+The Anscombe residual function (residuals.anscombe) is renamed to residualsAnscombe 
+wle.negativebinomial function is introduced
+
+Version 0.9-5, 2010/09/30
+Now mle.cv and wle.cv use a fixed seed in the fortran code.
+Now wle.aic and wle.cp report all the values with NA in case the procedure does not converge for a specific submodel.
+
+Version 0.9-4, 2010/02/09
 Fix a bug in wle.wrappednormal, the argument 'alpha' was not used.
 Fix a small bugs in print.wle.t.test and in wmme.gamma function
 Fix a bug in wle.fracdiff function.
 Fix bugs in mle.stepwise and wle.stepwise.
 Fix a problem in wle.poisson and wle.binomial related to delta=Inf.
 Function wle.gamma report the smoothing parameter bw.
-Function wle.negativebinomial for the estimation in the negative binomial model.
+Introduce all the necessary infrastructure for the GLM robust estimation and inference they are not working properly yet.
 
 Version 0.9-3, 2006/08/10
 Rewrite functions wle.vonmises, wle.wrappednormal so that they can work with new version (0-3.5) of circular package. Added functions mde.vonmises and mde.wrappednormal. 

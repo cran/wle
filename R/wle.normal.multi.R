@@ -39,7 +39,7 @@ if (missing(smooth)) {
 result <- list()
 
 if (size<(nvar*(nvar+1)/2+nvar)) {
-stop(paste("Number of observation must be at least equal to ",nvar*nvar))
+stop(paste("Number of observations must be at least equal to ",(nvar*(nvar+1)/2+nvar)))
 }
 if (group<(nvar*(nvar+1)/2+nvar)) {
     group <- max(round(size/4),(nvar*(nvar+1)/2+nvar))

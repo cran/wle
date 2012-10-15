@@ -14,13 +14,13 @@ C             ITALIA
 C
 C     E-mail: claudio@unive.it
 C
-C     March, 11, 2010
+C     July, 29, 2011
 C
-C     Version: 0.5
+C     Version: 0.6-1
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
-C    Copyright (C) 2010 Claudio Agostinelli
+C    Copyright (C) 2011 Claudio Agostinelli
 C
 C    This program is free software; you can redistribute it and/or modify
 C    it under the terms of the GNU General Public License as published by
@@ -69,9 +69,9 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
 
 C     Area comune
-      common/comune/ dx, dh, dl, doo, dgam 
+      common/comune/ dx, dh, dl, doo
+C Tolto dgam dalla common area
 C      save dx, dh, dl, doo, dgam 
-
 
       parameter(duno=1.0d00)
       parameter(ddue=2.0d00)
@@ -100,9 +100,8 @@ C     EXTERNAL SUBROUTINE
 C
       external dmod
 C
-C      external dqagi
       external dqagp
-      external dpoisraw
+      external dgammac
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       dxsize=nxsize
       do 130 i=1,nysize
@@ -111,47 +110,28 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
          do 120 ik=1,nxsize
             ds(ik)=dexp(-((dy(i)-dati(ik))**ddue)/(ddue*rk)) 
-     &             + exp(-((dy(i)+dati(ik))**ddue)/(ddue*rk))
+     &             + dexp(-((dy(i)+dati(ik))**ddue)/(ddue*rk))
             d(i)=d(i)+ds(ik)
  120      continue
-         d(i)=d(i)/dxsize
+         d(i)=d(i)/(dxsize*dsqrt(ddue*dpi*rk))
 
          dx=dy(i)
          dl=rlambda
          doo=romega
          dh=rk
-CCCC Not used anymore since we use dpois_raw C function 10 Nov. 2009
-C         dgam=dgamma(romega)
-
-
-         if (iuse.eq.1) then      
+         if (iuse.eq.1) then
 C         rprecint=rprec*1.00d-4
+           points(1)=dzero
+           points(2)=dsup
 
-         points(1)=0.0d00
-         points(2)=dsup
+           call dqagp(dmod,dzero,dsup,2,points,dzero,
+     &       rprecint,dtemp,abserr,neval,ier,nlimit,
+     &       nlenw,nlast,iwork,work)
 
-         call dqagp(dmod,0.0d00,dsup,2,points,0.0d00,
-     &    rprecint,dtemp,abserr,neval,ier,nlimit,
-     &    nlenw,nlast,iwork,work)
-
-C         call dqagi(dmod,0.0d00,1,0.00d00,rprecint,dtemp,
-C     &     abserr,neval,ier,nlimit,nlenw,nlast,iwork,work)
-
+           dtemp=dtemp/dsqrt(ddue*dpi*rk)
          else
-C              dtemp=(dl**doo) * (dx**(doo-duno)) * 
-C     &      (dexp(-dl*dx)) /dgam
-CCCC
-C Now the function use dpois_raw C function 10 Nov. 2009
-              dtemp=dpoisraw(doo, dl*dx, 0)
-              if(dx.gt.dzero) then
-                dtemp=dtemp/dx
-              else
-                dtemp=dzero
-              endif
-              dtemp=dtemp*dsqrt(ddue*dpi*dh)
+            dtemp=dgammac(dx,doo,duno/dl,0)
          endif
-
-
          rm(i)=dtemp
 
  130  continue
@@ -201,35 +181,13 @@ C IRAF = 3 Chi Squared disparity
 
       double precision function dmod(t)
       implicit double precision (a-h,o-z)
-      common/comune/ dx, dh, dl, doo, dgam
+      common/comune/ dx, dh, dl, doo
+C Tolto dgam dalla common area
       parameter(duno=1.0d00)
       parameter(ddue=2.0d00)
 
-C      dmod=(dexp(-((dx-t)**ddue)/(ddue*dh))+
-C     &      dexp(-((dx+t)**ddue)/(ddue*dh)))
-C     &      * (dl**doo) * (t**(doo-duno)) * 
-C     &      (dexp(-dl*t)) /dgam
-CCCC
-C Now the function use dpois_raw C function 10 Nov. 2009
-      dmod=dpoisraw(doo, dl*t, 0)
-      if(t.gt.dzero) then
-        dmod=dmod/t
-      else
-        dmod=dzero
-      endif
+      dmod=dgammac(t,doo,duno/dl,0)
       dmod=dmod*(dexp(-((dx-t)**ddue)/(ddue*dh))+
      &      dexp(-((dx+t)**ddue)/(ddue*dh)))
-
       return
       end
-
-
-
-
-
-
-
-
-
-
-

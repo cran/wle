@@ -1,41 +1,32 @@
-      SUBROUTINE genprm(iarray,larray)
-C**********************************************************************
-C
-C    SUBROUTINE GENPRM( IARRAY, LARRAY )
-C               GENerate random PeRMutation of iarray
-C
-C
-C                              Arguments
-C
-C
-C     IARRAY <--> On output IARRAY is a random permutation of its
-C                 value on input
-C                         INTEGER IARRAY( LARRAY )
-C
-C     LARRAY <--> Length of IARRAY
-C                         INTEGER LARRAY
-C
-C**********************************************************************
-C     .. Scalar Arguments ..
-      INTEGER larray
-C     ..
-C     .. Array Arguments ..
-      INTEGER iarray(larray)
-C     ..
-C     .. Local Scalars ..
-      INTEGER i,itmp,iwhich
-C     ..
-C     .. External Functions ..
-      INTEGER ignuin
-      EXTERNAL ignuin
-C     ..
-C     .. Executable Statements ..
-      DO 10,i = 1,larray
-          iwhich = ignuin(i,larray)
-          itmp = iarray(iwhich)
-          iarray(iwhich) = iarray(i)
-          iarray(i) = itmp
-   10 CONTINUE
-      RETURN
+      SUBROUTINE GENPRM (NX, NSIZE)
+      implicit double precision(a-h,o-z)
+      implicit integer (n,i,j)
 
-      END
+      parameter(dzero=0.0d00)
+      parameter(duno=1.0d00)
+      parameter(ddue=2.0d00)
+
+      dimension nx(nsize), ny(nsize)
+
+      external rndstart
+      external rndend
+      external rndunif
+
+      call rndstart()
+
+      n = nsize
+
+      do 10 i=1,nsize
+        ny(i) = nx(i)
+ 10   continue
+
+      do 20 i=1,nsize
+        j = n * rndunif() + 1
+        nx(i) = ny(j)
+        ny(j) = ny(n)
+        n = n - 1
+ 20   continue
+
+      call rndend()
+      return
+      end

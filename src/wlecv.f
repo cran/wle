@@ -10,20 +10,20 @@ C     Weighted Cross-Validation based on
 C     WLE in the normal regression linear model
 C     
 C     Author: Claudio Agostinelli 
-C             Dipartimento di Statistica
-C             Universita' di Padova
-C             35121 Padova
+C             DAIS
+C             Universita' Ca' Foscari
+C             30121 Venezia
 C             ITALIA
 C
-C     E-mail: claudio@stat.unipd.it
+C     E-mail: claudio@.unive.it
 C
-C     October, 10 1999
+C     October, 13 2012
 C
-C     Version: 0.2
+C     Version: 0.5
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
-C    Copyright (C) 1999 Claudio Agostinelli
+C    Copyright (C) 2012 Claudio Agostinelli
 C
 C    This program is free software; you can redistribute it and/or modify
 C    it under the terms of the GNU General Public License as published by
@@ -82,31 +82,6 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
-C The code use an external subroutine dues to:
-C
-C
-C
-C                                     RANLIBF
-C
-C            Library of Fortran Routines for Random Number Generation
-C
-C                            Compiled and Written by:
-C
-C                                 Barry W. Brown
-C                                  James Lovato                             C
-C
-C                     Department of Biomathematics, Box 237
-C                     The University of Texas, M.D. Anderson Cancer Center
-C                     1515 Holcombe Boulevard
-C                     Houston, TX      77030
-C
-C
-C This work was supported by grant CA-16672 from the National Cancer Institute.
-C
-C
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-C
 C The code use external subroutines dues to:
 C
 C
@@ -125,38 +100,6 @@ C                      Argonne, Illnois 60439
 C
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-C
-C The code use external subroutines dues to:
-C
-C***BEGIN PROLOGUE  DQRSL
-C***PURPOSE  Apply the output of DQRDC to compute coordinate transfor-
-C            mations, projections, and least squares solutions.
-C***LIBRARY   SLATEC (LINPACK)
-C***CATEGORY  D9, D2A1
-C***TYPE      DOUBLE PRECISION (SQRSL-S, DQRSL-D, CQRSL-C)
-C***KEYWORDS  LINEAR ALGEBRA, LINPACK, MATRIX, ORTHOGONAL TRIANGULAR,
-C             SOLVE
-C***AUTHOR  Stewart, G. W., (U. of Maryland)
-C
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-C
-C The code use external subroutines dues to:
-C
-C***BEGIN PROLOGUE  DQRDC
-C***PURPOSE  Use Householder transformations to compute the QR
-C            factorization of an N by P matrix.  Column pivoting is a
-C            users option.
-C***LIBRARY   SLATEC (LINPACK)
-C***CATEGORY  D5
-C***TYPE      DOUBLE PRECISION (SQRDC-S, DQRDC-D, CQRDC-C)
-C***KEYWORDS  LINEAR ALGEBRA, LINPACK, MATRIX, ORTHOGONAL TRIANGULAR,
-C             QR DECOMPOSITION
-C***AUTHOR  Stewart, G. W., (U. of Maryland)
-
-C
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
       implicit double precision(a-h,o-z)
       implicit integer (n,i,j)
@@ -198,29 +141,16 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       dimension ddd(nsplit)
 
 
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-C
-C     EXTERNAL SUBROUTINE
 C     wleregfix: subroutine for evaluating a wle estimators
 C                for the normal location model 
       external wleregfix
-C     the ranlib: genprm subroutine generate a permuation of an array 
       external genprm
 C     the blas: dgemm subroutine give matrix-matrix products
 C     the blas: dgemv subroutine give matrix-vector products 
       external dgemm, dgemv
-C     the slatec: dqrsl subroutine give least square parameters
-      external dqrsl
-C      the slatec: dqrdc subroutine give the QR decomposition nedeed by the dqrsl
-      external dqrdc
-C
-C
-      external setall
-C
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      external wls
+      external dectobin
 
-      iseed=1234
-      call setall(iseed,iseed)
       dsize=nsize
       info=0
       iinfo=0
@@ -398,7 +328,7 @@ C      write(*,*) 'sono arrivato qui 7'
 C      write(*,*) 'sono arrivato qui 8'
 
       if (iinfo.ne.0) then
-         dconv(imc)=dconv(imc)+duno
+         dconv(imodel)=dconv(imodel)+duno
          info=3
       else   
       ipos=0
@@ -437,7 +367,7 @@ C     End of the Monte Carlo replications
 
 C      write(*,*) 'sono arrivato qui 11'
 
-      do 210 i=1,nrep
+      do 210 i=1,nmaxmod
 C         write(*,*) dconv(i)
          cv(i,npre+1)=cv(i,npre+1)/(dmccv-dconv(i))
  210  continue
@@ -455,23 +385,3 @@ C      write(*,*) info
 
       return
       end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

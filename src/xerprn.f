@@ -123,8 +123,8 @@ C       IF THE MESSAGE IS ALL BLANKS, THEN PRINT ONE BLANK LINE.
 C
       IF (LENMSG .EQ. 0) THEN
          CBUFF(LPREF+1:LPREF+1) = ' '
-         DO 40 I=1,NUNIT
-            WRITE(IU(I), '(A)') CBUFF(1:LPREF+1)
+C         DO 40 I=1,NUNIT
+C            WRITE(IU(I), '(A)') CBUFF(1:LPREF+1)
    40    CONTINUE
          RETURN
       ENDIF
@@ -219,10 +219,10 @@ C
 C
 C       PRINT
 C
-      DO 60 I=1,NUNIT
-         WRITE(IU(I), '(A)') CBUFF(1:LPREF+LPIECE)
+C      DO 60 I=1,NUNIT
+C         WRITE(IU(I), '(A)') CBUFF(1:LPREF+LPIECE)
    60 CONTINUE
-C
+
       IF (NEXTC .LE. LENMSG) GO TO 50
       RETURN
       END

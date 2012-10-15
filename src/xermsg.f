@@ -321,23 +321,23 @@ C
 C       IF LKNTRL IS POSITIVE, WRITE THE ERROR NUMBER AND REQUEST A
 C          TRACEBACK.
 C
-      IF (LKNTRL .GT. 0) THEN
-         WRITE (TEMP, '(''ERROR NUMBER = '', I8)') NERR
-         DO 10 I=16,22
-            IF (TEMP(I:I) .NE. ' ') GO TO 20
+C      IF (LKNTRL .GT. 0) THEN
+C         WRITE (TEMP, '(''ERROR NUMBER = '', I8)') NERR
+C         DO 10 I=16,22
+C            IF (TEMP(I:I) .NE. ' ') GO TO 20
    10    CONTINUE
 C
-   20    CALL XERPRN (' *  ', -1, TEMP(1:15) // TEMP(I:23), 72)
-         CALL FDUMP
-      ENDIF
+C   20    CALL XERPRN (' *  ', -1, TEMP(1:15) // TEMP(I:23), 72)
+C         CALL FDUMP
+C      ENDIF
 C
 C       IF LKNTRL IS NOT ZERO, PRINT A BLANK LINE AND AN END OF MESSAGE.
 C
-      IF (LKNTRL .NE. 0) THEN
-         CALL XERPRN (' *  ', -1, ' ', 72)
-         CALL XERPRN (' ***', -1, 'END OF MESSAGE', 72)
-         CALL XERPRN ('    ',  0, ' ', 72)
-      ENDIF
+C      IF (LKNTRL .NE. 0) THEN
+C         CALL XERPRN (' *  ', -1, ' ', 72)
+C         CALL XERPRN (' ***', -1, 'END OF MESSAGE', 72)
+C         CALL XERPRN ('    ',  0, ' ', 72)
+C      ENDIF
 C
 C       IF THE ERROR IS NOT FATAL OR THE ERROR IS RECOVERABLE AND THE
 C       CONTROL FLAG IS SET FOR RECOVERY, THEN RETURN.
@@ -349,12 +349,12 @@ C       FATAL ERROR.  PRINT THE REASON FOR THE ABORT AND THE ERROR
 C       SUMMARY IF THE CONTROL FLAG AND THE MAXIMUM ERROR COUNT PERMIT.
 C
       IF (LKNTRL.GT.0 .AND. KOUNT.LT.MAX(1,MAXMES)) THEN
-         IF (LEVEL .EQ. 1) THEN
-            CALL XERPRN
-     *         (' ***', -1, 'JOB ABORT DUE TO UNRECOVERED ERROR.', 72)
-         ELSE
-            CALL XERPRN(' ***', -1, 'JOB ABORT DUE TO FATAL ERROR.', 72)
-         ENDIF
+C         IF (LEVEL .EQ. 1) THEN
+C            CALL XERPRN
+C     *         (' ***', -1, 'JOB ABORT DUE TO UNRECOVERED ERROR.', 72)
+C         ELSE
+C            CALL XERPRN(' ***', -1, 'JOB ABORT DUE TO FATAL ERROR.', 72)
+C         ENDIF
          CALL XERSVE (' ', ' ', ' ', -1, 0, 0, KDUMMY)
          CALL XERHLT (' ')
       ELSE

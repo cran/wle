@@ -2,13 +2,14 @@ Title: Weighted Likelihood Estimation
 LazyLoad: yes
 LazyData: yes
 Package: wle
-Version: 0.9-4
-Author: Claudio Agostinelli <claudio@unive.it>
+Version: 0.9-7
+Author: Claudio Agostinelli <claudio@unive.it>, SLATEC Common
+        Mathematical Library <www.netlib.org/slatec>
 Maintainer: Claudio Agostinelli <claudio@unive.it>
 Depends: circular
-Date: June, 10, 2010.
+Date: October, 15, 2012.
 Description: Approach to the robustness via Weighted Likelihood.
 License: GPL-2
-Packaged: 2010-06-05 03:58:32 UTC; claudio
+Packaged: 2012-10-15 11:53:43 UTC; claudio
 Repository: CRAN
-Date/Publication: 2010-06-05 05:58:20
+Date/Publication: 2012-10-16 08:49:33

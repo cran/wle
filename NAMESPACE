@@ -12,8 +12,13 @@ importFrom(stats, family)
 
 # functions
 export(
+# file anova.wle.glm.R
+ anova.wle.glm.root,      
 # file binary.R
  binary,
+# extractRoot.R
+ extractRoot,
+ extractRoot.wle.glm,
 # mde.vonmises.R
  mde.vonmises,
 # mde.wrappednormal.R
@@ -24,18 +29,28 @@ export(
  mle.cp,
 # file mle.cv.R
  mle.cv,
+# file mle.cv.robust.bootstrap.R
+# mle.cv.rb,      
+# file mle.inversegaussian.R
+# mle.inversegaussian,      
 # file mle.stepwise.R
  mle.stepwise,
+# file residualsAnscombe.R
+ residualsAnscombe,
 # file wle.aic.ar.R
  wle.aic.ar,
 # file wle.aic.R
  wle.aic,
+# file wle.aicfast.R
+# wle.aicfast,
 # file wle.ar.R
  wle.ar,
 # wle.binomial.R
  wle.binomial,
-# wle.negativebinomial.R
- wle.negativebinomial,
+# wle.boot.R
+# wle.boot,
+# wle.boot.ci.R
+# wle.boot.ci,      
 # file wle.cp.R
  wle.cp,
 # file wle.cv.R
@@ -44,10 +59,25 @@ export(
  wle.fracdiff,
 # file wle.gamma.R
  wle.gamma, 
+# file wle.glm.R
+ wle.glm,
+ wle.glm.fit,
+ wle.glm.weights,
+## effects.wle.glm,
+# file wle.inversegaussian.R
+# wle.inversegaussian,      
+# file wle.control.R
+ wle.lm.control,      
+ wle.glm.control,
+# wle.sur.control,
 # file wle.lm.R
  wle.lm,
+# file wle.negativebinomial.R
+ wle.negativebinomial,
 # file wle.normal.mixture.R
  wle.normal.mixture,
+# file wle.normal.high.R
+# wle.normal.high,
 # file wle.normal.multi.R
  wle.normal.multi,       
 # file wle.normal.R
@@ -58,6 +88,8 @@ export(
  wle.poisson,
 # file wle.smooth.R
  wle.smooth,
+# file wle.sur.R
+# wle.sur,
 # file wle.stepwise.R
  wle.stepwise,
 # file wle.t.test.R
@@ -76,6 +108,10 @@ export(
 #### wmme.gamma,
 # file mme.gamma.R
 #### mme.gamma,
+# file wle.cv.robust.bootstrap.R
+# wle.cv.rb,
+# wle.cv.rb.m,
+# wle.cv.rb.mc
 # file wle.cv.one.R
 ### wle.cv.one
 )
@@ -153,17 +189,36 @@ export(
 
 #S3method declaration
 
+#anova
+S3method(anova, wle.glm.root)       
+
 #coef
 S3method(coef, wle.lm)       
+S3method(coef, wle.glm)
+
+#deviance
+S3method(deviance, wle.glm)
+
+#effects
+S3method(effects, wle.glm)
+
+#extractRoot
+S3method(extractRoot, wle.glm)
+
+#family
+S3method(family, wle.glm)
 
 #fitted
 S3method(fitted, wle.lm)       
+S3method(fitted, wle.glm)
 
 #formula
 S3method(formula, wle.lm)   
+S3method(formula, wle.glm)
 
 #model.frame
 S3method(model.frame, wle.lm)
+S3method(model.frame, wle.glm)
 
 #plot 
 S3method(plot, mle.cp)
@@ -182,23 +237,25 @@ S3method(print, wle.aic.ar)
 S3method(print, summary.wle.aic.ar)
 S3method(print, wle.aic)      
 S3method(print, summary.wle.aic)
+S3method(print, wle.binomial)      
 S3method(print, wle.cp)      
 S3method(print, summary.wle.cp)
 S3method(print, wle.cv)      
 S3method(print, summary.wle.cv)
 S3method(print, wle.gamma)       
+#S3method(print, wle.inversegaussian)
+#S3method(print, mle.inversegaussian)
 S3method(print, wle.stepwise)      
 S3method(print, summary.wle.stepwise)
 S3method(print, wle.lm)
 S3method(print, summary.wle.lm)
 S3method(print, summary.wle.lm.root)
 S3method(print, wle.normal.mixture)
+#S3method(print, wle.normal.high)
 S3method(print, wle.normal.multi)
 S3method(print, wle.normal)
 S3method(print, wle.onestep)
 S3method(print, wle.poisson)
-S3method(print, wle.binomial)      
-S3method(print, wle.negativebinomial)      
 S3method(print, wle.smooth)
 S3method(print, wle.t.test)
 S3method(print, wle.vonmises)
@@ -207,6 +264,12 @@ S3method(print, mde.vonmises)
 S3method(print, mde.wrappednormal)
 S3method(print, wmme.gamma)
 S3method(print, mme.gamma)
+S3method(print, wle.glm)
+S3method(print, wle.glm.root)
+S3method(print, summary.wle.glm)
+#S3method(print, wle.boot)
+#residuals
+S3method(residuals, wle.glm)
 
 #summary
 S3method(summary, mle.aic)
@@ -220,6 +283,9 @@ S3method(summary, wle.cv)
 S3method(summary, wle.stepwise)
 S3method(summary, wle.lm)
 S3method(summary, wle.lm.root)       
+S3method(summary, wle.glm)
+S3method(summary, wle.glm.root)
 
 # weights
 S3method(weights, wle.lm) 
+S3method(weights, wle.glm)

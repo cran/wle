@@ -35,5 +35,6 @@ C   920501  Reformatted the REFERENCES section.  (WRB)
 C***END PROLOGUE  XERHLT
       CHARACTER*(*) MESSG
 C***FIRST EXECUTABLE STATEMENT  XERHLT
-      STOP
+C      STOP
+      RETURN
       END

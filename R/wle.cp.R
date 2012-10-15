@@ -3,10 +3,10 @@
 #	wle.cp function                                     #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@unive.it                            #
-#	Date: August, 2, 2001                               #
-#	Version: 0.4                                        #
+#	Date: October, 15, 2012                             #
+#	Version: 0.6                                        #
 #                                                           #
-#	Copyright (C) 2001 Claudio Agostinelli              #
+#	Copyright (C) 2012 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
@@ -142,15 +142,25 @@ if (min.weight<0) {
 	info=integer(1),
 	PACKAGE = "wle")
 
-delnull <- z$same==0
 
-result$wcp <- z$wcp[!delnull,]
-result$coefficients <- z$param[!delnull,]
-result$scale <- sqrt(z$var[!delnull])
-result$residuals <- z$resid[!delnull]
-result$weights <- z$weight[!delnull,]
-result$tot.weights <- z$totweight[!delnull]
-result$freq <- z$same[!delnull]
+delnull <- which(z$same==0)
+
+if (length(delnull)) {
+  z$wcp <- z$wcp[-delnull,]
+  z$param <- z$param[-delnull,]
+  z$var <- z$var[-delnull]
+  z$resid <- z$resid[-delnull]
+  z$weight <- z$weight[-delnull,]
+  z$totweight <- z$totweight[-delnull]
+}
+
+result$wcp <- z$wcp
+result$coefficients <- z$param
+result$scale <- sqrt(z$var)
+result$residuals <- z$resid
+result$weights <- z$weight
+result$tot.weights <- z$totweight
+result$freq <- z$same
 result$call <- cl
 result$info <- z$info
 result$contrasts <- attr(xdata, "contrasts")
@@ -176,13 +186,13 @@ return(result)
 
 #############################################################
 #                                                           #
-#	summary.wle.cp function                                 #
-#	Author: Claudio Agostinelli                             #
-#	E-mail: claudio@unive.it                                #
-#	Date: October, 28, 2003                                 #
-#	Version: 0.4-1                                          #
+#	summary.wle.cp function                             #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: October, 28, 2003                             #
+#	Version: 0.4-1                                      #
 #                                                           #
-#	Copyright (C) 2003 Claudio Agostinelli                  #
+#	Copyright (C) 2003 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
@@ -223,13 +233,13 @@ return(ans)
 
 #############################################################
 #                                                           #
-#	print.wle.cp function                                   #
-#	Author: Claudio Agostinelli                             #
-#	E-mail: claudio@unive.it                                #
-#	Date: October, 27, 2003                                 #
-#	Version: 0.4-1                                          #
+#	print.wle.cp function                               #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: October, 27, 2003                             #
+#	Version: 0.4-1                                      #
 #                                                           #
-#	Copyright (C) 2003 Claudio Agostinelli                  #
+#	Copyright (C) 2003 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 

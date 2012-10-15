@@ -3,10 +3,10 @@
 #	wle.aic function                                    #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@unive.it                            #
-#	Date: August, 2, 2001                               #
-#	Version: 0.4                                        #
+#	Date: September, 28, 2010                           #
+#	Version: 0.5                                        #
 #                                                           #
-#	Copyright (C) 2001 Claudio Agostinelli              #
+#	Copyright (C) 2010 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
@@ -144,13 +144,20 @@ if (min.weight<0) {
 
 delnull <- z$same==0
 
-result$waic <- z$waic[!delnull,]
-result$coefficients <- z$param[!delnull,]
-result$scale <- sqrt(z$var[!delnull])
-result$residuals <- z$resid[!delnull]
-result$weights <- z$weight[!delnull,]
-result$tot.weights <- z$totweight[!delnull]
-result$freq <- z$same[!delnull]
+z$waic[delnull,nvar+1] <- NA
+z$param[delnull,] <- NA
+z$var[delnull] <- NA
+z$resid[delnull] <- NA
+z$weight[delnull,] <- NA
+z$totweight[delnull] <- NA
+
+result$waic <- z$waic
+result$coefficients <- z$param
+result$scale <- sqrt(z$var)
+result$residuals <- z$resid
+result$weights <- z$weight
+result$tot.weights <- z$totweight
+result$freq <- z$same
 result$call <- cl
 result$info <- z$info
 result$contrasts <- attr(xdata, "contrasts")

@@ -1,53 +1,11 @@
 Some of the source files are not written by the author of this package. This is a complete list of these files:
 
-d9lgmc.f          fdump.f           
-dcsevl.f          genprm.f         
-getcgn.f          dgamlm.f
-dgamma.f          ignlgi.f          
-dgeco.f           ignuin.f          
-dgedi.f           initds.f          
-dgefa.f           initgn.f          
-inrgcm.f          j4save.f          
-lsame.f          
-dqagi.f           xermax.f
-dqagie.f          xermsg.f
-dqagp.f           xerprn.f
-dqagpe.f          xersve.f
-dqelg.f           mltmod.f          
-dqk15i.f          qrgnin.f (modified by Prof. B. Ripley)        
-dqk21.f           
-dqpsrt.f          setall.f
-xerclr.f          xgetf.f
-xercnt.f          xgetua.f
-xerdmp.f          xgetun.f
-xerhlt.f
-      
-Some of these files are from the library SLATEC Common Mathematical Library (and some from LINPACK) and some others are from the RANLIB.F library. You can find booth complete library in www.netlib.org
+dqelg.f     j4save.f    xermax.f     dqagp.f
+dqk15i.f    lsame.f     xermsg.f     xerdmp.f
+dqk21.f      xerprn.f    dqpsrt.f    xerhlt.f
+xersve.f     fdump.f     xgetf.f     dgeco.f      
+xgetua.f     dgedi.f     xgetun.f    dgefa.f      
+dqagie.f     xerclr.f    dqagi.f     initds.f    
+xercnt.f     dqagpe.f             
 
-RANLIB.F library ACM Transactions policy, hereafter follows the entire LEGALITIES:
-
-Code that appeared in an ACM publication is subject to their algorithms policy:
-
-     Submittal of an algorithm for publication in one of the ACM
-Transactions implies that unrestricted use  of the algorithm within a computer is permissible. General permission to copy and distribute the algorithm without fee is granted provided that the copies  
-are not made or distributed for direct commercial advantage.    
-The ACM copyright notice and the title of the publication and its date appear, and  notice is given that copying  is by permission of the Association for Computing Machinery. To copy otherwise, or to republish, requires a fee and/or specific permission.
-
-Krogh, F.  Algorithms  Policy.  ACM  Tran.   Math.  Softw.   13
-(1987), 183-186.
-
-We place the Ranlib code that we have written in the public domain. 
-                                 NO WARRANTY
-     
-     WE PROVIDE ABSOLUTELY  NO WARRANTY  OF ANY KIND EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS  WITH YOU. SHOULD THIS PROGRAM PROVE  DEFECTIVE, YOU ASSUME  THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION. IN NO EVENT SHALL THE UNIVERSITY  OF TEXAS OR  ANY OF ITS COMPONENT INSTITUTIONS INCLUDING M. D. ANDERSON HOSPITAL BE LIABLE TO YOU FOR DAMAGES, INCLUDING ANY LOST PROFITS, LOST MONIES, OR OTHER SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA OR ITS ANALYSIS BEING RENDERED INACCURATE OR  LOSSES SUSTAINED  BY THIRD PARTIES) THE PROGRAM.
-  (Above NO WARRANTY modified from the GNU NO WARRANTY statement.)
-
-
-
-
-
-
-
-
-              
-          
+These files are from the library SLATEC Common Mathematical Library (Some are originally from LINPACK or QUADPACK). You can find the complete libraries at www.netlib.org.

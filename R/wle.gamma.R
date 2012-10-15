@@ -3,10 +3,10 @@
 #	wle.gamma function                                  #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@unive.it                            #
-#	Date: March, 4, 2010                                #
-#	Version: 0.4-2                                      #
+#	Date: February, 21, 2011                            #
+#	Version: 0.4-3                                      #
 #                                                           #
-#	Copyright (C) 2010 Claudio Agostinelli              #
+#	Copyright (C) 2011 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
@@ -198,8 +198,8 @@ while (tot.sol < num.sol & iboot <= boot) {
       o.store <- o
       l.store <- l
       w.store <- ww
-      f.store <- z$density/sqrt(2*pi*smooth*temp)
-      m.store <- z$model/sqrt(2*pi*smooth*temp)
+      f.store <- z$density #### /sqrt(2*pi*smooth*temp)
+      m.store <- z$model #### /sqrt(2*pi*smooth*temp)
       d.store <- f.store/m.store - 1
       bw.store <- c(smooth*shape/lambda^2)
       tot.sol <- 1
@@ -208,8 +208,8 @@ while (tot.sol < num.sol & iboot <= boot) {
           o.store <- c(o.store,o)
           l.store <- c(l.store,l)
           w.store <- rbind(w.store,ww)
-          f.store <- rbind(f.store,z$density/sqrt(2*pi*smooth*temp))
-          m.store <- rbind(m.store,z$model/sqrt(2*pi*smooth*temp))
+          f.store <- rbind(f.store,z$density) ##### /sqrt(2*pi*smooth*temp))
+          m.store <- rbind(m.store,z$model) ##### /sqrt(2*pi*smooth*temp))
           d.store <- rbind(d.store,z$density/z$model - 1)
           bw.store <- c(bw.store, smooth*shape/lambda^2)
           tot.sol <- tot.sol + 1

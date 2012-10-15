@@ -9,20 +9,20 @@ C     Bootstrap roots search for WLE in the
 C     normal location and scale problem
 C     
 C     Author: Claudio Agostinelli 
-C             Dipartimento di Statistica
-C             Universita' di Padova
-C             35121 Padova
+C             DAIS
+C             Ca' Foscari University
+C             30121 Venice
 C             ITALIA
 C
-C     E-mail: claudio@stat.unipd.it
+C     E-mail: claudio@unive.it
 C
-C     August, 7, 2001
+C     October, 13, 2012
 C
-C     Version: 0.5
+C     Version: 0.6
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
-C    Copyright (C) 2001 Claudio Agostinelli
+C    Copyright (C) 2012 Claudio Agostinelli
 C
 C    This program is free software; you can redistribute it and/or modify
 C    it under the terms of the GNU General Public License as published by
@@ -73,32 +73,6 @@ C                                            does not converge
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-C
-C The code use an external subroutine dues to:
-C
-C
-C
-C                                     RANLIBF
-C
-C            Library of Fortran Routines for Random Number Generation
-C
-C                            Compiled and Written by:
-C
-C                                 Barry W. Brown
-C                                  James Lovato                             C
-C
-C                     Department of Biomathematics, Box 237
-C                     The University of Texas, M.D. Anderson Cancer Center
-C                     1515 Holcombe Boulevard
-C                     Houston, TX      77030
-C
-C
-C This work was supported by grant CA-16672 from the National Cancer Institute.
-C
-C
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-
       implicit double precision(a-h,o-z)
       implicit integer (n,i,j)
 
@@ -125,13 +99,7 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       dimension sub(ngrp), nstart(nsize)
       dimension nrand(nboot,ngrp)
 
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-C
-C     EXTERNAL SUBROUTINE
-C     the genprm subroutine generate a permuation of an array 
       external genprm
-C
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
       do 1 i=1,nsize
          dati(i)=ddati(i)

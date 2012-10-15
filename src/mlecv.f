@@ -7,20 +7,20 @@ C     Cross-Validation
 C     in the normal regression linear model
 C     
 C     Author: Claudio Agostinelli 
-C             Dipartimento di Statistica
-C             Universita' di Padova
-C             35121 Padova
+C             DAIS
+C             Universita' Ca' Foscari
+C             30121 Venezia
 C             ITALIA
 C
-C     E-mail: claudio@stat.unipd.it
+C     E-mail: claudio@unive.it
 C
-C     October, 10 1999
+C     March, 18 2011
 C
-C     Version: 0.2
+C     Version: 0.3
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
-C    Copyright (C) 1999 Claudio Agostinelli
+C    Copyright (C) 2011 Claudio Agostinelli
 C
 C    This program is free software; you can redistribute it and/or modify
 C    it under the terms of the GNU General Public License as published by
@@ -285,7 +285,7 @@ C         write(*,*) nmodel
       call wls(wycsub,wxdata,ddd,nsplit,npre,ncol,0,tparam,iinfo)
 
       if (iinfo.ne.0) then
-         dconv(imc)=dconv(imc)+duno
+         dconv(imodel)=dconv(imodel)+duno
          info=3
       else   
       ipos=0
@@ -307,7 +307,7 @@ C         write(*,*) nmodel
             dfit=dfit+(wyvsub(i)-xparam(i))**ddue
          endif
  100  continue
-         dfit=dfit/nvalid   
+         dfit=dfit/dvalid   
 
       cv(imodel,npre+1)=cv(imodel,npre+1)+dfit
 
@@ -318,9 +318,9 @@ C         write(*,*) nmodel
 C     End of the Monte Carlo replications 
  9999 continue
 
-      do 210 i=1,nrep
+      do 210 i=1,nmaxmod
 C         write(*,*) dconv(i)
-         cv(i,npre+1)=cv(i,npre+1)/(dmccv-dconv(i))  
+         cv(i,npre+1)=cv(i,npre+1)/(dmccv-dconv(i))
  210  continue
 
       return

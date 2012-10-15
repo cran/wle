@@ -10,8 +10,10 @@
 #                                                           #
 #############################################################
 
-wle.cv <- function(formula, data=list(), model=TRUE, x=FALSE, y=FALSE, monte.carlo=500, split, boot=30, group, num.sol=1, raf="HD", smooth=0.031, tol=10^(-6), equal=10^(-3), max.iter=500, min.weight=0.5, contrasts=NULL, verbose=FALSE) {
+wle.cv <- function(formula, data=list(), model=TRUE, x=FALSE, y=FALSE, monte.carlo=500, split, boot=30, group, num.sol=1, raf="HD", smooth=0.031, tol=10^(-6), equal=10^(-3), max.iter=500, min.weight=0.5, contrasts=NULL, type=c('fast', 'slow'), verbose=FALSE) {
 
+type <- match.arg(type)
+  
 raf <- switch(raf,
 	HD = 1,
 	NED = 2,
@@ -39,6 +41,7 @@ split <- 0
     mf$min.weight <- mf$max.iter <- mf$raf <- NULL
     mf$contrasts <- NULL
     mf$model <- mf$x <- mf$y <- NULL
+    mf$type <- NULL
     mf$verbose <- NULL
     mf$drop.unused.levels <- TRUE
     mf[[1]] <- as.name("model.frame")
@@ -117,10 +120,11 @@ if (min.weight<0) {
     min.weight <- 0.5
 }
 
+if (type=='fast') {
   z <- .Fortran("wlecv",
 	as.double(ydata),
 	as.matrix(xdata),
-	as.integer(0),
+	as.integer(0), 
 	as.integer(size),
 	as.integer(nvar),
 	as.integer(boot),
@@ -145,6 +149,36 @@ if (min.weight<0) {
 	index=integer(1),
 	info=integer(1),
 	PACKAGE="wle")
+} else {
+  z <- .Fortran("wwlecv",
+	as.double(ydata),
+	as.matrix(xdata),
+	as.integer(0), 
+	as.integer(size),
+	as.integer(nvar),
+	as.integer(boot),
+	as.integer(group),
+	as.integer(nrep),
+	as.integer(monte.carlo),
+	as.integer(split),
+	as.integer(raf),
+	as.double(smooth),
+	as.double(tol),
+	as.double(equal),
+	as.integer(max.iter),
+	as.integer(num.sol),
+	as.double(min.weight),
+	wcv=mat.or.vec(nrep,nvar+1),
+	param=mat.or.vec(num.sol,nvar),
+	var=double(num.sol),
+	resid=mat.or.vec(num.sol,size),
+	totweight=double(num.sol),
+	weight=mat.or.vec(num.sol,size),
+	same=integer(num.sol),
+	index=integer(1),
+	info=integer(1),
+	PACKAGE="wle")
+}
 
 delnull <- z$same==0
 

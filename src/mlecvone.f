@@ -1,5 +1,5 @@
       SUBROUTINE MLECVONE (YDATA,XDATA,INTER,NSIZE,NVAR,
-     &  NMCCV,IMODEL,NSPLIT,ISEED,
+     &  NMCCV,IMODEL,NSPLIT,
      &  cv,info)
 
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
@@ -8,20 +8,20 @@ C     in the normal regression linear model
 C     for one model
 C
 C     Author: Claudio Agostinelli 
-C             Dipartimento di Statistica
+C             DAIS
 C             Universita' di Venezia
-C             30125 VENEZIA
+C             30121 VENEZIA
 C             ITALIA
 C
 C     E-mail: claudio@unive.it
 C
-C     December, 04 2003
+C     October, 13 2012
 C
-C     Version: 0.3
+C     Version: 0.4
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
-C    Copyright (C) 2003 Claudio Agostinelli
+C    Copyright (C) 2012 Claudio Agostinelli
 C
 C    This program is free software; you can redistribute it and/or modify
 C    it under the terms of the GNU General Public License as published by
@@ -55,31 +55,6 @@ C     info      output   I      1
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-C
-C The code use an external subroutine dues to:
-C
-C
-C
-C                                     RANLIBF
-C
-C            Library of Fortran Routines for Random Number Generation
-C
-C                            Compiled and Written by:
-C
-C                                 Barry W. Brown
-C                                  James Lovato                             C
-C
-C                     Department of Biomathematics, Box 237
-C                     The University of Texas, M.D. Anderson Cancer Center
-C                     1515 Holcombe Boulevard
-C                     Houston, TX      77030
-C
-C
-C This work was supported by grant CA-16672 from the National Cancer Institute.
-C
-C
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
 C The code use external subroutines dues to:
@@ -159,10 +134,6 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       dimension wxdata(nsplit,nvar+inter)
       dimension ddd(nsplit)
 
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-C
-C     EXTERNAL SUBROUTINE
-C     the ranlib: genprm subroutine generate a 
       external genprm
 C     the blas: dgemm subroutine give matrix-matrix products
 C     the blas: dgemv subroutine give matrix-vector products 
@@ -171,10 +142,6 @@ C     the slatec: dqrsl subroutine give least square parameters
       external dqrsl
 C      the slatec: dqrdc subroutine give the QR decomposition nedeed by the dqrsl
       external dqrdc
-C
-      external setall
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-      call setall(iseed,iseed)      
 
       dsize=nsize
       info=0

@@ -462,16 +462,16 @@ wle.fracdiff.fitted <- function(t, d, M, x, x.init=rep(0,M), x.mean=0) {
 #	wle.crossover.ao function                           #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@unive.it                            #
-#	Date: December, 5, 2005                             #
-#	Version: 0.1                                        #
+#	Date: October, 13, 2012                             #
+#	Version: 0.1-1                                      #
 #                                                           #
-#	Copyright (C) 2005 Claudio Agostinelli              #
+#	Copyright (C) 2012 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
 wle.crossover.ao <- function(x, y, prob.crossover) {
     size <- length(x)
-    if (rbinom(n=1, size=1, p=prob.crossover)) {
+    if (rbinom(n=1, size=1, prob=prob.crossover)) {
 		split <- sample(x=1:(size-1), size=1, replace=FALSE)
 		x.temp <- c(x[1:split],y[(split+1):size])
         y.temp <- c(y[1:split],x[(split+1):size])
@@ -489,15 +489,15 @@ wle.crossover.ao <- function(x, y, prob.crossover) {
 #	wle.mutation.ao function                            #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@unive.it                            #
-#	Date: December, 5, 2005                             #
-#	Version: 0.1                                        #
+#	Date: October 13, 2012                              #
+#	Version: 0.1-1                                      #
 #                                                           #
-#	Copyright (C) 2005 Claudio Agostinelli              #
+#	Copyright (C) 2012 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
 wle.mutation.ao <- function(x, prob.mutation) {
-   mutation <- as.logical(rbinom(n=length(x), size=1, p=prob.mutation))
+   mutation <- as.logical(rbinom(n=length(x), size=1, prob=prob.mutation))
    replace <- sample(x=c(0, 1), size=sum(mutation), replace=TRUE)   
    x[mutation] <- replace
    return(x)

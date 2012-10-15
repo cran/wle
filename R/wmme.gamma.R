@@ -3,17 +3,18 @@
 #	wmme.gamma function                                 #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@unive.it                            #
-#	Date: July 01, 2009                                 #
-#	Version: 0.2-3                                      #
+#	Date: March 25, 2011                                #
+#	Version: 0.3                                        #
 #                                                           #
-#	Copyright (C) 2009 Claudio Agostinelli              #
+#	Copyright (C) 2011 Claudio Agostinelli              #
 #                                                           #
 #############################################################
-## WARNING: MAX shape allowed is 70!
+## WARNING: MAX shape allowed is 70! This was true with 0.2-3 version. We did not check for the new version.
+## SCHI2 work much better than HD, this is way it is the default!!!!!!
 #######
 
 
-wmme.gamma <- function(x, boot=30, group, num.sol=1, raf="HD", smooth=1, tol=10^(-6), equal=10^(-3), max.iter=500, use.smooth=TRUE, tol.int, verbose=FALSE) {
+wmme.gamma <- function(x, boot=30, group, num.sol=1, raf="SCHI2", smooth=0.008, tol=10^(-6), equal=10^(-3), max.iter=500, use.smooth=TRUE, tol.int, verbose=FALSE) {
 
 max.aa <- 70
 x <- as.vector(x)
@@ -117,30 +118,38 @@ while (tot.sol < num.sol & iboot <= boot) {
     if (all(!is.na(c(aa, bb, cc))) && aa < max.aa) cont <- FALSE
   }
   iboot <- iboot + 1
+  if (verbose) {
+    cat('a', aa, '\n')
+    cat('b', bb, '\n')
+    cat('c', cc, '\n')
+  }
+  
   if (all(!is.na(c(aa, bb, cc))) && aa < max.aa) {
     xdiff <- tol + 1
     iter <- 0
     while (xdiff > tol & iter < max.iter+2) {
        iter <- iter + 1
-       temp <- aa/bb^2
+       temp <- aa*bb^2
        xx <- x-cc+10^(-2)
        dsup <- max(xx)+ 3*smooth*temp
        aaold <- aa
        bbold <- bb
        ccold <- cc
 
-       if (verbose) {
-          cat('a', aa, '\n')
-          cat('b', bb, '\n')
-          cat('c', cc, '\n')
-       }
+#       if (verbose) {
+#          cat('a', aa, '\n')
+#          cat('b', bb, '\n')
+#          cat('c', cc, '\n')
+#       }
 
        z <- .Fortran("wlegamma",
-	    as.double(xx), 
+	    as.double(xx),
+	    as.double(xx),
 	    as.integer(size),
+	    as.integer(size),                     
 	    as.integer(raf),
             as.double(1),
-	    as.double(smooth),
+	    as.double(smooth*temp),
             as.integer(1*use.smooth),
             as.double(dsup),
 	    as.double(tol),
@@ -153,7 +162,7 @@ while (tot.sol < num.sol & iboot <= boot) {
         PACKAGE = "wle")
 
        ww <- z$weights
-       if (verbose) print(summary(ww))
+####       if (verbose) print(summary(ww))
        m1n <- m1(x, w=ww)
        m2n <- m2(x, m1=m1n, w=ww)
        m3n <- m3(x, m1=m1n, w=ww)
@@ -165,6 +174,12 @@ while (tot.sol < num.sol & iboot <= boot) {
        if (is.na(aa) || aa > max.aa) iter <- max.iter+2       
    }
 
+  if (verbose) {
+    cat('a', aa, '\n')
+    cat('b', bb, '\n')
+    cat('c', cc, '\n')
+  }
+    
    if (iter < max.iter) {
 
    if (tot.sol==0) {

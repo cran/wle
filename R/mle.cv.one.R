@@ -1,16 +1,16 @@
 #############################################################
 #                                                           #
-#	mle.cv.one function                                     #
-#	Author: Claudio Agostinelli                             #
-#	E-mail: claudio@unive.it                                #
-#	Date: December, 10, 2003                                #
-#	Version: 0.1-1                                          #
+#	mle.cv.one function                                 #
+#	Author: Claudio Agostinelli                         #
+#	E-mail: claudio@unive.it                            #
+#	Date: October, 13, 2012                             #
+#	Version: 0.2                                        #
 #                                                           #
-#	Copyright (C) 2003 Claudio Agostinelli                  #
+#	Copyright (C) 2012 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
-mle.cv.one <- function(formula, data=list(), model=TRUE, x=FALSE, y=FALSE, monte.carlo=500, split, contrasts=NULL, num.max, nmodel, verbose=FALSE, seed=1234, file, append=FALSE, ...) {
+mle.cv.one <- function(formula, data=list(), model=TRUE, x=FALSE, y=FALSE, monte.carlo=500, split, contrasts=NULL, num.max, nmodel, verbose=FALSE, file, append=FALSE, ...) {
 
 if (missing(split)) {
     split <- 0
@@ -31,7 +31,7 @@ if (!missing(file)) {
     mf$monte.carlo <- mf$split <- mf$contrasts <- NULL
     mf$model <- mf$x <- mf$y <- NULL
     mf$verbose <- NULL
-    mf$num.max <- mf$nmodel <- mf$seed <- mf$file <- mf$... <- NULL
+    mf$num.max <- mf$nmodel <- mf$file <- mf$... <- NULL
     mf$drop.unused.levels <- TRUE
     mf[[1]] <- as.name("model.frame")
     mf <- eval(mf, sys.frame(sys.parent()))
@@ -87,7 +87,6 @@ for (imodel in nmodel) {
 	as.integer(monte.carlo),
         as.integer(imodel),
 	as.integer(split),
-        as.integer(seed),
         cv=double(nvar+1),
 	info=integer(1),
 	PACKAGE="wle")
