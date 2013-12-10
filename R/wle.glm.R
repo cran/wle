@@ -119,9 +119,9 @@ wle.glm <- function (formula, family = binomial, data, weights, subset, na.actio
   # initial wle.weights
       wle.weights <- wle.glm.weights(Y, X, fitted.values=fitted.Y, family = family, dispersion=dispersion, raf=control$wle$raf, tau=control$wle$tau, smooth=control$wle$smooth, asy.smooth=control$wle$asy.smooth, window.size=control$wle$window.size, use.asymptotic=control$wle$use.asymptotic, use.smooth=control$wle$use.smooth, tol=control$wle$tol, dist.method=dist.method, cutpoint=control$wle$cutpoint, powerdown=control$wle$powerdown)$weights
     
-      fit <- wle.glm.fit(x = X, y = Y, weights = weights, wle.weights=wle.weights, start = fit.boot$coefficients, etastart = etastart, mustart = fit.boot$fitted.values, offset = offset, family = family, control = control, intercept = attr(mt, "intercept") > 0)
+      fit <- wle.glm.fit(x = X, y = Y, weights = weights, wle.weights=wle.weights, start = fit.boot$coefficients, etastart = etastart, mustart = fit.boot$fitted.values, offset = offset, family = family, control = control, intercept = attr(mt, "intercept") > 0, dispersion=dispersion)
       if (length(offset) && attr(mt, "intercept") > 0) {
-        fit$null.deviance <- wle.glm.fit(x = X[, "(Intercept)", drop = FALSE], y = Y, weights = weights, wle.weights=wle.weights, offset = offset, family = family, control = control, intercept = TRUE)$deviance
+        fit$null.deviance <- wle.glm.fit(x = X[, "(Intercept)", drop = FALSE], y = Y, weights = weights, wle.weights=wle.weights, offset = offset, family = family, control = control, intercept = TRUE, dispersion=dispersion)$deviance
       }
       if (fit$converged) {
         fit$wle.weights <- fit$wle.weights/max(fit$wle.weights)
@@ -172,7 +172,7 @@ wle.glm <- function (formula, family = binomial, data, weights, subset, na.actio
 #                                                           #
 #############################################################
 
-wle.glm.fit <- function(x, y, weights = NULL, wle.weights = rep(1, NROW(y)), start = NULL, etastart = NULL,  mustart = NULL, offset = rep(0, NROW(y)), family = gaussian(), control = list(glm=glm.control(), wle=wle.glm.control()), dist.method='euclidean', intercept = TRUE) {
+wle.glm.fit <- function(x, y, weights = NULL, wle.weights = rep(1, NROW(y)), start = NULL, etastart = NULL,  mustart = NULL, offset = rep(0, NROW(y)), family = gaussian(), control = list(glm=glm.control(), wle=wle.glm.control()), dist.method='euclidean', intercept = TRUE, dispersion=NULL) {
   if (is.null(weights))
     weights <- rep.int(1, NROW(y))
 
@@ -234,7 +234,7 @@ wle.glm.fit <- function(x, y, weights = NULL, wle.weights = rep(1, NROW(y)), sta
           warning("observations with zero weight not used for calculating dispersion")
         if (control$wle$mle.dispersion) {
           if (family$family=="Gamma") {
-            wle.gamma.shape.glm(y=y01, mu=res.glm.fit$fitted.values, deviance=res.glm.fit$deviance, df.residual=res.glm.fit$df.residual, prior.weights=weights, wle.weights=pesia, it.lim=control$glm$maxit, eps.max=control$glm$epsilon, verbose=control$wle$verbose)$dispersion
+            wle.gamma.shape.glm(y=y01, mu=res.glm.fit$fitted.values, deviance=res.glm.fit$deviance, df.residual=res.glm.fit$df.residual, prior.weights=weights, wle.weights=pesia, it.lim=control$glm$maxit, eps.max=control$glm$epsilon, verbose=control$wle$verbose, dispersion=dispersion)$dispersion
           } else if (family$family=="inverse.gaussian") {
             wle.inversegaussian.lambda.glm(y=y01, mu=res.glm.fit$fitted.values, prior.weights=weights, wle.weights=pesia)$dispersion
           } else {
@@ -640,6 +640,7 @@ wle.glm.weights <- function(y, x, fitted.values, family = gaussian(), dispersion
     weights[is.na(weights)] <- 0
     weights[weights > 1] <- 1
     weights <- sottopesa(weights, cutpoint=cutpoint, powerdown=powerdown)
+    weights[weights < 0.01] <- 0
 #######################################################################
   } else 
     stop("Only family 'gaussian', 'Gamma', 'inverse.gaussian', 'binomial', 'poisson', 'quasibinomial' and 'quasipoisson' are implemented (for now)")

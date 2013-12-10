@@ -2,7 +2,8 @@
 \title{Plots for the Linear Model}
 \usage{
 \method{plot}{wle.lm}(x, roots, which=1:4, which.main, level.weight=0.5, 
-   ask = dev.interactive(), col=c(2, 1, 3), id.n=3, labels.id, cex.id = 0.75, verbose=FALSE, ...)
+   ask = dev.interactive(), col=c(2, 1, 3), id.n=3, labels.id,
+   cex.id = 0.75, verbose=FALSE, ...)
 }
 \alias{plot.wle.lm}
 

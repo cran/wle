@@ -8,7 +8,11 @@ Computes the minimum distance estimates for the parameters of a Wrapped Normal d
 parameter (and the scale parameter).
 }
 \usage{
-mde.wrappednormal(x, bw, mu = NULL, rho = NULL, sd = NULL, alpha = NULL, p = 2, tol = 1e-05, n = 512, from = circular(0), to = circular(2 * pi), lower = NULL, upper = NULL, method = "L-BFGS-B", lower.rho = 1e-06, upper.rho = 1 - 1e-06, min.sd = 0.001, K = NULL, min.k = 10, control.circular = list(), ...)
+mde.wrappednormal(x, bw, mu = NULL, rho = NULL, sd = NULL,
+  alpha = NULL, p = 2, tol = 1e-05, n = 512, from = circular(0),
+  to = circular(2 * pi), lower = NULL, upper = NULL,
+  method = "L-BFGS-B", lower.rho = 1e-06, upper.rho = 1 - 1e-06,
+  min.sd = 0.001, K = NULL, min.k = 10, control.circular = list(), ...)
 \method{print}{mde.wrappednormal}(x, digits = max(3, getOption("digits") - 3), ...)
 }
 
@@ -59,7 +63,10 @@ The distance from an estimated density (by the non parametric kernel density est
   \item{k}{the density at the model.}
 }
 
-\references{C. Agostinelli (2006) Robust Estimation for Circular Data, under revision.}
+\references{
+  C. Agostinelli. Robust estimation for circular data.
+  Computational Statistics & Data Analysis, 51(12):5867-5875, 2007.
+}
 
 \author{Claudio Agostinelli}
 
@@ -67,18 +74,15 @@ The distance from an estimated density (by the non parametric kernel density est
 
 \examples{
 
-if (require(circular)) {
-    set.seed(1234)
-    x <- c(rwrappednormal(n=200, mu=circular(0), sd=0.6), rwrappednormal(n=20, mu=circular(pi/2), sd=0.1))
-    res <- mde.wrappednormal(x, bw=0.08, mu=circular(0), sd=0.6)
-    res
-    plot(circular(0), type='n', xlim=c(-1, 1.75), shrink=1.2)
-    lines(circular(res$x), res$y)
-    lines(circular(res$x), res$k, col=2)
-    legend(1,1.5, legend=c('estimated density', 'MDE'), lty=c(1, 1), col=c(1, 2))
-} else {
-   cat("Please, install the package 'circular' in order to use this function.\n")
-}
+set.seed(1234)
+x <- c(rwrappednormal(n=200, mu=circular(0), sd=0.6),
+  rwrappednormal(n=20, mu=circular(pi/2), sd=0.1))
+res <- mde.wrappednormal(x, bw=0.08, mu=circular(0), sd=0.6)
+res
+plot(circular(0), type='n', xlim=c(-1, 1.75), shrink=1.2)
+lines(circular(res$x), res$y)
+lines(circular(res$x), res$k, col=2)
+legend(1,1.5, legend=c('estimated density', 'MDE'), lty=c(1, 1), col=c(1, 2))
 
 }
 

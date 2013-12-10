@@ -3,14 +3,14 @@
 #	wle.normal.high function
 #	Author: Claudio Agostinelli
 #	E-mail: claudio@unive.it
-#	Date: April, 21, 2013
+#	Date: April, 13, 2011
 #	Version: 0.1
 #
-#	Copyright (C) 2013 Claudio Agostinelli
+#	Copyright (C) 2011 Claudio Agostinelli
 #
 #############################################################
 
-wle.normal.high <- function(x, boot=30, group, num.sol=1, raf="HD", smooth, tol=10^(-6), equal=10^(-3), max.iter=500, use.smooth=TRUE, tol.int, verbose=FALSE) {
+wle.normal.high.old2 <- function(x, boot=30, group, num.sol=1, raf="HD", smooth, tol=10^(-6), equal=10^(-3), max.iter=500, use.smooth=TRUE, tol.int, verbose=FALSE) {
 
 raf <- switch(raf,
 	HD = 1,
@@ -102,29 +102,31 @@ if (equal<=tol) {
     xboot <- x[sample(1:size, size=group),]
     posizione <- apply(xboot, 2, median)
     varianza <- diag(apply(xboot, 2, mad))
-    iiter <- 0
-    sumw <- size
+    iiter <- 0   
     while((diffp > tol | diffv > tol) & iiter < max.iter) {
       iiter <- iiter + 1
       mah <- mahalanobis(x, posizione, varianza)
       posizionevecchia <- posizione
       varianzavecchia <- varianza
-      z <- .Fortran("wlemah",
+      z <- .Fortran("wlechisq",
+	as.double(mah),
 	as.double(mah),
 	as.integer(size),
-        as.integer(nvar),
-        as.double(sumw),            
+	as.integer(size),
 	as.integer(raf),
         as.double(1),
 	as.double(smooth),
+        as.integer(1*use.smooth),
+        as.double(0),        
+        as.double(tol.int),
+        as.double(nvar/2),
 	weight=double(size),
 	density=double(size),
 	model=double(size),
 	PACKAGE="wle")
-####      if(iiter == 2) plot(z$weight)
+      if(iiter == 2) plot(z$weight)
       posizione <- apply(x, 2, function(x) weighted.mean(x, w=z$weight))
-      varianza <- cov.wt(x, wt=z$weight)$cov
-      sumw <- sum(z$weight)
+      varianza <- cov.wt(x, wt=z$weight)$cov      
       diffp <- max(abs(posizione-posizionevecchia))
       diffv <- max(abs(varianza-varianzavecchia))
     }

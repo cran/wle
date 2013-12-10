@@ -3,16 +3,15 @@
 #	mde.wrapperdnormal function                         #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@unive.it                            #
-#	Date: August, 10, 2006                              #
-#	Version: 0.3-1                                      #
+#	Date: December, 10, 2013                            #
+#	Version: 0.3-2                                      #
 #                                                           #
-#	Copyright (C) 2006 Claudio Agostinelli              #
+#	Copyright (C) 2013 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
 mde.wrappednormal <- function(x, bw, mu=NULL, rho=NULL, sd=NULL, alpha=NULL, p=2, tol=1e-5, n=512, from=circular(0), to=circular(2*pi), lower=NULL, upper=NULL, method="L-BFGS-B", lower.rho=1e-6, upper.rho=1-1e-6, min.sd=1e-3, K=NULL, min.k=10, control.circular=list(), ...) {
    result <- list()
-   if (require(circular)) { 
      h.fun <- function(x, xpoints, n, ffty, K, p) {
        k <- c(circular:::DwrappednormalRad(x=xpoints, mu=x[1], rho=x[2], K=K))
        k[k <= 2*.Machine$double.eps] <- 2*.Machine$double.eps
@@ -147,10 +146,6 @@ mde.wrappednormal <- function(x, bw, mu=NULL, rho=NULL, sd=NULL, alpha=NULL, p=2
     result$y <- y
     class(result) <- "mde.wrappednormal"
     return(result)
-} else {
-  stop("You need package 'circular ver. >= 0.3-5' for this function")
-}
-
 }
 
 #############################################################

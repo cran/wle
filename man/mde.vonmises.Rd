@@ -7,7 +7,10 @@
 Computes the minimum distance estimates for the parameters of a von Mises distribution:  the mean direction and the concentration parameter.
 }
 \usage{
-mde.vonmises(x, bw, mu = NULL, kappa = NULL, n = 512, from = circular(0), to = circular(2 * pi), lower = NULL, upper = NULL, method = "L-BFGS-B", lower.kappa = .Machine$double.eps, upper.kappa = Inf, alpha = NULL, p = 2, control.circular = list(), ...)
+mde.vonmises(x, bw, mu = NULL, kappa = NULL, n = 512,
+  from = circular(0), to = circular(2 * pi), lower = NULL,
+  upper = NULL, method = "L-BFGS-B", lower.kappa = .Machine$double.eps,
+  upper.kappa = Inf, alpha = NULL, p = 2, control.circular = list(), ...)
 \method{print}{mde.vonmises}(x, digits = max(3, getOption("digits") - 3), ...)
 
 }
@@ -53,7 +56,10 @@ The distance from an estimated density (by the non parametric kernel density est
   \item{k}{the density at the model.}
  }
 
-\references{C. Agostinelli (2006) Robust Estimation for Circular Data, under revision.}
+ \references{
+  C. Agostinelli. Robust estimation for circular data.
+  Computational Statistics & Data Analysis, 51(12):5867-5875, 2007.
+}
 
 \author{Claudio Agostinelli}
 
@@ -61,18 +67,14 @@ The distance from an estimated density (by the non parametric kernel density est
 
 \examples{
 
-if (require(circular)) {
-    set.seed(1234)
-    x <- c(rvonmises(n=200, mu=circular(0), kappa=10), rvonmises(n=20, mu=circular(pi/2), kappa=20))
-    res <- mde.vonmises(x, bw=500, mu=circular(0), kappa=10)
-    res
-    plot(circular(0), type='n', xlim=c(-1, 1.75), shrink=1.2)
-    lines(circular(res$x), res$y)
-    lines(circular(res$x), res$k, col=2)
-    legend(1,1.5, legend=c('estimated density', 'MDE'), lty=c(1, 1), col=c(1, 2))
-} else {
-   cat("Please, install the package 'circular' in order to use this function.\n")
-}
+set.seed(1234)
+x <- c(rvonmises(n=200, mu=circular(0), kappa=10), rvonmises(n=20, mu=circular(pi/2), kappa=20))
+res <- mde.vonmises(x, bw=500, mu=circular(0), kappa=10)
+res
+plot(circular(0), type='n', xlim=c(-1, 1.75), shrink=1.2)
+lines(circular(res$x), res$y)
+lines(circular(res$x), res$k, col=2)
+legend(1,1.5, legend=c('estimated density', 'MDE'), lty=c(1, 1), col=c(1, 2))
 
 }
 

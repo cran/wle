@@ -79,7 +79,10 @@ NULL, p = 2, verbose = FALSE, control.circular = list())
 \item{not.conv}{the number of starting points that does not converge after the \code{max.iter} iteration are reached.}
 }
 
-\references{C. Agostinelli (2006) Robust Estimation for Circular Data, under revision.}
+\references{
+  C. Agostinelli. Robust estimation for circular data.
+  Computational Statistics & Data Analysis, 51(12):5867-5875, 2007.
+}
 
 \author{Claudio Agostinelli}
 
@@ -87,12 +90,8 @@ NULL, p = 2, verbose = FALSE, control.circular = list())
 
 \examples{
 
-if (require(circular)) {
-    x <- c(rvonmises(n=50, mu=circular(0), kappa=10), rvonmises(n=5, mu=circular(pi/2), kappa=20))
-    wle.vonmises(x, smooth=20, group=5)
-} else {
-   cat("Please, install the package 'circular' in order to use this function.\n")
-}
+x <- c(rvonmises(n=50, mu=circular(0), kappa=10), rvonmises(n=5, mu=circular(pi/2), kappa=20))
+wle.vonmises(x, smooth=20, group=5)
 
 }
 

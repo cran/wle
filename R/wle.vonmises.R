@@ -3,10 +3,10 @@
 #	wle.vonmises function                               #
 #	Author: Claudio Agostinelli                         #
 #	E-mail: claudio@unive.it                            #
-#	Date: August, 10, 2006                              #
-#	Version: 0.3-2                                      #
+#	Date: December, 10, 2013                            #
+#	Version: 0.4-1                                      #
 #                                                           #
-#	Copyright (C) 2006 Claudio Agostinelli              #
+#	Copyright (C) 2013 Claudio Agostinelli              #
 #                                                           #
 #############################################################
 
@@ -14,16 +14,15 @@ wle.vonmises <- function(x, boot=30, group, num.sol=1, raf="HD", smooth, tol=10^
 
 ##############################################################
 ## convoluzione di due vonmises
-
 dvm.convolution <- function(theta, mu1, mu2, kappa1, kappa2) {
-
-  if (kappa1 < 0) stop("dvm.convolution: kappa1 must be not negative")
-  if (kappa2 < 0) stop("dvm.convolution: kappa2 must be not negative")
-
-  return(besselI(sqrt(kappa1^2+kappa2^2+2*kappa1*kappa2*cos(theta - (mu1+mu2))), 0)/(2*pi*besselI(kappa1, 0)*besselI(kappa2, 0)))
+  if (kappa1 < 0)
+    stop("dvm.convolution: kappa1 must be not negative")
+  if (kappa2 < 0)
+    stop("dvm.convolution: kappa2 must be not negative")
+  kappa <- sqrt(kappa1^2+kappa2^2+2*kappa1*kappa2*cos(theta - (mu1+mu2)))
+  ans <- besselI(kappa, 0, expon.scaled=TRUE)/(2*pi*besselI(kappa1, 0, expon.scaled=TRUE)*besselI(kappa2, 0, expon.scaled=TRUE)) * exp(kappa-kappa1-kappa2)
+  return(ans)
 }
-
-if (require(circular)) {
 
     result <- list()
 
@@ -244,10 +243,6 @@ if (tot.sol) {
 result$call <- match.call()
 class(result) <- "wle.vonmises"
 return(result)
-
-} else {
-  stop("You need package 'circular ver. >= 0.3-5' for this function")
-}
 
 }
 

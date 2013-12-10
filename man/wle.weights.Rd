@@ -3,7 +3,8 @@
 \title{Weights based on Weighted Likelihood for the normal model}
 \description{This function evaluated the weights for the vector `x` using the vector `y` in the estimation of the density by the kernel density estimator.}
 \usage{
-wle.weights(x, y=NULL, smooth=0.0031, sigma2, raf=1, location=FALSE, max.iter=1000, tol=10^(-6))
+wle.weights(x, y=NULL, smooth=0.0031, sigma2, raf=1, location=FALSE,
+  max.iter=1000, tol=10^(-6))
 }
 
 \arguments{

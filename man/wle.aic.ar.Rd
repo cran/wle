@@ -8,7 +8,19 @@ AutoRegressive Models. This is a robust model selection method to choose
 the order of an AutoRegressive model.
 }
 \usage{
-wle.aic.ar(x, order = c(1, 0), seasonal = list(order = c(0, 0), period = NA), group, group.start, group.step = group.start, xreg = NULL, include.mean = TRUE, na.action = na.fail, tol = 10^(-6), tol.step = tol, equal = 10^(-3), equal.step = equal, raf = "HD", var.full = 0, smooth = 0.0031, smooth.ao = smooth, boot = 10, boot.start = 10, boot.step = boot.start, num.sol = 1, x.init = 0, x.seasonal.init = 0, max.iter.out = 20, max.iter.in = 50, max.iter.start = 200, max.iter.step = 500, verbose = FALSE, w.level = 0.4, min.weights = 0.5, population.size = 10, population.choose = 5, elements.random = 2, wle.start = FALSE, init.values = NULL, num.max = NULL, num.sol.step = 2, min.weights.aic = 0.5, approx.w = TRUE, ask = TRUE, alpha = 2, method = "WLS")
+wle.aic.ar(x, order = c(1, 0), seasonal = list(order = c(0, 0),
+  period = NA), group, group.start, group.step = group.start,
+  xreg = NULL, include.mean = TRUE, na.action = na.fail,
+  tol = 10^(-6), tol.step = tol, equal = 10^(-3), equal.step = equal,
+  raf = "HD", var.full = 0, smooth = 0.0031, smooth.ao = smooth,
+  boot = 10, boot.start = 10, boot.step = boot.start, num.sol = 1,
+  x.init = 0, x.seasonal.init = 0, max.iter.out = 20, max.iter.in = 50,
+  max.iter.start = 200, max.iter.step = 500, verbose = FALSE,
+  w.level = 0.4, min.weights = 0.5, population.size = 10,
+  population.choose = 5, elements.random = 2, wle.start = FALSE,
+  init.values = NULL, num.max = NULL, num.sol.step = 2,
+  min.weights.aic = 0.5, approx.w = TRUE, ask = TRUE, alpha = 2,
+  method = "WLS")
 }
 
 \arguments{

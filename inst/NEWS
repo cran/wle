@@ -1,5 +1,8 @@
 Library wle
 ===========
+Version 0.9-9, 2013/12/10
+Fixed several problems to avoid WARNING and NOTE with last versions of R 
+
 Version 0.9-7, 2012/10/15 
 Removed several unnecessary code in src folder.
 

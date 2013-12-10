@@ -99,21 +99,23 @@ Goldberg, David E., (1989) Genetic Algorithms in Search, Optimization and Machin
 \author{Claudio Agostinelli}
 
 \examples{
-  set.seed(1234)
-  resw <- wle.fracdiff(Nile, M=100, include.mean=TRUE, lower=0.01, upper=0.96, group=20)
-  resw$d
-  resw$sigma2
-  resw$x.mean
+  \dontrun{
+    set.seed(1234)
+    resw <- wle.fracdiff(Nile, M=100, include.mean=TRUE, lower=0.01, upper=0.96, group=20)
+    resw$d
+    resw$sigma2
+    resw$x.mean
 
-  x <- Nile
-  x[50] <- x[50]+4*sd(x)
+    x <- Nile
+    x[50] <- x[50]+4*sd(x)
 
-  set.seed(1234)
-  resw <- wle.fracdiff(x, M=100, include.mean=TRUE, lower=0.01, upper=0.96, group=40)
-  resw$d
-  resw$sigma2
-  resw$x.mean
-  resw$ao.position
+    set.seed(1234)
+    resw <- wle.fracdiff(x, M=100, include.mean=TRUE, lower=0.01, upper=0.96, group=40)
+    resw$d
+    resw$sigma2
+    resw$x.mean
+    resw$ao.position
+  }
 }
 
 

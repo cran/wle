@@ -26,7 +26,8 @@ wle.glm(formula, family = binomial, data, weights, subset,
 wle.glm.fit(x, y, weights = NULL, wle.weights = rep(1, NROW(y)), 
      start = NULL, etastart = NULL,  mustart = NULL, offset = rep(0, NROW(y)),
      family = gaussian(), control = list(glm=glm.control(), 
-     wle=wle.glm.control()), dist.method='euclidean', intercept = TRUE)
+     wle=wle.glm.control()), dist.method='euclidean',
+     intercept = TRUE, dispersion=NULL)
 
 \method{weights}{wle.glm}(object, type = c("prior", "working", "wle"), root="all", \dots)
 }
@@ -111,6 +112,8 @@ wle.glm.fit(x, y, weights = NULL, wle.weights = rep(1, NROW(y)),
   \item{intercept}{logical. Should an intercept be included in the
     \emph{null} model?}
 
+  \item{dispersion}{numeric or NULL. If provided used as starting value.}
+  
   \item{object}{an object inheriting from class \code{"wle.glm"}.}
 
   \item{type}{character, partial matching allowed. Type of weights to

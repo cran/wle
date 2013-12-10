@@ -3,31 +3,30 @@
 #   wle.wrappednormal function                              #
 #   Author: Claudio Agostinelli                             #
 #   Email: claudio@unive.it                                 #
-#   Date: June, 27, 2008                                    #
-#   Copyright (C) 2008 Claudio Agostinelli                  #
+#   Date: December, 10, 2013                                #
+#   Copyright (C) 2013 Claudio Agostinelli                  #
 #                                                           #
-#   Version 0.2-3                                           #
+#   Version 0.2-4                                           #
 #############################################################
 
 wle.wrappednormal <- function(x, mu=NULL, rho=NULL, sd=NULL, K=NULL, boot=30, group, num.sol=1, raf="HD", smooth=0.0031, tol=10^(-6), equal=10^(-3), min.sd=1e-3, min.k=10, max.iter=100, use.smooth=TRUE,  alpha=NULL, p=2, verbose=FALSE, control.circular=list()) {
   
-if (require(circular)) {
-    # Handling missing values
-    x <- na.omit(x)
-    size <- n <- length(x)
-    if (size==0) {
-        warning("No observations (at least after removing missing values)")
-        return(NULL)
-    }
-    if (is.circular(x)) {
-       datacircularp <- circularp(x)     
-    } else {
-       datacircularp <- list(type="angles", units="radians", template="none", modulo="asis", zero=0, rotation="counter")
-    }
+# Handling missing values
+  x <- na.omit(x)
+  size <- n <- length(x)
+  if (size==0) {
+    warning("No observations (at least after removing missing values)")
+    return(NULL)
+  }
+  if (is.circular(x)) {
+    datacircularp <- circularp(x)     
+  } else {
+    datacircularp <- list(type="angles", units="radians", template="none", modulo="asis", zero=0, rotation="counter")
+  }
 
-    dc <- control.circular
-    if (is.null(dc$type))
-       dc$type <- datacircularp$type
+  dc <- control.circular
+  if (is.null(dc$type))
+    dc$type <- datacircularp$type
     if (is.null(dc$units))
        dc$units <- datacircularp$units
     if (is.null(dc$template))
@@ -207,7 +206,7 @@ if (require(circular)) {
                 w=double(size),
                 wk=double(size),
                 wm=double(size),
-                PACKAGE="circular"
+                PACKAGE="wle"
               )
               w <- z$w
               wk <- z$wk
@@ -299,16 +298,13 @@ if (require(circular)) {
    result$f.density <- rep(NA,size)
    result$m.density <- rep(NA,size)
    result$delta <- rep(NA,size)
-   result$tot.sol <- 0
-   result$not.conv <- boot
- }
+    result$tot.sol <- 0
+    result$not.conv <- boot
+  }
      
- result$call <- match.call()
- class(result) <- "wle.wrappednormal"
- return(result)
-} else {
-  stop("You need package 'circular ver. >= 0.3-5' for this function")
-}
+  result$call <- match.call()
+  class(result) <- "wle.wrappednormal"
+  return(result)
 }
 
 #############################################################

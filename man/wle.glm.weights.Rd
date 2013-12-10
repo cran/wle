@@ -97,14 +97,21 @@ example("wle.glm", echo = FALSE)}
 # tau=0.1
 wgr.D93 <- extractRoot(wle.glm.D93)
 # tau=0.2
-w1wgr.D93 <- wle.glm.weights(y = wgr.D93$y, x = wgr.D93$x, fitted.values = wgr.D93$fitted.values, family = wgr.D93$family, raf = "GKL", tau = 0.2, smooth = 0.031, window.size = NULL, use.asymptotic = NULL, dist.method = "euclidean")
+w1wgr.D93 <- wle.glm.weights(y = wgr.D93$y, x = wgr.D93$x,
+  fitted.values = wgr.D93$fitted.values, family = wgr.D93$family,
+  raf = "GKL", tau = 0.2, smooth = 0.031, window.size = NULL,
+  use.asymptotic = NULL, dist.method = "euclidean")
 # tau=0.3
-w2wgr.D93 <- wle.glm.weights(y = wgr.D93$y, x = wgr.D93$x, fitted.values = wgr.D93$fitted.values, family = wgr.D93$family, raf = "GKL", tau = 0.3, smooth = 0.031, window.size = NULL, use.asymptotic = NULL, dist.method = "euclidean")
+w2wgr.D93 <- wle.glm.weights(y = wgr.D93$y, x = wgr.D93$x,
+  fitted.values = wgr.D93$fitted.values, family = wgr.D93$family,
+  raf = "GKL", tau = 0.3, smooth = 0.031, window.size = NULL,
+  use.asymptotic = NULL, dist.method = "euclidean")
 
 plot(wgr.D93$wle.weights, ylim=c(0,1), ylab='Weights')
 points(w1wgr.D93$weights, col=2)
 points(w2wgr.D93$weights, col=3)
-legend('bottomright', legend=expression(tau==0.1, tau==0.2, tau==0.3), pch=rep(1,3), col=1:3, inset=0.05)
+legend('bottomright', legend=expression(tau==0.1, tau==0.2, tau==0.3),
+  pch=rep(1,3), col=1:3, inset=0.05)
 }
 
 \keyword{robust}
