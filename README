@@ -1,6 +1,6 @@
 This package contains a library for the robust approach to statistics. It is based on Weighted Likelihood approach.
 
-On the actual version 0.9-9 (see STATUS file) the package contains function for robust estimation of normal location and scale in univariate and multivariate model, shape and scale in gamma model, p in binomial model, lambda in poisson model, negative binomial, linear regression and one step estimation, robust model selection criterion based on Mallows Cp, AIC, Cross-validation, Stepwise, Backward and Forward, t-test and variance test. Robust estimation of circular data is possibile for von Mises and Wrapped Normal distribution. There is also experimental code for univariate normal mixture models, seasonal autoregressive models (weighted AIC for autoregressive models) and for fractional models (only estimation of the fractional parameter). Code for GLM is available for binomial, Poisson, Gaussian, gamma and inverse Gaussian models. 
+On the actual version 0.9-91 (see STATUS file) the package contains function for robust estimation of normal location and scale in univariate and multivariate model, shape and scale in gamma model, p in binomial model, lambda in poisson model, negative binomial, linear regression and one step estimation, robust model selection criterion based on Mallows Cp, AIC, Cross-validation, Stepwise, Backward and Forward, t-test and variance test. Robust estimation of circular data is possibile for von Mises and Wrapped Normal distribution. There is also experimental code for univariate normal mixture models, seasonal autoregressive models (weighted AIC for autoregressive models) and for fractional models (only estimation of the fractional parameter). Code for GLM is available for binomial, Poisson, Gaussian, gamma and inverse Gaussian models. 
 
 To install the package, use the command R CMD INSTALL wle.
 
@@ -8,5 +8,5 @@ Not all the code is written by me. Please, see the CREDITS, the COPYING and the 
 
 The code I wrote is not still optimize, and some bugs appear sometime. Please, report the bugs, any comments and suggestions to me by e-mail. Please, also let me know about any applications or use of the package.
 
-Claudio Agostinelli <claudio@unive.it>
+Claudio Agostinelli <claudio.agostinelli@unitn.it>
 

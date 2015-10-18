@@ -15,13 +15,14 @@
 }
 
 \usage{wle.fracdiff(x, lower, upper, M, group, na.action=na.fail,
-tol=10^(-6), equal=10^(-3), raf="HD", smooth=0.0031, smooth.ao=smooth,
-boot=10, num.sol=1, x.init=rep(0,M), use.uniroot=FALSE, max.iter.out=20,
-max.iter.in=100, max.iter.step=5000, max.iter.start=max.iter.step,
-verbose=FALSE, w.level=0.4, min.weights=0.5, init.values=NULL,
-num.max=length(x), include.mean=FALSE, ao.list=NULL, elitist=5,
-size.generation=5, size.population=10, type.selection="roulette",
-prob.crossover=0.8, prob.mutation=0.02, type.scale="none", scale.c=2)
+  tol=10^(-6), equal=10^(-3), raf="HD", smooth=0.0031,
+  smooth.ao=smooth, boot=10, num.sol=1, x.init=rep(0,M),
+  use.uniroot=FALSE, max.iter.out=20, max.iter.in=100,
+  max.iter.step=5000, max.iter.start=max.iter.step,
+  verbose=FALSE, w.level=0.4, min.weights=0.5, init.values=NULL,
+  num.max=length(x), include.mean=FALSE, ao.list=NULL, elitist=5,
+  size.generation=5, size.population=10, type.selection="roulette",
+  prob.crossover=0.8, prob.mutation=0.02, type.scale="none", scale.c=2)
 }
 
 \arguments{
@@ -99,22 +100,23 @@ Goldberg, David E., (1989) Genetic Algorithms in Search, Optimization and Machin
 \author{Claudio Agostinelli}
 
 \examples{
+  set.seed(1234)
+  resw <- wle.fracdiff(Nile, M=100, include.mean=TRUE, lower=0.01,
+    upper=0.96, group=20)
+  resw$d
+  resw$sigma2
+  resw$x.mean
   \dontrun{
-    set.seed(1234)
-    resw <- wle.fracdiff(Nile, M=100, include.mean=TRUE, lower=0.01, upper=0.96, group=20)
-    resw$d
-    resw$sigma2
-    resw$x.mean
+  x <- Nile
+  x[50] <- x[50]+4*sd(x)
 
-    x <- Nile
-    x[50] <- x[50]+4*sd(x)
-
-    set.seed(1234)
-    resw <- wle.fracdiff(x, M=100, include.mean=TRUE, lower=0.01, upper=0.96, group=40)
-    resw$d
-    resw$sigma2
-    resw$x.mean
-    resw$ao.position
+  set.seed(1234)
+  resw <- wle.fracdiff(x, M=100, include.mean=TRUE, lower=0.01,
+    upper=0.96, group=40)
+  resw$d
+  resw$sigma2
+  resw$x.mean
+  resw$ao.position
   }
 }
 

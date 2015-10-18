@@ -15,13 +15,13 @@
       call rndstart()
 
       n = nsize
-
+      
       do 10 i=1,nsize
         ny(i) = nx(i)
  10   continue
 
       do 20 i=1,nsize
-        j = n * rndunif() + 1
+        j = int(dble(n) * rndunif() + duno)
         nx(i) = ny(j)
         ny(j) = ny(n)
         n = n - 1

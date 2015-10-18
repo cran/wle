@@ -215,7 +215,7 @@ C Initial values
       do 60 icheck=2,iboot
       do 70 istart=1,ngrp
       do 80 iistart=1,ngrp
-   	 if(nstart(istart).eq.nrand(icheck,iistart)) then
+         if(nstart(istart).eq.nrand(icheck,iistart)) then
              nagain=nagain+1
          endif
  80   continue   
@@ -284,7 +284,7 @@ C      write(*,*) 'rnowh :', rnowh
 C      write(*,*) 'rnowhs :', rnowhs
   
       call dgeco(rnowh,nvar,nvar,ipvt,rcond,ztemp)
-      call dgedi(rnowh,nvar,nvar,ipvt,ddeth,dwork,11)	
+      call dgedi(rnowh,nvar,nvar,ipvt,ddeth,dwork,11)
 
       deth=ddeth(1)*(10.0d00**ddeth(2))
 
@@ -342,7 +342,7 @@ C          write(*,*) 'd ', d(i)
 
           dtemp=ddot(nvar,datai,1,ztemp,1)
 
-   	  rm(i)=dexp(- dtemp / ddue)/dsqrt(deths)
+          rm(i)=dexp(- dtemp / ddue)/dsqrt(deths)
 
 C          write(*,*) 'rm ', rm(i)
 
@@ -498,7 +498,7 @@ C
             endif
  300     continue
                    nsol=nsol+1
-		   nsame(nsol)=1
+                   nsame(nsol)=1
                    do 330 i=1,nvar
                       dmedia(nsol,i)=rloc(i)
                       do 340 j=1,nvar

@@ -171,6 +171,8 @@ C IRAF = 3 Chi Squared disparity
          endif         
  140   continue
 
+CCC ADDED 20151017
+      rprec = 0.0D+00
       return
       end
 

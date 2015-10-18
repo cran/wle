@@ -325,7 +325,7 @@ C      IF (LKNTRL .GT. 0) THEN
 C         WRITE (TEMP, '(''ERROR NUMBER = '', I8)') NERR
 C         DO 10 I=16,22
 C            IF (TEMP(I:I) .NE. ' ') GO TO 20
-   10    CONTINUE
+CCC   10    CONTINUE
 C
 C   20    CALL XERPRN (' *  ', -1, TEMP(1:15) // TEMP(I:23), 72)
 C         CALL FDUMP

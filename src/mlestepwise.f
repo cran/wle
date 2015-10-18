@@ -184,6 +184,7 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       info=0
       nstep=0
       istep=1
+      dvarmod=0.0D+00
 
       do 1 i=1, nsize
          dpesi(i)=duno
@@ -371,7 +372,7 @@ C         write(*,*) 'djpos', djpos
 
 
             aavaria(ipos)=avaria
- 1080    continue
+CCC 1080    continue
 
 
                ftunico(ipos)=ftest(ipos)

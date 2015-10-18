@@ -9,10 +9,10 @@ Evaluate the weights for a given GLM model
 }
 \usage{
 wle.glm.weights(y, x, fitted.values, family = gaussian(),
-dispersion = 1, raf = "GKL", tau = 0.1, smooth = NULL,
-asy.smooth=0.031, window.size = NULL, use.asymptotic = NULL,
-use.smooth=TRUE, tol=10^(-6), dist.method = "euclidean",
-cutpoint = 0, powerdown = 1)
+  dispersion = 1, raf = "GKL", tau = 0.1, smooth = NULL,
+  asy.smooth=0.031, window.size = NULL, use.asymptotic = NULL,
+  use.smooth=TRUE, tol=10^(-6), dist.method = "euclidean",
+  cutpoint = 0, powerdown = 1)
 }
 \arguments{
   \item{y}{

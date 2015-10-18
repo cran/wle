@@ -125,6 +125,7 @@ C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
       dsize=nsize
+      dvar = 0.0D+00
 CCCCC      dcol=ncol
       iinfo=0
 
@@ -186,7 +187,7 @@ C         write(*,*) nmodel
 
       wvaria=wvaria/(dsize-dcol)
 
-       if (ncol.eq.npre) then
+      if (ncol.eq.npre) then
           dvar=wvaria
       endif    
 
@@ -222,7 +223,7 @@ C         write(*,*) imodel,i
      & dlog(ddue*dpi*dvar) + (alpha*dcol)
 C      write(*,*) cp(imodel,npre+1)
       varia(imodel)=wvaria
- 70   continue
+CCCC 70   continue  NOT USED 20151017
 
  900  continue
       return

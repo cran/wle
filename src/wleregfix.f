@@ -269,7 +269,7 @@ C Initial values
       do 60 icheck=2,iboot
       do 70 istart=1,ngrp
       do 80 iistart=1,ngrp
-   	 if(nstart(istart).eq.nrand(icheck,iistart)) then
+         if(nstart(istart).eq.nrand(icheck,iistart)) then
              nagain=nagain+1
          endif
  80   continue   
@@ -364,7 +364,7 @@ C     Iteration Steps until convergence achieved
  120     continue
 
          d(i)=d(i)/dsize      
-	 rm(i)=dexp(-((rdata(i)-dmedia)**ddue)/
+         rm(i)=dexp(-((rdata(i)-dmedia)**ddue)/
      &         (ddue*rnowhs))/dsqrt(rnowhs)
 
  130  continue
@@ -526,7 +526,7 @@ C
             endif
  185     continue
                    nsol=nsol+1
-		   nsame(nsol)=1
+                   nsame(nsol)=1
                    do 195 i=1,npre 
                       rparam(nsol,i)=dparam(i)
  195               continue

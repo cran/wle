@@ -179,6 +179,7 @@ C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
       dsize=nsize
+      tot=dzero
 
 C
 C     Check the presence of the intercept
@@ -212,7 +213,7 @@ C
 C
 C     Variance of the residuals
 C
-      if(dvar.eq.zero) then
+      if(dvar.eq.dzero) then
       var=dzero
       do 110 i=1,nsize
          var=var+(rdata(i)**ddue)         
@@ -247,7 +248,7 @@ C     Iteration Steps
  120     continue
 
          d(i)=d(i)/dsize      
-	 rm(i)=dexp(-((rdata(i))**dqu)/
+         rm(i)=dexp(-((rdata(i))**dqu)/
      &         (dqu*rnowhs))/dsqrt(rnowhs)
 
  130  continue
@@ -365,7 +366,7 @@ C write down the results and return
  207     continue
          varia=var
          totpesi=tot
- 210  continue
+CCCC 210  continue
 
          do 230 i=1,nsize
             dpesi(i)=rw(i)
@@ -377,39 +378,3 @@ C write down the results and return
 
       return
       end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

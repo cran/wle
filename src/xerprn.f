@@ -125,7 +125,7 @@ C
          CBUFF(LPREF+1:LPREF+1) = ' '
 C         DO 40 I=1,NUNIT
 C            WRITE(IU(I), '(A)') CBUFF(1:LPREF+1)
-   40    CONTINUE
+CCCCCCCC   40    CONTINUE
          RETURN
       ENDIF
 C
@@ -221,7 +221,7 @@ C       PRINT
 C
 C      DO 60 I=1,NUNIT
 C         WRITE(IU(I), '(A)') CBUFF(1:LPREF+LPIECE)
-   60 CONTINUE
+CC   60 CONTINUE
 
       IF (NEXTC .LE. LENMSG) GO TO 50
       RETURN

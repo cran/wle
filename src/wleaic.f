@@ -118,6 +118,8 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
       dsize=nsize
       info=0
+      dvar = 0.0D+00
+      dtotpesi = 0.0D+00
 C
 C     Check the presence of the intercept
 C

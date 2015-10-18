@@ -124,7 +124,7 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
       dsize=nsize
       iinfo=0
-
+      dvar = 0.0D+00
 C
 C     Check the presence of the intercept
 C
@@ -219,30 +219,8 @@ C         write(*,*) imodel,i
      & wsum/dvar - dsize + (2*ncol) 
 C      write(*,*) cp(imodel,npre+1)
       varia(imodel)=wvaria
- 70   continue
+CCC 70   continue NOT USED 20151017
 
  900  continue
       return
       end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

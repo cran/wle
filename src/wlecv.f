@@ -266,7 +266,7 @@ C
       do 90 icheck=2,imc
       do 70 istart=1,nsplit
       do 80 iistart=1,nsplit
-   	 if(nstart(istart).eq.nrand(icheck,iistart)) then
+         if(nstart(istart).eq.nrand(icheck,iistart)) then
              nagain=nagain+1
          endif
  80   continue   

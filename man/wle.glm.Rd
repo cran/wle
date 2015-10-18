@@ -27,7 +27,7 @@ wle.glm.fit(x, y, weights = NULL, wle.weights = rep(1, NROW(y)),
      start = NULL, etastart = NULL,  mustart = NULL, offset = rep(0, NROW(y)),
      family = gaussian(), control = list(glm=glm.control(), 
      wle=wle.glm.control()), dist.method='euclidean',
-     intercept = TRUE, dispersion=NULL)
+     intercept = TRUE, dispersion = NULL)
 
 \method{weights}{wle.glm}(object, type = c("prior", "working", "wle"), root="all", \dots)
 }

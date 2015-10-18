@@ -98,7 +98,7 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
 C     EXTERNAL SUBROUTINE
 C
-      external dmod
+      external dmodel
 C
       external dqagp
       external dgammac
@@ -124,7 +124,7 @@ C         rprecint=rprec*1.00d-4
            points(1)=dzero
            points(2)=dsup
 
-           call dqagp(dmod,dzero,dsup,2,points,dzero,
+           call dqagp(dmodel,dzero,dsup,2,points,dzero,
      &       rprecint,dtemp,abserr,neval,ier,nlimit,
      &       nlenw,nlast,iwork,work)
 
@@ -176,18 +176,20 @@ C IRAF = 3 Chi Squared disparity
          endif         
  140   continue
 
+CCCCC ADDED 20151017
+      rprec = 0.0D+00
       return
       end
 
-      double precision function dmod(t)
+      double precision function dmodel(t)
       implicit double precision (a-h,o-z)
       common/comune/ dx, dh, dl, doo
 C Tolto dgam dalla common area
       parameter(duno=1.0d00)
       parameter(ddue=2.0d00)
 
-      dmod=dgammac(t,doo,duno/dl,0)
-      dmod=dmod*(dexp(-((dx-t)**ddue)/(ddue*dh))+
+      dmodel=dgammac(t,doo,duno/dl,0)
+      dmodel=dmodel*(dexp(-((dx-t)**ddue)/(ddue*dh))+
      &      dexp(-((dx+t)**ddue)/(ddue*dh)))
       return
       end

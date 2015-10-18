@@ -56,5 +56,11 @@ C   920501  Reformatted the REFERENCES section.  (WRB)
 C***END PROLOGUE  XERCNT
       CHARACTER*(*) LIBRAR, SUBROU, MESSG
 C***FIRST EXECUTABLE STATEMENT  XERCNT
+      LIBRAR=""
+      SUBROU=""
+      MESSG=""
+      NERR=0
+      LEVEL=0
+      KONTRL=0
       RETURN
       END

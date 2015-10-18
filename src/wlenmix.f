@@ -134,7 +134,7 @@ C     Iteration Steps until convergence achieved
  9999 continue
 
       iter=iter+1
-	
+
       do 130 i=1,nsize
          d(i)=0.0d00
          rm(i)=0.0d00

@@ -130,7 +130,7 @@ C Initial values
       do 60 icheck=2,iboot
       do 70 istart=1,ngrp
       do 80 iistart=1,ngrp
-   	 if(nstart(istart).eq.nrand(icheck,iistart)) then
+         if(nstart(istart).eq.nrand(icheck,iistart)) then
              nagain=nagain+1
          endif
  80   continue   
@@ -177,7 +177,7 @@ C     Iteration Steps until convergence achieved
  9999 continue
 
       iter=iter+1
-	
+
       do 130 i=1,nsize
          d(i)=0.0d00
          rm(i)=0.0d00
@@ -189,7 +189,7 @@ C     Iteration Steps until convergence achieved
  120      continue
 
          d(i)=d(i)/nsize      
-	rm(i)=dexp(-((dati(i)-rnowm)**ddue)/(ddue*rnowhs))/
+         rm(i)=dexp(-((dati(i)-rnowm)**ddue)/(ddue*rnowhs))/
      &        dsqrt(rnowhs)
 
  130  continue
@@ -291,7 +291,7 @@ C
             endif
  180     continue
                    nsol=nsol+1
-		   nsame(nsol)=1
+                   nsame(nsol)=1
       		   dmedia(nsol)=rnowm
       		   varia(nsol)=rnows
       		   totpesi(nsol)=tot

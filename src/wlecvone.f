@@ -211,8 +211,8 @@ C
 C
 C     Costruction-Validation Sample
 C
-
-7777  call genprm(nstart,nsize)
+CCC 7777
+      call genprm(nstart,nsize)
 
       do 110 i=1,nsplit
          wycsub(i)=wydata(nstart(i))
@@ -272,7 +272,7 @@ CCC           zparam(imc, i)=tparam(ipos)
          dcv=dcv+dfit
       endif
 
- 900  continue
+CCC 900  continue NOT USED 20151017
 
 C     End of the Monte Carlo replications 
  9999 continue

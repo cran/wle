@@ -153,9 +153,11 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
       dimension ipvt(nvar)
       dimension ztemp(nvar), dwork(nvar)
-      dimension datai(nvar), dataik(nvar)
+      dimension datai(nvar)
+CCC   dimension dataik(nvar) NOT USED 20151017
 
-      dimension ddeth(2), ddeths(2)
+CCC   dimension ddeth(2)  NOT USED 20151017
+      dimension ddeths(2)
       
 
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
@@ -215,7 +217,7 @@ C Initial values
       do 60 icheck=2,iboot
       do 70 istart=1,ngrp
       do 80 iistart=1,ngrp
-   	 if(nstart(istart).eq.nrand(icheck,iistart)) then
+         if(nstart(istart).eq.nrand(icheck,iistart)) then
              nagain=nagain+1
          endif
  80   continue   

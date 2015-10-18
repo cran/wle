@@ -238,7 +238,8 @@ C
 C     Costruction-Validation Sample
 C
 
-7777  call genprm(nstart,nsize)
+CCCC 7777  
+      call genprm(nstart,nsize)
 
       dresval=dzero
       do 110 i=1,nsplit
@@ -310,7 +311,7 @@ C         write(*,*) nmodel
          dsigma(imc)=dres/dresval
       endif
 
- 900  continue
+CCCC 900  continue NOT USED 20151017
 
 C     End of the Monte Carlo replications 
  9999 continue

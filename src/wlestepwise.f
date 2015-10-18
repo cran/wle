@@ -240,6 +240,7 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       iinfo=0
       nstep=0
       istep=1
+      dvarmod=0.0d00
 
       if(ntype.eq.3) then
          nstep=1

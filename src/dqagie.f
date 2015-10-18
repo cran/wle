@@ -241,6 +241,12 @@ C
       RLIST(1) = 0.0D+00
       ELIST(1) = 0.0D+00
       IORD(1) = 0
+CC ADDED 20151017
+      CORREC = 0.0D+00
+      SMALL = 0.0D+00
+      ERTEST = 0.0D+00
+      ERLARG = 0.0D+00
+CCC
       IF(EPSABS.LE.0.0D+00.AND.EPSREL.LT.MAX(0.5D+02*EPMACH,0.5D-28))
      1  IER = 6
        IF(IER.EQ.6) GO TO 999
